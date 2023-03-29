@@ -1,11 +1,13 @@
 package canvas.components;
 
+import canvas.LogicSubScene;
+
 public class Dot  extends SingleCanvasComponent{
 	
 	FunctionalCanvasComponent parent;
 	
 	public Dot(FunctionalCanvasComponent parent) {
-		super(3, 3);
+		super(LogicSubScene.wire_height/2, LogicSubScene.wire_height/2);
 		this.parent =  parent;
 	}
 	
