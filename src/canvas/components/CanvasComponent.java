@@ -49,7 +49,6 @@ public class CanvasComponent extends WritableImage{
 		rotation = HORIZONTAL;
 		image_view = new ImageView();
 		image_view.setImage(this);
-		
 	}
 	
 	//Function to init a CanvasComponent with an ImageURL
