@@ -113,6 +113,7 @@ public class LogicSubScene extends SubScene{
 					addYTranslate(moves_y-(me.getSceneY()-Y-25));
 					moves_x = me.getSceneX()-X;
 					moves_y = me.getSceneY()-Y-25;
+					System.out.println(getXTranslate());
 				}
 			}
 		};
@@ -138,7 +139,7 @@ public class LogicSubScene extends SubScene{
 			public void handle(MouseEvent me) {
 				if(primary) {
 					try {
-						addWire((int)(pressed_x+geXTranslate()), (int) (pressed_y+getYTranslate()), (int) (me.getSceneX()-X+geXTranslate()), (int) (me.getSceneY()-Y-25+getYTranslate()));
+						addWire((int)(pressed_x+getXTranslate()), (int) (pressed_y+getYTranslate()), (int) (me.getSceneX()-X+getXTranslate()), (int) (me.getSceneY()-Y-25+getYTranslate()));
 					} catch (Exception e) {}
 					primary = false;
 				}
@@ -369,10 +370,15 @@ public class LogicSubScene extends SubScene{
 			camera_position.setY(Y_Position);
 		}
 	}
+	
+	public void checkXYTanslate(){
+		
+	}
+	
 	public double getZTranslate() {
 		return camera_position.getZ();
 	}
-	public double geXTranslate() {
+	public double getXTranslate() {
 		return camera_position.getX();
 	}
 	public double getYTranslate() {
