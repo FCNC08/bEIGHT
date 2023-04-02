@@ -91,8 +91,8 @@ public class LogicSubScene extends SubScene{
 		camera = new PerspectiveCamera();
 		camera.getTransforms().add(camera_position);
 		
-		camera_position.setX(width/4-12.5);
-		camera_position.setY(height/4-12.5);
+		camera_position.setX(width/4-cross_distance/2);
+		camera_position.setY(height/4-cross_distance/2);
 		
 		setCamera(camera);
 		
@@ -113,7 +113,6 @@ public class LogicSubScene extends SubScene{
 					addYTranslate(moves_y-(me.getSceneY()-Y-25));
 					moves_x = me.getSceneX()-X;
 					moves_y = me.getSceneY()-Y-25;
-					System.out.println(getXTranslate());
 				}
 			}
 		};
@@ -208,10 +207,10 @@ public class LogicSubScene extends SubScene{
 		try {
 			if(wire.rotation == CanvasComponent.HORIZONTAL) {
 				for(int x = wire.getXPoint(); x <= wire.width/LogicSubScene.cross_distance; x++) {
-					if(used[x][wire.getYPoint()] < 1) {
+					if(used[x][wire.getYPoint()] > 1) {
 						throw new OcupationExeption();
 					}else if(used[x][wire.getYPoint()]==1){
-						
+						throw new OcupationExeption();
 					}else{
 						used[x][wire.getYPoint()] = ID;
 						System.out.println(x+" "+wire.getYPoint());
@@ -219,11 +218,13 @@ public class LogicSubScene extends SubScene{
 				}
 			}else {
 				System.out.println("vertical");
-				for(int y = getNearesDot(wire.getY()); y <= getNearesDot((int) wire.height); y++) {
-					if(used[wire.getX()/cross_distance+1][y] != 0) {
+				for(int y = wire.getYPoint(); y <= getNearesDot((int) wire.height/LogicSubScene.cross_distance); y++) {
+					if(used[wire.getXPoint()][y] > 1) {
 						throw new OcupationExeption();
-					}else {
-						used[wire.getX()/cross_distance+1][y] = ID;
+					}else if(used[wire.getXPoint()][y]==1){
+						
+					}else{
+						used[wire.getXPoint()][y] = ID;
 					}
 				}
 			}
@@ -234,14 +235,14 @@ public class LogicSubScene extends SubScene{
 		
 		System.out.println(ID);
 		
-		for(short[] i: used) {
+		/*for(short[] i: used) {
 			for(short q : i) {
 				System.out.print(q+";");
 			}
 			System.out.print("____");
 		}
 		System.out.println("Next");
-				
+		*/		
 	}
 	
 	public static short generateRandomID() {
@@ -318,6 +319,8 @@ public class LogicSubScene extends SubScene{
 			wire_horizontal.setState(CanvasComponent.UNSET);
 			
 			add(wire_horizontal);
+			System.out.println(" X-P:"+wire_horizontal.getXPoint()+" Y-P: "+wire_horizontal.getYPoint());
+			System.out.println(" X:"+wire_horizontal.getX()+" Y: "+wire_horizontal.getY());
 		}
 		if(round_start_y!=round_end_y) {
 			Wire wire_vertical = new Wire(Math.abs(round_start_y-round_end_y)+wire_height);
@@ -332,6 +335,8 @@ public class LogicSubScene extends SubScene{
 			wire_vertical.setState(CanvasComponent.UNSET);
 			
 			add(wire_vertical);
+			System.out.println(" X-P:"+wire_vertical.getXPoint()+" Y-P: "+wire_vertical.getYPoint());
+			System.out.println(" X:"+wire_vertical.getX()+" Y: "+wire_vertical.getY());
 		}
 		
 	}
@@ -355,6 +360,7 @@ public class LogicSubScene extends SubScene{
 		}else {
 			camera_position.setZ(Z_Postion);
 		}
+		checkXYTanslate();
 	}
 	public void addXTranslate(double x) {
 		double X_Postion = camera_position.getX()+x;
@@ -372,7 +378,10 @@ public class LogicSubScene extends SubScene{
 	}
 	
 	public void checkXYTanslate(){
-		
+		if(getZTranslate()/-2 > getXTranslate()) {
+			camera_position.setX(getZTranslate()/-2);
+			System.out.println(getXTranslate()+"X-Coord");
+		}
 	}
 	
 	public double getZTranslate() {

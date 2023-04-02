@@ -88,12 +88,12 @@ public class CanvasComponent extends WritableImage{
 	//Setter/Getter for X/Y position
 	public void setX(int X_coord){
 		this.X=X_coord;
-		this.point_X = X_coord/LogicSubScene.cross_distance;
+		this.point_X = (X_coord+LogicSubScene.wire_height/2)/LogicSubScene.cross_distance;
 		image_view.setLayoutX(image_view.getLayoutX()+X_coord);
 	}
 	public void setY(int Y_coord) {
 		this.Y=Y_coord;
-		this.point_Y = Y_coord/LogicSubScene.cross_distance;
+		this.point_Y = (Y_coord+LogicSubScene.wire_height/2)/LogicSubScene.cross_distance;
 		image_view.setLayoutY(image_view.getLayoutY()+Y_coord);
 	}
 	public int getX() {
@@ -133,12 +133,12 @@ public class CanvasComponent extends WritableImage{
 	public void setRotation(boolean New_Rotation) {
 		if(New_Rotation != rotation && New_Rotation == VERTICAL){
 			//Changing Location relative to rotation
-			image_view.setLayoutX(image_view.getLayoutX()+0.5*width-0.5*height);
-			image_view.setLayoutY(image_view.getLayoutY()-0.5*width+0.5*height);
+			setX((int) (0.5*width-0.5*height));
+			setY((int) (-0.5*width+0.5*height));
 			
 		}else if(New_Rotation != rotation && New_Rotation == HORIZONTAL) {
-			image_view.setLayoutX(image_view.getLayoutX()-0.5*width+0.5*height);
-			image_view.setLayoutY(image_view.getLayoutY()+0.5*width-0.5*height);
+			setX((int) (-0.5*width+0.5*height));
+			setY((int) (0.5*width-0.5*height));
 		}
 		
 		rotation = New_Rotation;
