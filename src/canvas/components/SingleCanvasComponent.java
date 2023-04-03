@@ -37,4 +37,16 @@ public class SingleCanvasComponent extends CanvasComponent {
 	protected void change() {
 		//Override in higher Classes
 	}
+
+	public boolean checkEnd(int x, int y) {
+		if(rotation == HORIZONTAL) {
+			return (x==getXPoint()&&y==getYPoint())||(x==(getXPoint()+getHeightPoint())&&y==getYPoint());
+		}else {
+			return (x==getXPoint()&&y==getYPoint())||(x==getXPoint()&&y==(getYPoint()+getHeightPoint()));
+		}
+	}
+	
+	public void addComponent(short ID) {
+		connected_Components.add(ID);
+	}
 }
