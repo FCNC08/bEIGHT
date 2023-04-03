@@ -72,20 +72,22 @@ public class Wire extends SingleCanvasComponent{
 	}
 	
 	public ImageView getImageView() {
-		ImageView img = new ImageView();
-		img.setImage(this);
-		img.setRotate(getRotation());
-		img.setLayoutX(img.getLayoutX() + X);
-		img.setLayoutY(img.getLayoutY() + Y);
-		if(rotation == CanvasComponent.VERTICAL) {
-			img.setLayoutY(img.getLayoutY()+0.5*width-0.5*getHeight());
-			img.setLayoutX(img.getLayoutX()-0.5*width+0.5*getHeight());
-		}
-		//img.setLayoutX();
-		return img;
+		createImageView();
+		return image_view;
 	}
 
-
+	@Override
+	protected void createImageView() {
+		image_view= new ImageView();
+		image_view.setImage(this);
+		image_view.setRotate(getRotation());
+		image_view.setLayoutX(image_view.getLayoutX() + X);
+		image_view.setLayoutY(image_view.getLayoutY() + Y);
+		if(rotation == CanvasComponent.VERTICAL) {
+			image_view.setLayoutY(image_view.getLayoutY()+0.5*width-0.5*getHeight());
+			image_view.setLayoutX(image_view.getLayoutX()-0.5*width+0.5*getHeight());
+		}
+	}
 
 	public void setHeight(int height) {
 		this.height = height;
