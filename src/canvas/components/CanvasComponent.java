@@ -121,6 +121,14 @@ public class CanvasComponent extends WritableImage{
 		return point_Y;
 	}
 	
+	public int getWidthPoint() {
+		return (width+LogicSubScene.cross_distance/2)/LogicSubScene.cross_distance;
+	}
+	public int getHeightPoint() {
+		return (width+LogicSubScene.cross_distance/2)/LogicSubScene.cross_distance;
+	}
+	
+	
 	//Setter/Getter for ID (in a Hashmap)
 	public void setId(short ID){
 		id = ID;

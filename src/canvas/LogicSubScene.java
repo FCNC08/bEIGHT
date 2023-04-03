@@ -203,46 +203,93 @@ public class LogicSubScene extends SubScene{
 	}
 	
 	public void add(Wire wire) {
-		short ID = generateRandomID();
+		short ID = generateRandomID();		
+		short loc_ID;
 		try {
 			if(wire.rotation == CanvasComponent.HORIZONTAL) {
-				for(int x = wire.getXPoint(); x <= wire.width/LogicSubScene.cross_distance; x++) {
-					if(used[x][wire.getYPoint()] > 1) {
-						throw new OcupationExeption();
-					}else if(used[x][wire.getYPoint()]==1){
-						throw new OcupationExeption();
-					}else{
+				for(int x = wire.getXPoint()+1; x < wire.getXPoint()+wire.getWidthPoint(); x++) {
+					loc_ID = used[x][wire.getYPoint()];
+					if(loc_ID == 0) {
 						used[x][wire.getYPoint()] = ID;
-						System.out.println(x+" "+wire.getYPoint());
-					}
-				}
-			}else {
-				System.out.println("vertical");
-				for(int y = wire.getYPoint(); y <= getNearesDot((int) wire.height/LogicSubScene.cross_distance); y++) {
-					if(used[wire.getXPoint()][y] > 1) {
+					}else if(loc_ID == 1){
 						throw new OcupationExeption();
-					}else if(used[wire.getXPoint()][y]==1){
-						
-					}else{
-						used[wire.getXPoint()][y] = ID;
+					}else {
+						if(getCanvasComponent(loc_ID).checkEnd(x, wire.getYPoint())) {
+							getCanvasComponent(loc_ID).addComponent(ID);
+							wire.addComponent(loc_ID);
+						}else {
+							throw new OcupationExeption();
+						}
 					}
 				}
+				
+				loc_ID = used[wire.getXPoint()][wire.getYPoint()];
+				if(loc_ID==0) {
+					used[wire.getXPoint()][wire.getYPoint()] = ID;
+				}else if(loc_ID==1) {
+					throw new OcupationExeption();
+				}else {
+					getCanvasComponent(loc_ID).addComponent(ID);
+					wire.addComponent(loc_ID);
+				}
+				
+				//Sets End/Start Point
+				loc_ID = used[wire.getXPoint()+wire.getHeightPoint()][wire.getYPoint()];
+				if(loc_ID==0) {
+					used[wire.getXPoint()+wire.getHeightPoint()][wire.getYPoint()] = ID;
+				}else if(loc_ID==1) {
+					throw new OcupationExeption();
+				}else {
+					getCanvasComponent(loc_ID).addComponent(ID);
+					wire.addComponent(loc_ID);
+				}
+				
+			}else {
+				for(int y = wire.getYPoint()+1; y < wire.getYPoint()+wire.getHeightPoint(); y++) {
+					loc_ID = used[wire.getXPoint()][y];
+					if(loc_ID == 0) {
+						used[wire.getXPoint()][y] = ID;
+					}else if(loc_ID == 1){
+						throw new OcupationExeption();
+					}else {
+						if(getCanvasComponent(loc_ID).checkEnd(wire.getXPoint(), y)) {
+							getCanvasComponent(loc_ID).addComponent(ID);
+							wire.addComponent(loc_ID);
+						}else {
+						throw new OcupationExeption();
+						}
+					}
+				}
+				
+
+				//Sets End/Start Point
+				loc_ID = used[wire.getXPoint()][wire.getYPoint()];
+				if(loc_ID==0) {
+					used[wire.getXPoint()][wire.getYPoint()] = ID;
+				}else if(loc_ID==1) {
+					throw new OcupationExeption();
+				}else {
+					getCanvasComponent(loc_ID).addComponent(ID);
+					wire.addComponent(loc_ID);
+				}
+				
+				loc_ID = used[wire.getXPoint()][wire.getYPoint()+wire.getHeightPoint()];
+				if(loc_ID==0) {
+					used[wire.getXPoint()][wire.getYPoint()+wire.getHeightPoint()] = ID;
+				}else if(loc_ID==1) {
+					throw new OcupationExeption();
+				}else {
+					getCanvasComponent(loc_ID).addComponent(ID);
+					wire.addComponent(loc_ID);
+				}
+				
 			}
+			wire.setId(ID);
 			root.getChildren().add(wire.getImageView());
-		}catch(OcupationExeption e){
+		}catch (OcupationExeption oe) {
 			System.out.println("ERROR");
 		}
-		
-		System.out.println(ID);
-		
-		/*for(short[] i: used) {
-			for(short q : i) {
-				System.out.print(q+";");
-			}
-			System.out.print("____");
-		}
-		System.out.println("Next");
-		*/		
+		components.put(ID, wire); 
 	}
 	
 	public static short generateRandomID() {
@@ -319,8 +366,8 @@ public class LogicSubScene extends SubScene{
 			wire_horizontal.setState(CanvasComponent.UNSET);
 			
 			add(wire_horizontal);
-			System.out.println(" X-P:"+wire_horizontal.getXPoint()+" Y-P: "+wire_horizontal.getYPoint());
-			System.out.println(" X:"+wire_horizontal.getX()+" Y: "+wire_horizontal.getY());
+			System.out.println(" sX-P:"+wire_horizontal.getXPoint()+" sY-P: "+wire_horizontal.getYPoint());
+			System.out.println(" eX-P:"+(wire_horizontal.getXPoint()+wire_horizontal.getWidthPoint())+" eY-P:"+(wire_horizontal.getYPoint())+" Width-P:"+wire_horizontal.getHeightPoint());
 		}
 		if(round_start_y!=round_end_y) {
 			Wire wire_vertical = new Wire(Math.abs(round_start_y-round_end_y)+wire_height);
@@ -336,7 +383,7 @@ public class LogicSubScene extends SubScene{
 			
 			add(wire_vertical);
 			System.out.println(" X-P:"+wire_vertical.getXPoint()+" Y-P: "+wire_vertical.getYPoint());
-			System.out.println(" X:"+wire_vertical.getX()+" Y: "+wire_vertical.getY());
+			System.out.println(" eX-P:"+(wire_vertical.getXPoint())+" Width-P: "+wire_vertical.getWidthPoint()+" eY-P:"+(wire_vertical.getYPoint()));
 		}
 		
 	}
