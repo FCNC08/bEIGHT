@@ -3,7 +3,9 @@ package canvas.components;
 import canvas.LogicSubScene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 
 public class CanvasComponent extends WritableImage{
 	
@@ -27,6 +29,9 @@ public class CanvasComponent extends WritableImage{
 	
 	//ImageView to add to LogicSubScene
 	protected ImageView image_view;
+	
+	//PixelWriter to paint Pixels
+	protected PixelWriter pwriter;
 	
 	//Height and width, X and Y offset
 	public int width;
@@ -76,12 +81,24 @@ public class CanvasComponent extends WritableImage{
 		System.gc();
 	}
 	
+	public void clearPixels() {
+		for(int x=0; x <width; x++) {
+			for(int y=0; y < height; y++) {
+				pwriter.setColor(x, y, new Color(1.0, 1.0, 1.0, 0.0));
+			}
+		}
+	}
+	
 	//Setter/Getter setState for simulation
 	public void setSetState(boolean new_set_state) {
 		set_state = new_set_state;
 	}
 	public boolean getSetState() {
 		return set_state;
+	}
+	
+	public void setFocus(boolean status) {
+		//Override in higher classes
 	}
 	
 	//Setter/Getter for X/Y position

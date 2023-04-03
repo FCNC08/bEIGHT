@@ -6,36 +6,34 @@ import canvas.LogicSubScene;
 import canvas.components.CanvasComponent;
 import canvas.components.SingleCanvasComponent;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 
 public class Wire extends SingleCanvasComponent{
 	
-	boolean front_dot = false;
-	boolean back_dot = false;
-	PixelWriter pwriter;
-	public int width;
-	public int height;
+	protected boolean front_dot = false;
+	protected boolean back_dot = false;
+	protected boolean focus;
 	
 	public Wire(int Startwidth){
 		super(Startwidth, LogicSubScene.wire_height);
-		setHeight(LogicSubScene.wire_height);
+		setHeight(LogicSubScene.wire_height/2);
 		width = Startwidth;
+		focus = false;
 		pwriter = getPixelWriter();
 		connected_Components = new ArrayList<>();
 		PaintWire();
 	}
 	
 	private void PaintWire() {
+		clearPixels();
 		Color c = getColor();
-		for(int x = 0; x < width; x++) {
-			for(int y = 0; y < getHeight(); y++) {
+		for(int x = LogicSubScene.wire_height/4; x < width; x++) {
+			for(int y = LogicSubScene.wire_height/4; y < getHeight()-LogicSubScene.wire_height/4; y++) {
 				pwriter.setColor(x, y, c);
 			}
 		}
 		
 		c = null;
-		System.gc();
 	}
 	
 	public void setFrontDot(boolean set) {
@@ -62,6 +60,37 @@ public class Wire extends SingleCanvasComponent{
 		}
 			
 		PaintWire();
+	}
+	
+	@Override
+	public void setFocus(boolean focus) {
+		if(focus != this.focus) {
+			if(focus) {
+				for(int x = 2; x < LogicSubScene.wire_height-1; x ++) {
+					for(int y = 2; y < LogicSubScene.wire_height-1; y++) {
+						pwriter.setColor(x, y, LogicSubScene.focus_square_main);
+					}
+				}
+				for(int x = 1; x < LogicSubScene.wire_height; x++) {
+					//Paint horizontal lines
+					pwriter.setColor(x, 1, LogicSubScene.focus_square_secondary);
+					pwriter.setColor(x, LogicSubScene.wire_height-1, LogicSubScene.focus_square_secondary);
+					
+					//Paint vertical lines
+					pwriter.setColor(1, x, LogicSubScene.focus_square_secondary);
+					pwriter.setColor(LogicSubScene.wire_height-1, x, LogicSubScene.focus_square_secondary);
+				}
+				for(int x = (int) getWidth(); x > getWidth()-LogicSubScene.wire_height; x--) {
+					for(int y = (int) getHeight(); y > getHeight()-LogicSubScene.wire_height; y--) {
+						pwriter.setColor(x, y, LogicSubScene.focus_square_main);
+					}
+				}
+			}else {
+				System.out.println("test");
+				PaintWire();
+			}
+			this.focus = focus;
+		}
 	}
 	
 	public void addConnectedComponent(short ID) {

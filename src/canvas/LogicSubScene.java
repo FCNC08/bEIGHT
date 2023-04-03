@@ -25,15 +25,23 @@ public class LogicSubScene extends SubScene{
 	
 	public static Random random = new Random();
 	
-	public static int wire_height = 7;
+	public static int wire_height = 12;
 	public static int dot_radius = 7;
 	public static int maxed_dot_radius = 20;
-	public static int cross_distance = wire_height*3;
+	public static int cross_distance = wire_height*2;
 	
 	protected static Color black = new Color(0.0,0.0,0.0, 1.0);
+	protected static Color white = new Color(1.0,1.0,1.0,1.0);
+
+	public static Color focus_square_main = white;
+	public static Color focus_square_secondary = black;
+	
+	public static boolean actual_set_state = true;
 	
 	protected int width; 
 	protected int height;
+	
+	protected int multiplier;
 	
 	protected int Start_Width;
 	protected int Start_Height;
@@ -48,6 +56,8 @@ public class LogicSubScene extends SubScene{
 	private double moves_x;
 	private double moves_y;
 	
+	protected short last_focused_component;
+	
 	private boolean adding;
 	private boolean primary;
 	private boolean secondary;
@@ -55,12 +65,15 @@ public class LogicSubScene extends SubScene{
 	protected Camera camera;
 	protected Translate camera_position;
 	
-	public static boolean actual_set_state = true;
 	
 	public static HashMap<Short, SingleCanvasComponent> single_canvas_components;
 	protected short[][] used;
 	
 	private Group root;
+	
+	public static void setTheme() {
+		
+	}
 	
 	public LogicSubScene(Group Mainroot,int StartWidth, int StartHeight, int multiplier) {
 		super(Mainroot, StartWidth, StartHeight);
@@ -69,6 +82,7 @@ public class LogicSubScene extends SubScene{
 		
 		this.Start_Width = StartWidth;
 		this.Start_Height = StartHeight;
+		this.multiplier = multiplier;
 		
 		int Newwidth = StartWidth*multiplier;
 		int Newheight = StartHeight*multiplier;
@@ -76,7 +90,6 @@ public class LogicSubScene extends SubScene{
 		if(Newwidth%cross_distance != 0||Newheight%cross_distance!=0) {
 			throw new IllegalArgumentException("The size have to fit with the distance between the crosses");
 		}
-		
 		
 		
 		width = Newwidth;
@@ -129,14 +142,20 @@ public class LogicSubScene extends SubScene{
 					adding = true;
 					pressed_x = (int) (me.getSceneX()-X+getXTranslate());
 					pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
-				
+					System.out.println(last_focused_component);
+					if(last_focused_component != 0) {
+						getCanvasComponent(last_focused_component).setFocus(false);
+						last_focused_component= 0;
+					}
 				}else if(secondary) {
 					moves_x = me.getSceneX()-X;
 					moves_y = me.getSceneY()-Y-25;
 				}
+				
 			}
 		};
 		EventHandler<MouseEvent> released_Mouse_Handler = new EventHandler<MouseEvent>() {
+			
 			@Override
 			public void handle(MouseEvent me) {
 				if(adding) {
@@ -147,11 +166,12 @@ public class LogicSubScene extends SubScene{
 						int new_pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
 						
 						if(pressed_x == new_pressed_x && pressed_y == new_pressed_y) {
-							//Focus Canvas Component with ID id;
+							getCanvasComponent(id).setFocus(true);
 						}else {
 							addWire(pressed_x, pressed_y, new_pressed_x, new_pressed_y );
 						}
 						} catch (Exception e) {}
+					adding = false;
 					primary = false;
 				}
 			}
@@ -172,6 +192,7 @@ public class LogicSubScene extends SubScene{
 		
 		
 	}
+	
 	public void add(FunctionalCanvasComponent component) {
 		
 	}
@@ -325,7 +346,9 @@ public class LogicSubScene extends SubScene{
 		int round_end_y = getNearesDot(end_Y);
 		
 		if(round_start_x!=round_end_x) {
-			Wire wire_horizontal = new Wire(Math.abs(round_start_x-round_end_x)+wire_height);
+			Wire wire_horizontal = new Wire(Math.abs(round_start_x-round_end_x)+wire_height*3/4);
+			
+			//Location relative to point and minus half of 
 			if(round_start_x >= round_end_x) {
 				wire_horizontal.setX(round_end_x-wire_height/2);
 			}else {
@@ -338,7 +361,7 @@ public class LogicSubScene extends SubScene{
 			add(wire_horizontal);
 		}
 		if(round_start_y!=round_end_y) {
-			Wire wire_vertical = new Wire(Math.abs(round_start_y-round_end_y)+wire_height);
+			Wire wire_vertical = new Wire(Math.abs(round_start_y-round_end_y)+wire_height*3/4);
 			wire_vertical.setRotation(CanvasComponent.VERTICAL);
 			if(round_start_y>=round_end_y) {
 				wire_vertical.setY(round_end_y-wire_height/2);
@@ -367,6 +390,10 @@ public class LogicSubScene extends SubScene{
 		setLayoutY(Y);
 	}
 	
+	public void setStandardZoom() {
+		camera_position.setZ(multiplier);
+	}
+	
 	public void addZTranslate(double z) {
 		double Z_Postion = camera_position.getZ()+z;
 		if(Z_Postion <= max_zoom) {		
@@ -391,6 +418,7 @@ public class LogicSubScene extends SubScene{
 	}
 	
 	public void checkXYTanslate(){
+		//TODO prevent CameraPosition to move outside depending on zoom
 		if(getZTranslate()/-2 > getXTranslate()) {
 			camera_position.setX(getZTranslate()/-2);
 			System.out.println(getXTranslate()+"X-Coord");

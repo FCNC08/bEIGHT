@@ -89,7 +89,7 @@ public class Main extends Application {
 		MainScene.setFill(Color.GRAY);
 		
 		//Adding LogicScene
-		LogicSubScene logicscene = LogicSubScene.init(LogicSubScene.cross_distance*73, LogicSubScene.cross_distance*40, 4); 
+		LogicSubScene logicscene = LogicSubScene.init(LogicSubScene.cross_distance*70, LogicSubScene.cross_distance*35, 4); 
 		logicscene.setFill(Color.AQUA);
 		
 		logicscene.addX(50);
@@ -97,6 +97,16 @@ public class Main extends Application {
 		
 		root.getChildren().add(logicscene);
 		vbox.getChildren().add(MainScene);
+		
+		Menu translate = new Menu("Translations");
+		MenuItem standard = new MenuItem("Standard-Zoom");
+		standard.setOnAction(e -> {
+			e.consume();
+			logicscene.setStandardZoom();
+		});
+		
+		translate.getItems().add(standard);
+		bar.getMenus().add(translate);
 		
 		Scene scene = new Scene(vbox);
 		
