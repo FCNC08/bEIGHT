@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.Random;
 
 import canvas.components.CanvasComponent;
+import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.SingleCanvasComponent;
 import canvas.components.StandardComponents.Wire;
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.image.ImageView;
@@ -18,6 +20,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 
@@ -30,11 +33,12 @@ public class LogicSubScene extends SubScene{
 	public static int maxed_dot_radius = 20;
 	public static int cross_distance = wire_height*2;
 	
-	protected static Color black = new Color(0.0,0.0,0.0, 1.0);
-	protected static Color white = new Color(1.0,1.0,1.0,1.0);
+	protected static Color black_grey = new Color(0.3,0.3,0.3, 1.0);
+	protected static Color white_grey = new Color(0.85,0.85,0.85,1.0);
+	protected static Color black = new Color(0.0,0.0,0.0,1.0);
 
-	public static Color focus_square_main = white;
-	public static Color focus_square_secondary = black;
+	public static Color focus_square_main = white_grey;
+	public static Color focus_square_secondary = black_grey;
 	
 	public static boolean actual_set_state = true;
 	
@@ -65,8 +69,8 @@ public class LogicSubScene extends SubScene{
 	protected Camera camera;
 	protected Translate camera_position;
 	
-	
-	public static HashMap<Short, SingleCanvasComponent> single_canvas_components;
+	public HashMap<Short, FunctionalCanvasComponent> functional_canvas_component;
+	public HashMap<Short, SingleCanvasComponent> single_canvas_components;
 	protected short[][] used;
 	
 	private Group root;
@@ -77,6 +81,7 @@ public class LogicSubScene extends SubScene{
 	
 	public LogicSubScene(Group Mainroot,int StartWidth, int StartHeight, int multiplier) {
 		super(Mainroot, StartWidth, StartHeight);
+		
 		
 		max_zoom = (int) ((StartWidth*-0.5*multiplier)+(cross_distance));
 		
@@ -115,6 +120,7 @@ public class LogicSubScene extends SubScene{
 		
 		
 		single_canvas_components = new HashMap<>();
+		functional_canvas_component = new HashMap<>();
 		
 		root = Mainroot;
 		
@@ -194,102 +200,127 @@ public class LogicSubScene extends SubScene{
 	}
 	
 	public void add(FunctionalCanvasComponent component) {
+		try {
+			for(Dot d : component.inputs) {
+				add(d);
+			}
+			for(Dot d : component.outputs) {
+				add(d);
+			}
+			//for()
+			
+			component.setLogicSubScene(this);
+		}catch(OcupationExeption oe) {
+			
+		}
 		
 	}
 	
-	public void add(Wire wire) {
-		short ID = generateRandomID();		
+	public void add(SingleCanvasComponent component) throws OcupationExeption {
+		short ID = generateRandomSingleComponentID();		
 		short loc_ID;
-		try {
-			if(wire.rotation == CanvasComponent.HORIZONTAL) {
-				for(int x = wire.getXPoint()+1; x < wire.getXPoint()+wire.getWidthPoint(); x++) {
-					loc_ID = used[x][wire.getYPoint()];
-					if(loc_ID == 0) {
-						used[x][wire.getYPoint()] = ID;
-					}else if(loc_ID == 1){
-						throw new OcupationExeption();
-					}else {
-						if(getCanvasComponent(loc_ID).checkEnd(x, wire.getYPoint())) {
-							getCanvasComponent(loc_ID).addComponent(ID);
-							wire.addComponent(loc_ID);
-						}
-					}
-				}
-				
-				loc_ID = used[wire.getXPoint()][wire.getYPoint()];
-				if(loc_ID==0) {
-					used[wire.getXPoint()][wire.getYPoint()] = ID;
-				}else if(loc_ID==1) {
-					throw new OcupationExeption();
-				}else {
-					getCanvasComponent(loc_ID).addComponent(ID);
-					wire.addComponent(loc_ID);
-				}
-				
-				//Sets End/Start Point
-				loc_ID = used[wire.getXPoint()+wire.getHeightPoint()][wire.getYPoint()];
-				if(loc_ID==0) {
-					used[wire.getXPoint()+wire.getHeightPoint()][wire.getYPoint()] = ID;
-				}else if(loc_ID==1) {
-					throw new OcupationExeption();
-				}else {
-					getCanvasComponent(loc_ID).addComponent(ID);
-					wire.addComponent(loc_ID);
-				}
-				
-			}else {
-				for(int y = wire.getYPoint()+1; y < wire.getYPoint()+wire.getHeightPoint(); y++) {
-					loc_ID = used[wire.getXPoint()][y];
-					if(loc_ID == 0) {
-						used[wire.getXPoint()][y] = ID;
-					}else if(loc_ID == 1){
-						throw new OcupationExeption();
-					}else {
-						if(getCanvasComponent(loc_ID).checkEnd(wire.getXPoint(), y)) {
-							getCanvasComponent(loc_ID).addComponent(ID);
-							wire.addComponent(loc_ID);
-						}
-					}
-				}
-				
 
-				//Sets End/Start Point
-				loc_ID = used[wire.getXPoint()][wire.getYPoint()];
-				if(loc_ID==0) {
-					used[wire.getXPoint()][wire.getYPoint()] = ID;
-				}else if(loc_ID==1) {
+		
+		if(component.rotation == CanvasComponent.HORIZONTAL) {
+			for(int x = component.getXPoint()+1; x < component.getXPoint()+component.getWidthPoint(); x++) {
+				loc_ID = used[x][component.getYPoint()];
+				if(loc_ID == 0) {
+					used[x][component.getYPoint()] = ID;
+				}else if(loc_ID == 1){
 					throw new OcupationExeption();
 				}else {
-					getCanvasComponent(loc_ID).addComponent(ID);
-					wire.addComponent(loc_ID);
+					if(getCanvasComponent(loc_ID).checkEnd(x, component.getYPoint())) {
+						getCanvasComponent(loc_ID).addComponent(ID);
+						component.addComponent(loc_ID);
+					}
 				}
-				
-				loc_ID = used[wire.getXPoint()][wire.getYPoint()+wire.getHeightPoint()];
-				if(loc_ID==0) {
-					used[wire.getXPoint()][wire.getYPoint()+wire.getHeightPoint()] = ID;
-				}else if(loc_ID==1) {
-					throw new OcupationExeption();
-				}else {
-					getCanvasComponent(loc_ID).addComponent(ID);
-					wire.addComponent(loc_ID);
-				}
-				
 			}
-			wire.setId(ID);
-			root.getChildren().add(wire.getImageView());
-		}catch (OcupationExeption oe) {
-			System.out.println("ERROR");
+			
+			loc_ID = used[component.getXPoint()][component.getYPoint()];
+			if(loc_ID==0) {
+				used[component.getXPoint()][component.getYPoint()] = ID;
+			}else if(loc_ID==1) {
+				throw new OcupationExeption();
+			}else {
+				getCanvasComponent(loc_ID).addComponent(ID);
+				component.addComponent(loc_ID);
+			}
+			
+			//Sets End/Start Point
+			loc_ID = used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()];
+			if(loc_ID==0) {
+				used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()] = ID;
+			}else if(loc_ID==1) {
+				throw new OcupationExeption();
+			}else {
+				getCanvasComponent(loc_ID).addComponent(ID);
+				component.addComponent(loc_ID);
+			}
+			
+		}else {
+			for(int y = component.getYPoint()+1; y < component.getYPoint()+component.getHeightPoint(); y++) {
+				loc_ID = used[component.getXPoint()][y];
+				if(loc_ID == 0) {
+					used[component.getXPoint()][y] = ID;
+				}else if(loc_ID == 1){
+					throw new OcupationExeption();
+				}else {
+					if(getCanvasComponent(loc_ID).checkEnd(component.getXPoint(), y)) {
+						getCanvasComponent(loc_ID).addComponent(ID);
+						component.addComponent(loc_ID);
+					}
+				}
+			}
+			
+
+			//Sets End/Start Point
+			loc_ID = used[component.getXPoint()][component.getYPoint()];
+			if(loc_ID==0) {
+				used[component.getXPoint()][component.getYPoint()] = ID;
+			}else if(loc_ID==1) {
+				throw new OcupationExeption();
+			}else {
+				getCanvasComponent(loc_ID).addComponent(ID);
+				component.addComponent(loc_ID);
+			}
+			
+			loc_ID = used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()];
+			if(loc_ID==0) {
+				used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()] = ID;
+			}else if(loc_ID==1) {
+				throw new OcupationExeption();
+			}else {
+				getCanvasComponent(loc_ID).addComponent(ID);
+				component.addComponent(loc_ID);
+			}
+			
 		}
-		single_canvas_components.put(ID, wire); 
+		component.setLogicSubScene(this);
+		component.setId(ID);
+		root.getChildren().add(component.getImageView());
+		
+		single_canvas_components.put(ID, component); 
 	}
 	
-	public static short generateRandomID() {
+	public short generateRandomSingleComponentID() {
 		short ID = (short) random.nextInt(1 << 15);
 		if(ID <= 1) {
-			return generateRandomID();
+			return generateRandomSingleComponentID();
 		}
 		if(single_canvas_components.getOrDefault(ID, null) != null) {
-			return generateRandomID();
+			return generateRandomSingleComponentID();
+		}else {
+			return ID;
+		}
+	}
+	
+	public short generateRandomFunctionalComponent() {
+		short ID = (short) random.nextInt(1 << 15);
+		if(ID <= 1) {
+			return generateRandomFunctionalComponent();
+		}
+		if(functional_canvas_component.getOrDefault(ID, null) != null) {
+			return generateRandomFunctionalComponent();
 		}else {
 			return ID;
 		}
@@ -358,7 +389,11 @@ public class LogicSubScene extends SubScene{
 			
 			wire_horizontal.setState(CanvasComponent.OFF);
 			
-			add(wire_horizontal);
+			try {
+				add(wire_horizontal);
+			} catch (OcupationExeption e) {
+				System.out.println("ERROR");
+			}
 		}
 		if(round_start_y!=round_end_y) {
 			Wire wire_vertical = new Wire(Math.abs(round_start_y-round_end_y)+wire_height*3/4);
@@ -372,12 +407,16 @@ public class LogicSubScene extends SubScene{
 			
 			wire_vertical.setState(CanvasComponent.OFF);
 			
-			add(wire_vertical);
+			try {
+				add(wire_vertical);
+			} catch (OcupationExeption e) {
+				System.out.println("ERROR");
+			}
 		}
 		
 	}
 	
-	public static SingleCanvasComponent getCanvasComponent(short id) {
+	public SingleCanvasComponent getCanvasComponent(short id) {
 		return single_canvas_components.get(id); 
 	}
 	

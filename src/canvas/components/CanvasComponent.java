@@ -27,6 +27,9 @@ public class CanvasComponent extends WritableImage{
 	//SetState for missing double simulation
 	protected boolean set_state = false;
 	
+	//LogicSubScene where it is added
+	protected LogicSubScene logic_scene;
+	
 	//ImageView to add to LogicSubScene
 	protected ImageView image_view;
 	
@@ -81,10 +84,15 @@ public class CanvasComponent extends WritableImage{
 		System.gc();
 	}
 	
+	public void setLogicSubScene(LogicSubScene parentScene) {
+		this.logic_scene = parentScene;
+	}
+	
 	public void clearPixels() {
+		Color invisible = new Color(1.0, 1.0, 1.0, 0.0);
 		for(int x=0; x <width; x++) {
 			for(int y=0; y < height; y++) {
-				pwriter.setColor(x, y, new Color(1.0, 1.0, 1.0, 0.0));
+				pwriter.setColor(x, y, invisible);
 			}
 		}
 	}

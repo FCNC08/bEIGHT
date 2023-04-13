@@ -12,8 +12,8 @@ public class FunctionalCanvasComponent extends CanvasComponent{
 	protected int input_count;
 	protected int output_count;
 	
-	protected Dot[] inputs;
-	protected Dot[] outputs;
+	public Dot[] inputs;
+	public Dot[] outputs;
 	
 	protected int[] input_x;
 	protected int[] input_y;

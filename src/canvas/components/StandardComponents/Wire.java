@@ -46,7 +46,7 @@ public class Wire extends SingleCanvasComponent{
 	@Override
 	public void change() {
 		for(short i: connected_Components) {
-			SingleCanvasComponent c = LogicSubScene.getCanvasComponent(i);
+			SingleCanvasComponent c = logic_scene.getCanvasComponent(i);
 			if(c.getSetState() == LogicSubScene.actual_set_state) {
 				if (this.state !=c.getState()) {
 					c.setState(ERR);

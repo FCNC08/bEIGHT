@@ -3,6 +3,7 @@ package application;
 import java.util.ArrayList;
 
 import canvas.LogicSubScene;
+import canvas.LogicSubSceneContainer;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Group;
@@ -94,6 +95,8 @@ public class Main extends Application {
 		
 		logicscene.addX(50);
 		logicscene.addY(25);
+		
+		//LogicSubSceneContainer logicscene = new LogicSubSceneContainer(LogicSubScene.cross_distance*70, LogicSubScene.cross_distance*35, 4);
 		
 		root.getChildren().add(logicscene);
 		vbox.getChildren().add(MainScene);
