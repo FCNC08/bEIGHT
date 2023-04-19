@@ -9,6 +9,7 @@ import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.SingleCanvasComponent;
 import canvas.components.StandardComponents.Wire;
+
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
