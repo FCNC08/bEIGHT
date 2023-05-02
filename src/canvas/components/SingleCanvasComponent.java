@@ -49,4 +49,13 @@ public class SingleCanvasComponent extends CanvasComponent {
 	public void addComponent(short ID) {
 		connected_Components.add(ID);
 	}
+	public void removeComponent(short ID) {
+		connected_Components.remove(ID);
+	}
+	public void printComponents() {
+		for(short i : connected_Components) {
+			System.out.print(i+" 	");
+		}
+		System.out.println(id);
+	}
 }

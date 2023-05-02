@@ -14,7 +14,7 @@ public class LogicSubSceneContainer extends HBox{
 		logic_subscene = LogicSubScene.init(Startwidth, Startheight, multiplier);
 		
 		//getChildren().add(component_chooser);
-		getChildren().add(logic_subscene);
+		//getChildren().add(logic_subscene);
 	}
 	
 	

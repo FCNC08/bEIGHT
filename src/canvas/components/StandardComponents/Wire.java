@@ -92,14 +92,6 @@ public class Wire extends SingleCanvasComponent{
 			this.focus = focus;
 		}
 	}
-	
-	public void addConnectedComponent(short ID) {
-		connected_Components.add((short)ID);
-	}
-	public void removeConnectedComponent(short ID) {
-		connected_Components.remove((short) ID);
-	}
-	
 	public ImageView getImageView() {
 		createImageView();
 		return image_view;

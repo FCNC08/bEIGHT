@@ -148,7 +148,6 @@ public class LogicSubScene extends SubScene{
 					adding = true;
 					pressed_x = (int) (me.getSceneX()-X+getXTranslate());
 					pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
-					System.out.println(last_focused_component);
 					if(last_focused_component != 0) {
 						getCanvasComponent(last_focused_component).setFocus(false);
 						last_focused_component= 0;
@@ -173,6 +172,7 @@ public class LogicSubScene extends SubScene{
 						
 						if(pressed_x == new_pressed_x && pressed_y == new_pressed_y) {
 							getCanvasComponent(id).setFocus(true);
+							getCanvasComponent(id).printComponents();
 						}else {
 							addWire(pressed_x, pressed_y, new_pressed_x, new_pressed_y );
 						}
@@ -219,7 +219,8 @@ public class LogicSubScene extends SubScene{
 	public void add(SingleCanvasComponent component) throws OcupationExeption {
 		short ID = generateRandomSingleComponentID();		
 		short loc_ID;
-
+		
+		System.out.println(ID);
 		
 		if(component.rotation == CanvasComponent.HORIZONTAL) {
 			for(int x = component.getXPoint()+1; x < component.getXPoint()+component.getWidthPoint(); x++) {
@@ -256,7 +257,6 @@ public class LogicSubScene extends SubScene{
 				getCanvasComponent(loc_ID).addComponent(ID);
 				component.addComponent(loc_ID);
 			}
-			
 		}else {
 			for(int y = component.getYPoint()+1; y < component.getYPoint()+component.getHeightPoint(); y++) {
 				loc_ID = used[component.getXPoint()][y];
@@ -300,6 +300,7 @@ public class LogicSubScene extends SubScene{
 		root.getChildren().add(component.getImageView());
 		
 		single_canvas_components.put(ID, component); 
+		component.printComponents();
 	}
 	
 	public short generateRandomSingleComponentID() {
