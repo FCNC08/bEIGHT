@@ -43,7 +43,6 @@ public class Wire extends SingleCanvasComponent{
 		back_dot = set;
 	}
 	
-	@Override
 	public void change() {
 		for(short i: connected_Components) {
 			SingleCanvasComponent c = logic_scene.getCanvasComponent(i);

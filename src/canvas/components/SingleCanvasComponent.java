@@ -36,9 +36,7 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 		return null;
 	}
 
-	protected void change() {
-		//Override in higher Classes
-	}
+	protected abstract void change();
 
 	public boolean checkEnd(int x, int y) {
 		if(rotation == HORIZONTAL) {

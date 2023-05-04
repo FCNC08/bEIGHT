@@ -103,9 +103,7 @@ public abstract class CanvasComponent extends WritableImage{
 		return set_state;
 	}
 	
-	public void setFocus(boolean status) {
-		//Override in higher classes
-	}
+	public abstract void setFocus(boolean status);
 	
 	//Setter/Getter for X/Y position
 	public void setX(int X_coord){

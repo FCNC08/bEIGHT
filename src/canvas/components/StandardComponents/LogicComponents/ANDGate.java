@@ -32,4 +32,10 @@ public class ANDGate extends LogicComponent{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void setFocus(boolean status) {
+		// TODO Auto-generated method stub
+		
+	}
 }
