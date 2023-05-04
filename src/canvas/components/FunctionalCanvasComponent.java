@@ -5,7 +5,7 @@ import java.util.HashMap;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class FunctionalCanvasComponent extends CanvasComponent{
+public abstract class FunctionalCanvasComponent extends CanvasComponent{
 
 	protected HashMap<State[], State[]> truth_table;
 	
@@ -36,25 +36,27 @@ public class FunctionalCanvasComponent extends CanvasComponent{
 	}
 
 	public static FunctionalCanvasComponent initImage(String url, int inputs, int outputs, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y ) {
-		Image temp_img = new Image(url);
+		//Override in higher classes
+		/*Image temp_img = new Image(url);
 		FunctionalCanvasComponent component = new FunctionalCanvasComponent((int)temp_img.getWidth(),(int)temp_img.getHeight(), inputs, outputs, inputs_x, inputs_y, outputs_x, outputs_y);
 		ImageView temp_view = new ImageView(temp_img);
 		temp_view.snapshot(null, component);
 		temp_img = null;
 		temp_view = null;
 		System.gc();
-		return component;
+		return component;*/
+		return null;
 	}
 	public static FunctionalCanvasComponent initImage(ImageView image, int input_count, int output_count, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
-		FunctionalCanvasComponent component = new FunctionalCanvasComponent(
+		//Override in higher classes
+		/*FunctionalCanvasComponent component = new FunctionalCanvasComponent(
 				(int)image.getImage().getWidth(), (int) image.getImage().getHeight(), input_count, output_count, inputs_x, inputs_y, outputs_x, outputs_y );
 		image.snapshot(null, component);
-		return component;
+		return component;*/
+		return null;
 	}
 	
-	public void simulate() {
-		
-	}
+	public abstract void simulate();
 	
 	protected State[] getInputStates() {
 		State[] states = new State[inputs.length];

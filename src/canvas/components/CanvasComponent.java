@@ -7,7 +7,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
-public class CanvasComponent extends WritableImage{
+public abstract class CanvasComponent extends WritableImage{
 	
 	//rotation Modes
 	public static boolean HORIZONTAL = true;
@@ -60,10 +60,8 @@ public class CanvasComponent extends WritableImage{
 	
 	//Function to init a CanvasComponent with an ImageURL
 	public static CanvasComponent initImage(String url) {
-		Image temp_img = new Image(url);
-		CanvasComponent component = new CanvasComponent((int) temp_img.getWidth(), (int) temp_img.getHeight());
-		component.setImage(temp_img);
-		return component;
+		//Override in higher classes
+		return null;
 	}
 	
 	//Method to set a image width URL

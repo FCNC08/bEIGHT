@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class SingleCanvasComponent extends CanvasComponent {
+public abstract class SingleCanvasComponent extends CanvasComponent {
 
 
 	protected ArrayList<Short> connected_Components;
@@ -28,10 +28,12 @@ public class SingleCanvasComponent extends CanvasComponent {
 	}
 	
 	public static SingleCanvasComponent initImage(String url) {
-		Image temp_img = new Image(url);
+		//Override in higher classes
+		/*Image temp_img = new Image(url);
 		SingleCanvasComponent component = new SingleCanvasComponent((int) temp_img.getWidth(), (int) temp_img.getHeight());
 		component.setImage(temp_img);
-		return component;
+		return component;*/
+		return null;
 	}
 
 	protected void change() {

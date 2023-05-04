@@ -201,7 +201,7 @@ public class LogicSubScene extends SubScene{
 	}
 	
 	public void add(FunctionalCanvasComponent component) {
-		try {
+		/*try {
 			for(Dot d : component.inputs) {
 				add(d);
 			}
@@ -213,8 +213,7 @@ public class LogicSubScene extends SubScene{
 			component.setLogicSubScene(this);
 		}catch(OcupationExeption oe) {
 			
-		}
-		
+		}*/
 	}
 	
 	public void add(SingleCanvasComponent component) throws OcupationExeption {

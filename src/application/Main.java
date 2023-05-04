@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import canvas.LogicSubScene;
 import canvas.LogicSubSceneContainer;
+import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Group;
@@ -95,6 +96,8 @@ public class Main extends Application {
 		
 		logicscene.addX(50);
 		logicscene.addY(25);
+		
+		//logicscene.add(ANDGate.getANDGATE(2, 2, new int[2], new int[2], new int[2], new int[2]));
 		
 		//LogicSubSceneContainer logicscene = new LogicSubSceneContainer(LogicSubScene.cross_distance*70, LogicSubScene.cross_distance*35, 4);
 		
