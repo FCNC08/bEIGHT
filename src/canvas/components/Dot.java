@@ -15,6 +15,12 @@ public class Dot  extends SingleCanvasComponent{
 	protected void change() {
 		parent.simulate();
 	}
+
+	@Override
+	public void setFocus(boolean status) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
 }
