@@ -22,6 +22,9 @@ public class State {
 	public static Color unset = white_unset;
 	public static Color err = white_err;
 	
+	protected boolean mode;
+	protected boolean state;
+	
 	public static void setState(boolean state) {
 		if(state == WHITE_MODE) {
 			off = white_off;
@@ -32,8 +35,6 @@ public class State {
 	}
 	
 	
-	protected boolean mode;
-	protected boolean state;
 	
 	public State(boolean set_mode, boolean set_state) {
 		mode = set_mode;

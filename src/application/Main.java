@@ -14,6 +14,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -99,10 +100,18 @@ public class Main extends Application {
 		
 		//logicscene.add(ANDGate.getANDGATE(2, 2, new int[2], new int[2], new int[2], new int[2]));
 		
+		ImageView and = new ImageView(ANDGate.LogicComponent_Image);
+		and.setLayoutX(1000.0);
+		and.setLayoutY(500);
+		and.setFitWidth(75);
+		and.setFitHeight(75);
+		
+		
 		//LogicSubSceneContainer logicscene = new LogicSubSceneContainer(LogicSubScene.cross_distance*70, LogicSubScene.cross_distance*35, 4);
 		
 		root.getChildren().add(logicscene);
 		vbox.getChildren().add(MainScene);
+		root.getChildren().add(and);
 		
 		Menu translate = new Menu("Translations");
 		MenuItem standard = new MenuItem("Standard-Zoom");
