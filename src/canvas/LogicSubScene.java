@@ -13,7 +13,6 @@ import canvas.components.StandardComponents.Wire;
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
-import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.image.ImageView;
@@ -21,7 +20,6 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 

@@ -47,6 +47,7 @@ public class ANDGate extends LogicComponent{
 		image_view.setRotate(getRotation());
 		image_view.setLayoutX(image_view.getLayoutX() + X);
 		image_view.setLayoutY(image_view.getLayoutY() + Y);
+		
 		if(rotation == CanvasComponent.VERTICAL) {
 			image_view.setLayoutY(image_view.getLayoutY()+0.5*width-0.5*getHeight());
 			image_view.setLayoutX(image_view.getLayoutX()-0.5*width+0.5*getHeight());
