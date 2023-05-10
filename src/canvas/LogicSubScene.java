@@ -214,6 +214,7 @@ public class LogicSubScene extends SubScene{
 		}catch(OcupationExeption oe) {
 			
 		}*/
+		root.getChildren().add(component.getImageView());
 	}
 	
 	public void add(SingleCanvasComponent component) throws OcupationExeption {
