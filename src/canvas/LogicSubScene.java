@@ -1,6 +1,5 @@
 package canvas;
 
-
 import java.util.HashMap;
 import java.util.Random;
 
@@ -13,6 +12,7 @@ import canvas.components.StandardComponents.Wire;
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
+import javafx.scene.ImageCursor;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.image.ImageView;
@@ -131,6 +131,7 @@ public class LogicSubScene extends SubScene{
 				{
 					addXTranslate(moves_x-(me.getSceneX()-X));
 					addYTranslate(moves_y-(me.getSceneY()-Y-25));
+					setCursor(javafx.scene.Cursor.NONE);
 					moves_x = me.getSceneX()-X;
 					moves_y = me.getSceneY()-Y-25;
 				}
@@ -178,6 +179,8 @@ public class LogicSubScene extends SubScene{
 						} catch (Exception e) {}
 					adding = false;
 					primary = false;
+				}else if(primary) {
+					setCursor(javafx.scene.Cursor.OPEN_HAND);
 				}
 			}
 		};
