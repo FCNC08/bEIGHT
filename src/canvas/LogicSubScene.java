@@ -131,7 +131,7 @@ public class LogicSubScene extends SubScene{
 				{
 					addXTranslate(moves_x-(me.getSceneX()-X));
 					addYTranslate(moves_y-(me.getSceneY()-Y-25));
-					setCursor(javafx.scene.Cursor.NONE);
+					//setCursor(javafx.scene.Cursor.NONE);
 					moves_x = me.getSceneX()-X;
 					moves_y = me.getSceneY()-Y-25;
 				}
@@ -180,7 +180,7 @@ public class LogicSubScene extends SubScene{
 					adding = false;
 					primary = false;
 				}else if(primary) {
-					setCursor(javafx.scene.Cursor.OPEN_HAND);
+					//setCursor(javafx.scene.Cursor.OPEN_HAND);
 				}
 			}
 		};
