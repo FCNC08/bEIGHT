@@ -20,8 +20,10 @@ public class ANDGate extends LogicComponent{
 	}
 	
 	public static ANDGate getANDGATE(int inputs, int outputs, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y ) {
-		ANDGate component = new ANDGate((int)LogicComponent_Image.getWidth(),(int)LogicComponent_Image.getHeight(), inputs, outputs, inputs_x, inputs_y, outputs_x, outputs_y);
+		ANDGate component = new ANDGate(200,200, inputs, outputs, inputs_x, inputs_y, outputs_x, outputs_y);
 		ImageView temp_view = new ImageView(LogicComponent_Image);
+		temp_view.setFitHeight(200);
+		temp_view.setFitWidth(200);
 		temp_view.snapshot(null, component);
 		temp_view = null;
 		System.gc();

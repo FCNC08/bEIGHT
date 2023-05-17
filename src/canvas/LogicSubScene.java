@@ -202,7 +202,8 @@ public class LogicSubScene extends SubScene{
 	}
 	
 	public void add(FunctionalCanvasComponent component) {
-		/*try {
+		short ID = generateRandomFunctionalComponent();
+		try {
 			for(Dot d : component.inputs) {
 				add(d);
 			}
@@ -212,10 +213,11 @@ public class LogicSubScene extends SubScene{
 			//for()
 			
 			component.setLogicSubScene(this);
+			functional_canvas_component.put(ID, component);
+			root.getChildren().add(component.getImageView());
 		}catch(OcupationExeption oe) {
 			
-		}*/
-		root.getChildren().add(component.getImageView());
+		}
 	}
 	
 	public void add(SingleCanvasComponent component) throws OcupationExeption {
