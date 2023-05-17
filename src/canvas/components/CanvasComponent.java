@@ -55,8 +55,12 @@ public abstract class CanvasComponent extends WritableImage{
 		
 		//Adding standard values
 		rotation = HORIZONTAL;
+<<<<<<< HEAD
 		this.createImageView();
 		image_view = new ImageView(this);
+=======
+		createImageView();
+>>>>>>> 5ad9dae292563a61ee1117896a0ad2ef351888d1
 	}
 	
 	//Function to init a CanvasComponent with an ImageURL
@@ -181,9 +185,7 @@ public abstract class CanvasComponent extends WritableImage{
 		}
 	}
 	
-	protected void createImageView() {
-		//Ovverride in higher classes
-	}
+	protected abstract void createImageView();
 	
 	//Getting ImageView to add to LogicSubScene
 	public ImageView getImageView() {

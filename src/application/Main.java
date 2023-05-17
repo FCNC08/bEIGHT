@@ -93,7 +93,7 @@ public class Main extends Application {
 		
 		//Adding LogicScene
 		LogicSubScene logicscene = LogicSubScene.init(LogicSubScene.cross_distance*70, LogicSubScene.cross_distance*35, 4); 
-		logicscene.setFill(Color.AQUA);
+		logicscene.setFill(Color.WHITE);
 		
 		logicscene.addX(50);
 		logicscene.addY(25);
@@ -108,7 +108,10 @@ public class Main extends Application {
 		
 		int[] test = {10,10};
 		ANDGate gate = new ANDGate(750, 750, 2, 2, test, test, test, test);
+		ANDGate and = ANDGate.getANDGATE(0, 0, null, null, null, null);
 		
+		and.setX(800);
+		and.setY(800);
 		
 		//LogicSubSceneContainer logicscene = new LogicSubSceneContainer(LogicSubScene.cross_distance*70, LogicSubScene.cross_distance*35, 4);
 		
@@ -117,6 +120,7 @@ public class Main extends Application {
 		//root.getChildren().add(and);
 		//logicscene.add(gate);
 		root.getChildren().add(gate.getImageView());
+		logicscene.add(and);
 		
 		Menu translate = new Menu("Translations");
 		MenuItem standard = new MenuItem("Standard-Zoom");

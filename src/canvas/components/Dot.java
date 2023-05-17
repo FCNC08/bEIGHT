@@ -21,6 +21,12 @@ public class Dot  extends SingleCanvasComponent{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	protected void createImageView() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 
 }
