@@ -56,6 +56,7 @@ public abstract class CanvasComponent extends WritableImage{
 		//Adding standard values
 		rotation = HORIZONTAL;
 		this.createImageView();
+		image_view = new ImageView(this);
 	}
 	
 	//Function to init a CanvasComponent with an ImageURL

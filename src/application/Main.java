@@ -100,18 +100,23 @@ public class Main extends Application {
 		
 		//logicscene.add(ANDGate.getANDGATE(2, 2, new int[2], new int[2], new int[2], new int[2]));
 		
-		ImageView and = new ImageView(ANDGate.LogicComponent_Image);
+		/*ImageView and = new ImageView(ANDGate.LogicComponent_Image);
 		and.setLayoutX(1000.0);
 		and.setLayoutY(500);
 		and.setFitWidth(75);
-		and.setFitHeight(75);
+		and.setFitHeight(75);*/
+		
+		int[] test = {10,10};
+		ANDGate gate = new ANDGate(750, 750, 2, 2, test, test, test, test);
 		
 		
 		//LogicSubSceneContainer logicscene = new LogicSubSceneContainer(LogicSubScene.cross_distance*70, LogicSubScene.cross_distance*35, 4);
 		
 		root.getChildren().add(logicscene);
 		vbox.getChildren().add(MainScene);
-		root.getChildren().add(and);
+		//root.getChildren().add(and);
+		//logicscene.add(gate);
+		root.getChildren().add(gate.getImageView());
 		
 		Menu translate = new Menu("Translations");
 		MenuItem standard = new MenuItem("Standard-Zoom");
