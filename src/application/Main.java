@@ -93,7 +93,7 @@ public class Main extends Application {
 		
 		//Adding LogicScene
 		LogicSubScene logicscene = LogicSubScene.init(LogicSubScene.cross_distance*70, LogicSubScene.cross_distance*35, 4); 
-		logicscene.setFill(Color.AQUA);
+		logicscene.setFill(Color.WHITE);
 		
 		logicscene.addX(50);
 		logicscene.addY(25);

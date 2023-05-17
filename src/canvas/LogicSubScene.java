@@ -1,6 +1,5 @@
 package canvas;
 
-
 import java.util.HashMap;
 import java.util.Random;
 
@@ -13,7 +12,7 @@ import canvas.components.StandardComponents.Wire;
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
-import javafx.scene.Parent;
+import javafx.scene.ImageCursor;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.image.ImageView;
@@ -21,7 +20,6 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 
@@ -133,6 +131,7 @@ public class LogicSubScene extends SubScene{
 				{
 					addXTranslate(moves_x-(me.getSceneX()-X));
 					addYTranslate(moves_y-(me.getSceneY()-Y-25));
+					//setCursor(javafx.scene.Cursor.NONE);
 					moves_x = me.getSceneX()-X;
 					moves_y = me.getSceneY()-Y-25;
 				}
@@ -180,6 +179,8 @@ public class LogicSubScene extends SubScene{
 						} catch (Exception e) {}
 					adding = false;
 					primary = false;
+				}else if(primary) {
+					//setCursor(javafx.scene.Cursor.OPEN_HAND);
 				}
 			}
 		};
@@ -201,7 +202,8 @@ public class LogicSubScene extends SubScene{
 	}
 	
 	public void add(FunctionalCanvasComponent component) {
-		/*try {
+		short ID = generateRandomFunctionalComponent();
+		try {
 			for(Dot d : component.inputs) {
 				add(d);
 			}
@@ -211,10 +213,11 @@ public class LogicSubScene extends SubScene{
 			//for()
 			
 			component.setLogicSubScene(this);
+			functional_canvas_component.put(ID, component);
+			root.getChildren().add(component.getImageView());
 		}catch(OcupationExeption oe) {
 			
-		}*/
-		root.getChildren().add(component.getImageView());
+		}
 	}
 	
 	public void add(SingleCanvasComponent component) throws OcupationExeption {
