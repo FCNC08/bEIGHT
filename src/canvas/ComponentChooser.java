@@ -28,7 +28,7 @@ public class ComponentChooser extends SubScene{
 			for(FunctionalCanvasComponent ImageComponent : group) {
 				ImageView view = ImageComponent.getImageView();
 				view.setLayoutX(width*(count%2)*0.5);
-				view.setLayoutY();
+				view.setLayoutY((count-count%2)*view.getFitWidth());
 			}
 		}
 	}

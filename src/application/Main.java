@@ -106,6 +106,8 @@ public class Main extends Application {
 		and.setFitWidth(75);
 		and.setFitHeight(75);*/
 		
+		int[] test = {10,10};
+		ANDGate gate = new ANDGate(750, 750, 2, 2, test, test, test, test);
 		ANDGate and = ANDGate.getANDGATE(0, 0, null, null, null, null);
 		
 		and.setX(800);
@@ -115,6 +117,9 @@ public class Main extends Application {
 		
 		root.getChildren().add(logicscene);
 		vbox.getChildren().add(MainScene);
+		//root.getChildren().add(and);
+		//logicscene.add(gate);
+		root.getChildren().add(gate.getImageView());
 		logicscene.add(and);
 		
 		Menu translate = new Menu("Translations");
