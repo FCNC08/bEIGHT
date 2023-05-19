@@ -59,7 +59,7 @@ public class LogicSubScene extends SubScene{
 	private double moves_x;
 	private double moves_y;
 	
-	protected short last_focused_component;
+	private short last_focused_component = 0;
 	
 	private boolean adding;
 	private boolean primary;
@@ -173,6 +173,7 @@ public class LogicSubScene extends SubScene{
 						if(pressed_x == new_pressed_x && pressed_y == new_pressed_y) {
 							getCanvasComponent(id).setFocus(true);
 							getCanvasComponent(id).printComponents();
+							last_focused_component = id;
 						}else {
 							addWire(pressed_x, pressed_y, new_pressed_x, new_pressed_y );
 						}
