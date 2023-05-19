@@ -18,18 +18,24 @@ public class ComponentChooser extends SubScene{
 		super(root, Width, Height);
 		this.width = Width;
 		this.height = Height;
+		this.logic_Scene = parent_logicScene;
 		grouping = component_param;
 		MainRoot = root;
 	}
 	
 	public void reloadDesign() {
 		int count = 0;
+		double height = 0;
 		for(ComponentGroup group : grouping) {
 			for(FunctionalCanvasComponent ImageComponent : group) {
 				ImageView view = ImageComponent.getImageView();
 				view.setLayoutX(width*(count%2)*0.5);
-				view.setLayoutY((count-count%2)*view.getFitWidth());
+				count++;
+				height+=count%2*view.getFitHeight();
+				view.setLayoutY(height);
+				MainRoot.getChildren().add(view);
 			}
+			count = 0;
 		}
 	}
 
