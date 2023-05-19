@@ -2,6 +2,9 @@ package application;
 	
 import java.util.ArrayList;
 
+import canvas.ComponentChooser;
+import canvas.ComponentGroup;
+import canvas.ComponentGroupings;
 import canvas.LogicSubScene;
 import canvas.LogicSubSceneContainer;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
@@ -98,6 +101,15 @@ public class Main extends Application {
 		logicscene.addX(50);
 		logicscene.addY(25);
 		
+		ComponentGroupings grouping = new ComponentGroupings();
+		ComponentGroup group = new ComponentGroup();
+		group.add(ANDGate.getANDGATE(0, 0, null, null, null, null));
+		grouping.add(group);
+		
+		ComponentChooser chooser = new ComponentChooser(logicscene, new Group(), 400, LogicSubScene.cross_distance*35, grouping);
+		chooser.setLayoutX(LogicSubScene.cross_distance*60);
+		chooser.setLayoutY(100);
+		
 		//logicscene.add(ANDGate.getANDGATE(2, 2, new int[2], new int[2], new int[2], new int[2]));
 		
 		/*ImageView and = new ImageView(ANDGate.LogicComponent_Image);
@@ -116,6 +128,7 @@ public class Main extends Application {
 		//LogicSubSceneContainer logicscene = new LogicSubSceneContainer(LogicSubScene.cross_distance*70, LogicSubScene.cross_distance*35, 4);
 		
 		root.getChildren().add(logicscene);
+		root.getChildren().add(chooser);
 		vbox.getChildren().add(MainScene);
 		//root.getChildren().add(and);
 		//logicscene.add(gate);
