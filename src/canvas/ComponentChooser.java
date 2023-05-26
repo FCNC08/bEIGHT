@@ -23,7 +23,7 @@ public class ComponentChooser extends SubScene{
 		this.width = Width;
 		this.height = Height;
 		this.logic_Scene = parent_logicScene;
-		setFill(Color.ALICEBLUE);
+		setFill(Color.BLUEVIOLET);
 		grouping = component_param;
 		MainRoot = root;
 		
@@ -64,12 +64,13 @@ public class ComponentChooser extends SubScene{
 			for(FunctionalCanvasComponent ImageComponent : group) {
 				ImageView view = ImageComponent.getImageView();
 				view.setLayoutX(width*(count%2)*0.5);
-				count++;
-				height+=count%2*view.getFitHeight()+view.getFitHeight()/4;
 				view.setLayoutY(height);
+				height= height+(count%2)*ImageComponent.getHeight();
+				System.out.println();
+				count++;
 				MainRoot.getChildren().add(view);
 			}
-			
+			 
 			Rectangle Seperator = new Rectangle(width, 20);
 			height+=20;
 			Seperator.setLayoutY(height);

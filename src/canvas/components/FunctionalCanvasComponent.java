@@ -58,6 +58,8 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 	
 	public abstract void simulate();
 	
+	public abstract LogicComponent getClone(byte size);
+	
 	protected State[] getInputStates() {
 		State[] states = new State[inputs.length];
 		for(int i = 0; i < inputs.length; i++) {

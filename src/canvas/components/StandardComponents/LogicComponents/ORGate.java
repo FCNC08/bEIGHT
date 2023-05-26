@@ -5,12 +5,12 @@ import canvas.components.LogicComponent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class ANDGate extends LogicComponent{
+public class ORGate extends LogicComponent{
 
-	public static Image LogicComponent_Image = new Image("AND.png");
+	public static Image LogicComponent_Image = new Image("OR.png");
 	
 	
-	public ANDGate(byte size, int width, int height, int input_count, int output_count, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
+	public ORGate(byte size, int width, int height, int input_count, int output_count, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
 		super(size, width, height, input_count, output_count, inputs_x, inputs_y, outputs_x, outputs_y);
 		// TODO Auto-generated constructor stub
 	}
@@ -19,7 +19,7 @@ public class ANDGate extends LogicComponent{
 		LogicComponent_Image = standard_image;
 	}
 	
-	public static ANDGate getANDGATE(byte size,int inputs, int outputs, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y ) {
+	public static ORGate getORGATE(byte size,int inputs, int outputs, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y ) {
 		int height;
 		int width;
 		switch (size) {
@@ -40,7 +40,7 @@ public class ANDGate extends LogicComponent{
             height = 1;
             break;
 		}
-		ANDGate component = new ANDGate(size, width,  height, inputs, outputs, inputs_x, inputs_y, outputs_x, outputs_y);
+		ORGate component = new ORGate(size, width,  height, inputs, outputs, inputs_x, inputs_y, outputs_x, outputs_y);
 		ImageView temp_view = new ImageView(LogicComponent_Image);
 		temp_view.setFitHeight(height);
 		temp_view.setFitWidth(width);
@@ -78,7 +78,7 @@ public class ANDGate extends LogicComponent{
 
 	@Override
 	public LogicComponent getClone(byte size) {
-		ANDGate gate = ANDGate.getANDGATE(size, input_count, output_count, input_x, input_y, output_x, output_y);
+		ORGate gate = ORGate.getORGATE(size, input_count, output_count, input_x, input_y, output_x, output_y);
 		return gate;
 	}
 }

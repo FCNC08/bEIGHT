@@ -9,6 +9,7 @@ import canvas.LogicSubScene;
 import canvas.LogicSubSceneContainer;
 import canvas.components.LogicComponent;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
+import canvas.components.StandardComponents.LogicComponents.ORGate;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Group;
@@ -96,7 +97,7 @@ public class Main extends Application {
 		MainScene.setFill(Color.GRAY);
 		
 		//Adding LogicScene
-		LogicSubScene logicscene = LogicSubScene.init(LogicSubScene.cross_distance*65, LogicSubScene.cross_distance*35, 4); 
+		LogicSubScene logicscene = LogicSubScene.init(LogicSubScene.cross_distance*60, LogicSubScene.cross_distance*35, 4); 
 		logicscene.setFill(Color.WHITE);
 		
 		logicscene.addX(50);
@@ -104,24 +105,20 @@ public class Main extends Application {
 		
 		ComponentGroupings grouping = new ComponentGroupings();
 		ComponentGroup group = new ComponentGroup();
-		group.add(ANDGate.getANDGATE(0, 0, null, null, null, null));
-		grouping.add(group);
+		group.add(ANDGate.getANDGATE(LogicComponent.SIZE_MIDDLE ,0, 0, null, null, null, null));
+		group.add(ORGate.getORGATE(LogicComponent.SIZE_MIDDLE ,0, 0, null, null, null, null));
+		group.add(ANDGate.getANDGATE(LogicComponent.SIZE_MIDDLE ,0, 0, null, null, null, null));
+		group.add(ORGate.getORGATE(LogicComponent.SIZE_MIDDLE ,0, 0, null, null, null, null));
+		ComponentGroup group_1 = new ComponentGroup();
 		
-		ComponentChooser chooser = new ComponentChooser(logicscene, new Group(), 400, LogicSubScene.cross_distance*35, grouping);
-		chooser.setLayoutX(LogicSubScene.cross_distance*65+50);
+		grouping.add(group);
+		grouping.add(group_1);
+		
+		ComponentChooser chooser = new ComponentChooser(logicscene, new Group(),400, LogicSubScene.cross_distance*35, grouping);
+		chooser.setLayoutX(LogicSubScene.cross_distance*60+50);
 		chooser.setLayoutY(25);
 		
-		//logicscene.add(ANDGate.getANDGATE(2, 2, new int[2], new int[2], new int[2], new int[2]));
-		
-		/*ImageView and = new ImageView(ANDGate.LogicComponent_Image);
-		and.setLayoutX(1000.0);
-		and.setLayoutY(500);
-		and.setFitWidth(75);
-		and.setFitHeight(75);*/
-		
-		int[] test = {10,10};
-		ANDGate gate = new ANDGate(750, 750, 2, 2, test, test, test, test);
-		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_MIDDLE, 0, 0, null, null, null, null);
+		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 0, 0, null, null, null, null);
 		
 		and.setX(800);
 		and.setY(800);
@@ -131,9 +128,6 @@ public class Main extends Application {
 		root.getChildren().add(logicscene);
 		root.getChildren().add(chooser);
 		vbox.getChildren().add(MainScene);
-		//root.getChildren().add(and);
-		//logicscene.add(gate);
-		root.getChildren().add(gate.getImageView());
 		logicscene.add(and);
 		
 		Menu translate = new Menu("Translations");
