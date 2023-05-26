@@ -66,7 +66,6 @@ public class ComponentChooser extends SubScene{
 				view.setLayoutX(width*(count%2)*0.5);
 				view.setLayoutY(height);
 				height= height+(count%2)*ImageComponent.getHeight();
-				System.out.println();
 				count++;
 				MainRoot.getChildren().add(view);
 			}

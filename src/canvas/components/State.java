@@ -42,14 +42,14 @@ public class State {
 	}
 	
 	public Color getColor() {
-		if(mode = STANDARD_MODE) {
-			if(state = ON_ERROR) {
+		if(mode == STANDARD_MODE) {
+			if(state == ON_ERROR) {
 				return on;
 			}else {
 				return off;
 			}
 		}else {
-			if(state = ON_ERROR) {
+			if(state == ON_ERROR) {
 				return err;
 			}else {
 				return unset;

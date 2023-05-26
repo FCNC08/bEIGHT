@@ -393,7 +393,7 @@ public class LogicSubScene extends SubScene{
 			}
 			wire_horizontal.setY(round_start_y-wire_height/2);
 			
-			wire_horizontal.setState(CanvasComponent.OFF);
+			wire_horizontal.setState(CanvasComponent.UNSET);
 			
 			try {
 				add(wire_horizontal);
@@ -411,7 +411,7 @@ public class LogicSubScene extends SubScene{
 			}
 			wire_vertical.setX(round_end_x-wire_height/2);
 			
-			wire_vertical.setState(CanvasComponent.OFF);
+			wire_vertical.setState(CanvasComponent.UNSET);
 			
 			try {
 				add(wire_vertical);
