@@ -19,11 +19,31 @@ public class ANDGate extends LogicComponent{
 		LogicComponent_Image = standard_image;
 	}
 	
-	public static ANDGate getANDGATE(int inputs, int outputs, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y ) {
-		ANDGate component = new ANDGate((int)StandardWidth, (int) StandardHeight, inputs, outputs, inputs_x, inputs_y, outputs_x, outputs_y);
+	public static ANDGate getANDGATE(byte size,int inputs, int outputs, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y ) {
+		int height;
+		int width;
+		switch (size) {
+        case SIZE_BIG:
+            width = 100;
+            height = 100;
+            break;
+        case SIZE_MIDDLE:
+            width = 200;
+            height = 200;
+            break;
+        case SIZE_SMALL:
+            width = 300;
+            height = 300;
+            break;
+        default:
+            width = 0;
+            height = 0;
+            break;
+    }
+		ANDGate component = new ANDGate(width,  height, inputs, outputs, inputs_x, inputs_y, outputs_x, outputs_y);
 		ImageView temp_view = new ImageView(LogicComponent_Image);
-		temp_view.setFitHeight(StandardHeight);
-		temp_view.setFitWidth(StandardWidth);
+		temp_view.setFitHeight(height);
+		temp_view.setFitWidth(width);
 		temp_view.snapshot(null, component);
 		temp_view = null;
 		System.gc();

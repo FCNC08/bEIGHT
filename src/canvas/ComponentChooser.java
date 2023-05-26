@@ -1,9 +1,11 @@
 package canvas;
 
 import canvas.components.FunctionalCanvasComponent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -24,6 +26,34 @@ public class ComponentChooser extends SubScene{
 		setFill(Color.ALICEBLUE);
 		grouping = component_param;
 		MainRoot = root;
+		
+		EventHandler<MouseEvent> press_Event_Handler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+				
+			}
+		};
+		
+		EventHandler<MouseEvent> release_Event_Handler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+			
+			}
+		};
+		
+		EventHandler<MouseEvent> move_Event_Handler = new EventHandler<MouseEvent>() {
+			
+			@Override
+			public void handle(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		
+		addEventFilter(MouseEvent.MOUSE_PRESSED, press_Event_Handler);
+		addEventFilter(MouseEvent.MOUSE_RELEASED, release_Event_Handler);
+		
+		
 		reloadDesign();
 	}
 	

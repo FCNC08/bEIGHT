@@ -7,6 +7,7 @@ import canvas.ComponentGroup;
 import canvas.ComponentGroupings;
 import canvas.LogicSubScene;
 import canvas.LogicSubSceneContainer;
+import canvas.components.LogicComponent;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -95,7 +96,7 @@ public class Main extends Application {
 		MainScene.setFill(Color.GRAY);
 		
 		//Adding LogicScene
-		LogicSubScene logicscene = LogicSubScene.init(LogicSubScene.cross_distance*70, LogicSubScene.cross_distance*35, 4); 
+		LogicSubScene logicscene = LogicSubScene.init(LogicSubScene.cross_distance*65, LogicSubScene.cross_distance*35, 4); 
 		logicscene.setFill(Color.WHITE);
 		
 		logicscene.addX(50);
@@ -107,8 +108,8 @@ public class Main extends Application {
 		grouping.add(group);
 		
 		ComponentChooser chooser = new ComponentChooser(logicscene, new Group(), 400, LogicSubScene.cross_distance*35, grouping);
-		chooser.setLayoutX(LogicSubScene.cross_distance*60);
-		chooser.setLayoutY(100);
+		chooser.setLayoutX(LogicSubScene.cross_distance*65+50);
+		chooser.setLayoutY(25);
 		
 		//logicscene.add(ANDGate.getANDGATE(2, 2, new int[2], new int[2], new int[2], new int[2]));
 		
@@ -120,7 +121,7 @@ public class Main extends Application {
 		
 		int[] test = {10,10};
 		ANDGate gate = new ANDGate(750, 750, 2, 2, test, test, test, test);
-		ANDGate and = ANDGate.getANDGATE(0, 0, null, null, null, null);
+		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_MIDDLE, 0, 0, null, null, null, null);
 		
 		and.setX(800);
 		and.setY(800);

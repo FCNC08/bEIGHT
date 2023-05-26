@@ -4,8 +4,15 @@ import javafx.scene.image.Image;
 
 public abstract class LogicComponent extends FunctionalCanvasComponent{
 
-	protected static double StandardWidth = 200;
-	protected static double StandardHeight = 200;
+	public static final byte  SIZE_BIG = 2;
+	public static final byte SIZE_MIDDLE = 1;
+	public static final byte SIZE_SMALL = 0;
+	
+	protected static int StandardWidth_big, StandardHeight_big = 400;
+	
+	protected static int StandardWidth_middle, StandardHeight_middle = 200;
+	
+	protected static int StandardWidth_small, StandardHeight_small = 100; 
 	
 	public LogicComponent(int width, int height, int input_count, int output_count, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
 		super(width, height, input_count, output_count, inputs_x, inputs_y, outputs_x, outputs_y);
