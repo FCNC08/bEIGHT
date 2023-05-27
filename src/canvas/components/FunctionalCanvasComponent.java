@@ -6,7 +6,18 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public abstract class FunctionalCanvasComponent extends CanvasComponent{
-
+	public static final byte  SIZE_BIG = 2;
+	public static final byte SIZE_MIDDLE = 1;
+	public static final byte SIZE_SMALL = 0;
+	
+	protected static int StandardWidth_big = 400, StandardHeight_big = 400; 
+	
+	protected static int StandardWidth_middle = 200, StandardHeight_middle = 200;
+	
+	protected static int StandardWidth_small = 100, StandardHeight_small = 100; 
+	
+	protected byte Size;
+	
 	protected HashMap<State[], State[]> truth_table;
 	
 	protected int input_count;
@@ -20,8 +31,10 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 	protected int[] output_x;
 	protected int[] output_y;
 	
-	public FunctionalCanvasComponent(int width, int height,int input_count, int output_count, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
+	public FunctionalCanvasComponent(byte size,int width, int height,int input_count, int output_count, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
 		super(width, height);
+		
+		this.Size = size;
 		
 		this.input_count = input_count;
 		this.output_count = output_count;
@@ -58,7 +71,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 	
 	public abstract void simulate();
 	
-	public abstract LogicComponent getClone(byte size);
+	public abstract FunctionalCanvasComponent getClone(byte size);
 	
 	protected State[] getInputStates() {
 		State[] states = new State[inputs.length];

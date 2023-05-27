@@ -1,5 +1,7 @@
 package application;
 	
+import java.awt.FileDialog;
+import java.awt.Frame;
 import java.util.ArrayList;
 
 import canvas.ComponentChooser;
@@ -61,6 +63,7 @@ public class Main extends Application {
 		theme.getItems().add(bright);
 		return theme;
 	}
+	 
 	
 	private void addStartScene() {
 		//Adding MenuBar and Adding ThemeChooser
@@ -136,9 +139,27 @@ public class Main extends Application {
 			e.consume();
 			logicscene.setStandardZoom();
 		});
-		
 		translate.getItems().add(standard);
 		bar.getMenus().add(translate);
+		
+		Menu file = new Menu("File");
+		MenuItem savingpdf = new MenuItem("Save as PDF");
+		savingpdf.setOnAction(e ->{
+			e.consume();
+			FileDialog fd = new FileDialog(new Frame(), "Save as PDF");
+			fd.setMode(FileDialog.SAVE);
+			fd.setFilenameFilter((dir, name) -> name.toLowerCase().endsWith(".pdf"));
+			fd.setVisible(true);
+			
+			String directory = fd.getDirectory();
+			String filename = fd.getFile();
+			if(directory!=null && filename != null) {
+				String filepath = directory+filename;
+				logicscene.SaveAsPDF(filepath);
+			}
+		});
+		file.getItems().add(savingpdf);
+		bar.getMenus().add(file);
 		
 		Scene scene = new Scene(vbox);
 		

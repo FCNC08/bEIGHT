@@ -1,14 +1,22 @@
 package canvas;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Random;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 
 import canvas.components.CanvasComponent;
 import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.SingleCanvasComponent;
 import canvas.components.StandardComponents.Wire;
-
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -478,5 +486,45 @@ public class LogicSubScene extends SubScene{
 	}
 	public double getYTranslate() {
 		return camera_position.getY();
+	}
+	
+	public void SaveAsPDF(String filepath) {
+		File temp_image_file = new File("temp.png");
+		try{
+			double start_Z = getZTranslate();
+			
+			camera_position.setZ(max_zoom);
+			
+			WritableImage image = this.snapshot(null, null);
+			BufferedImage buff_image = SwingFXUtils.fromFXImage(image, null);
+			
+			// Create a new PDF document
+	        PDDocument document = new PDDocument();
+	        PDPage page = new PDPage();
+	        document.addPage(page);
+
+	        // Create a content stream for writing to the page
+	        PDPageContentStream contentStream = new PDPageContentStream(document, page);
+
+	        // Draw the image on the page
+	        contentStream.drawImage(
+	                LosslessFactory.createFromImage(document, buff_image),
+	                0, 0, page.getMediaBox().getWidth(), page.getMediaBox().getHeight());
+
+	        // Close the content stream
+	        contentStream.close();
+
+	        // Save the document to the output file
+	        document.save(filepath);
+
+	        // Close the document
+	        document.close();
+			
+	        camera_position.setZ(start_Z);
+	        
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		temp_image_file.delete();
 	}
 }
