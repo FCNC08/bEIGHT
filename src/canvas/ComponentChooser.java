@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -22,6 +23,8 @@ public class ComponentChooser extends SubScene{
 	protected ComponentGroupings grouping;
 	protected Group MainRoot;
 	
+	protected FunctionalCanvasComponent adding_component;
+	
 	private EventHandler<MouseEvent> press_Event_Handler;
 	
 	public ComponentChooser(LogicSubScene parent_logicScene,Group root, double Width, double Height, ComponentGroupings component_param) {
@@ -35,43 +38,68 @@ public class ComponentChooser extends SubScene{
 		view_width = (int) (Width/2);
 		view_height = view_width;
 		
-		EventHandler<MouseEvent> press_Event_Handler = new EventHandler<MouseEvent>() {
+		EventHandler<MouseEvent> standard_press_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
-			public void handle(MouseEvent me) {
+			public void handle(MouseEvent me) {				
 				if(me.getSource() instanceof ImageView) {
 					ImageView view = (ImageView) me.getSource();
 					if(view.getImage() instanceof FunctionalCanvasComponent) {
 						FunctionalCanvasComponent component = (FunctionalCanvasComponent) view.getImage();
-						if(me.isPrimaryButtonDown()) {
-							logic_Scene.add(component.getClone(FunctionalCanvasComponent.SIZE_MIDDLE));
-						}else if(me.isSecondaryButtonDown()) {
-							logic_Scene.add(component.getClone(FunctionalCanvasComponent.SIZE_SMALL));
+						if(me.getButton() == MouseButton.PRIMARY){
+							adding_component = component.getClone(FunctionalCanvasComponent.SIZE_MIDDLE);
+							System.out.println("Middle");
+						}else if(me.getButton() == MouseButton.SECONDARY){
+							adding_component = component.getClone(FunctionalCanvasComponent.SIZE_SMALL);
+							System.out.println("Small");
+						}else {
+							adding_component = component.getClone(FunctionalCanvasComponent.SIZE_BIG);
+							System.out.println("Big");
 						}
 					}
 				}
 			}
 		};
 		
-		this.press_Event_Handler = press_Event_Handler;
+		this.press_Event_Handler = standard_press_Event_Handler;
+		
+		EventHandler<MouseEvent> pressed_Event_Handler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+			}
+		};
 		
 		EventHandler<MouseEvent> release_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
-			
+				adding_component = null;
 			}
 		};
 		
 		EventHandler<MouseEvent> move_Event_Handler = new EventHandler<MouseEvent>() {
-			
 			@Override
 			public void handle(MouseEvent me) {
-				// TODO Auto-generated method stub
 				
 			}
 		};
 		
+		EventHandler<MouseEvent> exit_Event_Handler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+				System.out.println("Leaving");
+				if(adding_component != null) {
+					adding_component.setX((int) logic_Scene.getXTranslate());
+					adding_component.setY((int) logic_Scene.getYTranslate());
+					logic_Scene.add(adding_component);
+					adding_component = null;
+				}
+			}
+		};;
+		
+		addEventFilter(MouseEvent.MOUSE_PRESSED, pressed_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_RELEASED, release_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_MOVED, move_Event_Handler);
+		addEventFilter(MouseEvent.MOUSE_EXITED, exit_Event_Handler);
+		
 		
 		reloadDesign();
 	}

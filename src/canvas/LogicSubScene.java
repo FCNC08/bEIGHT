@@ -16,6 +16,7 @@ import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.SingleCanvasComponent;
 import canvas.components.StandardComponents.Wire;
+import canvas.components.StandardComponents.WireDoublet;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
@@ -76,6 +77,9 @@ public class LogicSubScene extends SubScene{
 	protected Camera camera;
 	protected Translate camera_position;
 	
+	
+	private CanvasComponent adding_CanvasComponent;
+	private WireDoublet adding_WireDoublet;
 	public HashMap<Short, FunctionalCanvasComponent> functional_canvas_component;
 	public HashMap<Short, SingleCanvasComponent> single_canvas_components;
 	protected short[][] used;
@@ -131,8 +135,7 @@ public class LogicSubScene extends SubScene{
 		
 		root = Mainroot;
 		
-		
-		EventHandler<MouseEvent> move_Event_Handler = new EventHandler<MouseEvent>() {
+		EventHandler<MouseEvent> dragging_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
 				if(me.isSecondaryButtonDown())
@@ -144,7 +147,7 @@ public class LogicSubScene extends SubScene{
 					moves_y = me.getSceneY()-Y-25;
 				}
 			}
-		};
+		};		
 		EventHandler<MouseEvent> press_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
@@ -160,15 +163,34 @@ public class LogicSubScene extends SubScene{
 						getCanvasComponent(last_focused_component).setFocus(false);
 						last_focused_component= 0;
 					}
+					adding_WireDoublet = new WireDoublet();
 				}else if(secondary) {
 					moves_x = me.getSceneX()-X;
 					moves_y = me.getSceneY()-Y-25;
 				}
 				
 			}
+		};	
+		EventHandler<MouseEvent> move_Event_Handler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+				if(adding_CanvasComponent != null) {
+					
+				}
+				
+				if(adding_WireDoublet != null) {
+					int new_pressed_x = (int) (me.getSceneX()-X+getXTranslate());
+					int new_pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
+					try {
+						adding_WireDoublet = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
+					}catch (Exception e) {
+						adding_WireDoublet = null;
+					}
+					
+				}
+			}
 		};
 		EventHandler<MouseEvent> released_Mouse_Handler = new EventHandler<MouseEvent>() {
-			
 			@Override
 			public void handle(MouseEvent me) {
 				if(adding) {
@@ -183,7 +205,21 @@ public class LogicSubScene extends SubScene{
 							getCanvasComponent(id).printComponents();
 							last_focused_component = id;
 						}else {
-							addWire(pressed_x, pressed_y, new_pressed_x, new_pressed_y );
+							if(adding_WireDoublet != null) {
+								try{
+								
+									add(adding_WireDoublet.getHorizontalWire());
+								}catch (Exception e) {}
+								try {
+									add(adding_WireDoublet.getVerticalWire());
+								}catch (Exception e) {}
+								adding_WireDoublet = null;
+							}
+							
+							if(adding_CanvasComponent != null) {
+								
+								adding_CanvasComponent = null;
+							}
 						}
 						} catch (Exception e) {}
 					adding = false;
@@ -194,9 +230,10 @@ public class LogicSubScene extends SubScene{
 			}
 		};
 		
+		addEventFilter(MouseEvent.MOUSE_DRAGGED, dragging_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_PRESSED, press_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_RELEASED, released_Mouse_Handler);
-		addEventFilter(MouseEvent.MOUSE_DRAGGED, move_Event_Handler);
+		addEventFilter(MouseEvent.MOUSE_MOVED, move_Event_Handler);
 		
 		EventHandler<ScrollEvent> zoom_Event_Handler = new EventHandler<ScrollEvent>() {
 			@Override
@@ -230,90 +267,95 @@ public class LogicSubScene extends SubScene{
 	}
 	
 	public void add(SingleCanvasComponent component) throws OcupationExeption {
-		short ID = generateRandomSingleComponentID();		
-		short loc_ID;
+		if(component != null) {
+			
 		
-		System.out.println(ID);
-		
-		if(component.rotation == CanvasComponent.HORIZONTAL) {
-			for(int x = component.getXPoint()+1; x < component.getXPoint()+component.getWidthPoint(); x++) {
-				loc_ID = used[x][component.getYPoint()];
-				if(loc_ID == 0) {
-					used[x][component.getYPoint()] = ID;
-				}else if(loc_ID == 1){
-					throw new OcupationExeption();
-				}else {
-					if(getCanvasComponent(loc_ID).checkEnd(x, component.getYPoint())) {
-						getCanvasComponent(loc_ID).addComponent(ID);
-						component.addComponent(loc_ID);
+			short ID = generateRandomSingleComponentID();		
+			short loc_ID;
+			
+			System.out.println(ID);
+			
+			if(component.rotation == CanvasComponent.HORIZONTAL) {
+				for(int x = component.getXPoint()+1; x < component.getXPoint()+component.getWidthPoint(); x++) {
+					loc_ID = used[x][component.getYPoint()];
+					if(loc_ID == 0) {
+						used[x][component.getYPoint()] = ID;
+					}else if(loc_ID == 1){
+						throw new OcupationExeption();
+					}else {
+						if(getCanvasComponent(loc_ID).checkEnd(x, component.getYPoint())) {
+							getCanvasComponent(loc_ID).addComponent(ID);
+							component.addComponent(loc_ID);
+						}
 					}
 				}
-			}
-			
-			loc_ID = used[component.getXPoint()][component.getYPoint()];
-			if(loc_ID==0) {
-				used[component.getXPoint()][component.getYPoint()] = ID;
-			}else if(loc_ID==1) {
-				throw new OcupationExeption();
-			}else {
-				getCanvasComponent(loc_ID).addComponent(ID);
-				component.addComponent(loc_ID);
-			}
-			
-			//Sets End/Start Point
-			loc_ID = used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()];
-			if(loc_ID==0) {
-				used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()] = ID;
-			}else if(loc_ID==1) {
-				throw new OcupationExeption();
-			}else {
-				getCanvasComponent(loc_ID).addComponent(ID);
-				component.addComponent(loc_ID);
-			}
-		}else {
-			for(int y = component.getYPoint()+1; y < component.getYPoint()+component.getHeightPoint(); y++) {
-				loc_ID = used[component.getXPoint()][y];
-				if(loc_ID == 0) {
-					used[component.getXPoint()][y] = ID;
-				}else if(loc_ID == 1){
+				
+				loc_ID = used[component.getXPoint()][component.getYPoint()];
+				if(loc_ID==0) {
+					used[component.getXPoint()][component.getYPoint()] = ID;
+				}else if(loc_ID==1) {
 					throw new OcupationExeption();
 				}else {
-					if(getCanvasComponent(loc_ID).checkEnd(component.getXPoint(), y)) {
-						getCanvasComponent(loc_ID).addComponent(ID);
-						component.addComponent(loc_ID);
+					getCanvasComponent(loc_ID).addComponent(ID);
+					component.addComponent(loc_ID);
+				}
+				
+				//Sets End/Start Point
+				loc_ID = used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()];
+				if(loc_ID==0) {
+					used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()] = ID;
+				}else if(loc_ID==1) {
+					throw new OcupationExeption();
+				}else {
+					getCanvasComponent(loc_ID).addComponent(ID);
+					component.addComponent(loc_ID);
+				}
+			}else {
+				for(int y = component.getYPoint()+1; y < component.getYPoint()+component.getHeightPoint(); y++) {
+					loc_ID = used[component.getXPoint()][y];
+					if(loc_ID == 0) {
+						used[component.getXPoint()][y] = ID;
+					}else if(loc_ID == 1){
+						throw new OcupationExeption();
+					}else {
+						if(getCanvasComponent(loc_ID).checkEnd(component.getXPoint(), y)) {
+							getCanvasComponent(loc_ID).addComponent(ID);
+							component.addComponent(loc_ID);
+						}
 					}
 				}
+				
+	
+				//Sets End/Start Point
+				loc_ID = used[component.getXPoint()][component.getYPoint()];
+				if(loc_ID==0) {
+					used[component.getXPoint()][component.getYPoint()] = ID;
+				}else if(loc_ID==1) {
+					throw new OcupationExeption();
+				}else {
+					getCanvasComponent(loc_ID).addComponent(ID);
+					component.addComponent(loc_ID);
+				}
+				
+				loc_ID = used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()];
+				if(loc_ID==0) {
+					used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()] = ID;
+				}else if(loc_ID==1) {
+					throw new OcupationExeption();
+				}else {
+					getCanvasComponent(loc_ID).addComponent(ID);
+					component.addComponent(loc_ID);
+				}
+				
+				
 			}
+			component.setLogicSubScene(this);
+			component.setId(ID);
+			root.getChildren().add(component.getImageView());
 			
-
-			//Sets End/Start Point
-			loc_ID = used[component.getXPoint()][component.getYPoint()];
-			if(loc_ID==0) {
-				used[component.getXPoint()][component.getYPoint()] = ID;
-			}else if(loc_ID==1) {
-				throw new OcupationExeption();
-			}else {
-				getCanvasComponent(loc_ID).addComponent(ID);
-				component.addComponent(loc_ID);
-			}
-			
-			loc_ID = used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()];
-			if(loc_ID==0) {
-				used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()] = ID;
-			}else if(loc_ID==1) {
-				throw new OcupationExeption();
-			}else {
-				getCanvasComponent(loc_ID).addComponent(ID);
-				component.addComponent(loc_ID);
-			}
-			
+			single_canvas_components.put(ID, component); 
+			component.printComponents();
 		}
-		component.setLogicSubScene(this);
-		component.setId(ID);
-		root.getChildren().add(component.getImageView());
-		
-		single_canvas_components.put(ID, component); 
-		component.printComponents();
 	}
 	
 	public short generateRandomSingleComponentID() {
@@ -384,12 +426,14 @@ public class LogicSubScene extends SubScene{
 		}
 	}
 	
-	public void addWire(int start_X, int start_Y, int end_X, int end_Y) {
+	public WireDoublet getWires(int start_X, int start_Y, int end_X, int end_Y) throws IllegalArgumentException{
 		int round_start_x = roundToNextDot(start_X);
 		int round_start_y = roundToNextDot(start_Y);
 		int round_end_x = getNearesDot(end_X);
 		int round_end_y = getNearesDot(end_Y);
 		
+		WireDoublet doublet = new WireDoublet();
+
 		if(round_start_x!=round_end_x) {
 			Wire wire_horizontal = new Wire(Math.abs(round_start_x-round_end_x)+wire_height*3/4);
 			
@@ -403,11 +447,7 @@ public class LogicSubScene extends SubScene{
 			
 			wire_horizontal.setState(CanvasComponent.UNSET);
 			
-			try {
-				add(wire_horizontal);
-			} catch (OcupationExeption e) {
-				System.out.println("ERROR");
-			}
+			doublet.setHorizontalWire(wire_horizontal);
 		}
 		if(round_start_y!=round_end_y) {
 			Wire wire_vertical = new Wire(Math.abs(round_start_y-round_end_y)+wire_height*3/4);
@@ -421,13 +461,9 @@ public class LogicSubScene extends SubScene{
 			
 			wire_vertical.setState(CanvasComponent.UNSET);
 			
-			try {
-				add(wire_vertical);
-			} catch (OcupationExeption e) {
-				System.out.println("ERROR");
-			}
+			doublet.setVerticalWire(wire_vertical);
 		}
-		
+		return doublet;
 	}
 	
 	public SingleCanvasComponent getCanvasComponent(short id) {
@@ -493,7 +529,7 @@ public class LogicSubScene extends SubScene{
 		try{
 			double start_Z = getZTranslate();
 			
-			camera_position.setZ(max_zoom);
+			//camera_position.setZ(max_zoom);
 			
 			WritableImage image = this.snapshot(null, null);
 			BufferedImage buff_image = SwingFXUtils.fromFXImage(image, null);
