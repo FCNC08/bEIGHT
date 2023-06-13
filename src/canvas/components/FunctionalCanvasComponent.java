@@ -2,7 +2,7 @@ package canvas.components;
 
 import java.util.HashMap;
 
-import javafx.scene.image.Image;
+import canvas.LogicSubScene;
 import javafx.scene.image.ImageView;
 
 public abstract class FunctionalCanvasComponent extends CanvasComponent{
@@ -26,12 +26,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 	public Dot[] inputs;
 	public Dot[] outputs;
 	
-	protected int[] input_x;
-	protected int[] input_y;
-	protected int[] output_x;
-	protected int[] output_y;
-	
-	public FunctionalCanvasComponent(byte size,int width, int height,int input_count, int output_count, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
+	public FunctionalCanvasComponent(byte size,int width, int height,int input_count, int output_count) {
 		super(width, height);
 		
 		this.Size = size;
@@ -41,11 +36,6 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 		
 		inputs = new Dot[input_count];
 		outputs = new Dot[output_count];
-		
-		input_x = inputs_x;
-		input_y = inputs_y;
-		output_x = outputs_x;
-		output_y = outputs_y;
 	}
 
 	public static FunctionalCanvasComponent initImage(String url, int inputs, int outputs, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y ) {
@@ -67,6 +57,26 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 		image.snapshot(null, component);
 		return component;*/
 		return null;
+	}
+	
+	protected void setStandardDotLocations() {
+		int standard_y_distance = height/(input_count+1);
+		int y_location = standard_y_distance+getY();
+		int x_location = getX();
+		for(Dot d : inputs) {
+			d.setY(LogicSubScene.getNearesDot(y_location));
+			d.setX(LogicSubScene.getNearesDot(x_location));
+			y_location+=standard_y_distance;
+		}
+		
+		standard_y_distance = height/(output_count+1);
+		y_location = standard_y_distance+getY();
+		x_location = getX()+width;
+		for(Dot d : outputs) {
+			d.setY(LogicSubScene.getNearesDot(y_location));
+			d.setX(LogicSubScene.getNearesDot(x_location));
+			y_location+=standard_y_distance;
+		}
 	}
 	
 	public abstract void simulate();

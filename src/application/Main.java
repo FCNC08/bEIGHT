@@ -108,10 +108,10 @@ public class Main extends Application {
 		
 		ComponentGroupings grouping = new ComponentGroupings();
 		ComponentGroup group = new ComponentGroup();
-		group.add(ANDGate.getANDGATE(LogicComponent.SIZE_MIDDLE ,0, 0, null, null, null, null));
-		group.add(ORGate.getORGATE(LogicComponent.SIZE_MIDDLE ,0, 0, null, null, null, null));
-		group.add(ANDGate.getANDGATE(LogicComponent.SIZE_MIDDLE ,0, 0, null, null, null, null));
-		group.add(ORGate.getORGATE(LogicComponent.SIZE_MIDDLE ,0, 0, null, null, null, null));
+		group.add(ANDGate.getANDGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
+		group.add(ORGate.getORGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
+		group.add(ANDGate.getANDGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
+		group.add(ORGate.getORGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
 		ComponentGroup group_1 = new ComponentGroup();
 		
 		grouping.add(group);
@@ -121,7 +121,7 @@ public class Main extends Application {
 		chooser.setLayoutX(LogicSubScene.cross_distance*60+50);
 		chooser.setLayoutY(25);
 		
-		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 0, 0, null, null, null, null);
+		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2, 1);
 		
 		and.setX(800);
 		and.setY(800);

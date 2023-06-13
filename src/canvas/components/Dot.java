@@ -11,21 +11,27 @@ public class Dot  extends SingleCanvasComponent{
 		this.parent =  parent;
 	}
 	
-	@Override
 	protected void change() {
 		parent.simulate();
 	}
 
-	@Override
 	public void setFocus(boolean status) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	protected void createImageView() {
-		// TODO Auto-generated method stub
 		
+	}
+	
+	protected void paintCircle() {
+		for(int x = 0; x <width; x++) {
+			for(int y = 0; y < height; y++) {
+				if(Math.sqrt(Math.abs(x-width/2)*Math.abs(x-width/2)+Math.abs(y-height/2)*Math.abs(y-height/2))<=width/2) {
+					pwriter.setColor(x, y, getColor());
+				}
+			}
+		}
 	}
 	
 

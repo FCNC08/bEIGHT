@@ -1,10 +1,11 @@
 package canvas.components.ExternalComponents;
 
-import canvas.components.CanvasComponent;
+import canvas.components.FunctionalCanvasComponent;
 
-public abstract class ExternalComponent extends CanvasComponent{
-	public ExternalComponent(int width, int height) {
-		super(width, height);
+public abstract class ExternalComponent extends FunctionalCanvasComponent{
+	public ExternalComponent(byte size,int width, int height,int input_count, int output_count) {
+		super(size, width, height, input_count, output_count);
+		
 	}
 
 	@Override

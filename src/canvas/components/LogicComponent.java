@@ -5,13 +5,13 @@ import javafx.scene.image.Image;
 public abstract class LogicComponent extends FunctionalCanvasComponent{
 
 	
-	
-	public LogicComponent(byte size, int width, int height, int input_count, int output_count, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
-		super(size,width, height, input_count, output_count, inputs_x, inputs_y, outputs_x, outputs_y);
+	public LogicComponent(byte size, int width, int height, int input_count, int output_count) {
+		super(size,width, height, input_count, output_count);
 		// TODO Auto-generated constructor stub
 	}
 	
 	public static void setStandardImage(Image standard_image) {
 		//Override in higher classes
 	}
+	
 }

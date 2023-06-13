@@ -45,6 +45,8 @@ public class LogicSubScene extends SubScene{
 	protected static Color white_grey = new Color(0.85,0.85,0.85,1.0);
 	protected static Color black = new Color(0.0,0.0,0.0,1.0);
 
+	protected Color cross_color = black;
+	
 	public static Color focus_square_main = white_grey;
 	public static Color focus_square_secondary = black_grey;
 	
@@ -406,7 +408,7 @@ public class LogicSubScene extends SubScene{
 		return image;
 	}
 	
-	protected static int roundToNextDot(int coordinat) throws IllegalArgumentException{
+	public static int roundToNextDot(int coordinat) throws IllegalArgumentException{
 		
 		int overflow = coordinat % cross_distance;
 		if(overflow<=cross_distance/3) {
@@ -417,7 +419,7 @@ public class LogicSubScene extends SubScene{
 			throw new IllegalArgumentException();
 		}
 	}
-	protected static int getNearesDot(int coordinat) {
+	public static int getNearesDot(int coordinat) {
 		int overflow = coordinat% cross_distance;
 		if(overflow<=cross_distance/2) {
 			return coordinat-overflow;
