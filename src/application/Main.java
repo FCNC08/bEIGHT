@@ -121,7 +121,7 @@ public class Main extends Application {
 		chooser.setLayoutX(LogicSubScene.cross_distance*60+50);
 		chooser.setLayoutY(25);
 		
-		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2, 1);
+		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2, 1); 
 		
 		and.setX(800);
 		and.setY(800);
