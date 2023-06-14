@@ -185,6 +185,8 @@ public class LogicSubScene extends SubScene{
 					int new_pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
 					try {
 						adding_WireDoublet = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
+						add(adding_WireDoublet.getHorizontalWire());
+						add(adding_WireDoublet.getVerticalWire());
 					}catch (Exception e) {
 						adding_WireDoublet = null;
 					}
