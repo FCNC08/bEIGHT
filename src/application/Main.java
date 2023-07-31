@@ -9,6 +9,7 @@ import canvas.ComponentGroup;
 import canvas.ComponentGroupings;
 import canvas.LogicSubScene;
 import canvas.LogicSubSceneContainer;
+import canvas.OcupationExeption;
 import canvas.components.LogicComponent;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import canvas.components.StandardComponents.LogicComponents.ORGate;
@@ -131,7 +132,12 @@ public class Main extends Application {
 		root.getChildren().add(logicscene);
 		root.getChildren().add(chooser);
 		vbox.getChildren().add(MainScene);
-		logicscene.add(and);
+		try {
+			logicscene.add(and);
+		} catch (OcupationExeption e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		Menu translate = new Menu("Translations");
 		MenuItem standard = new MenuItem("Standard-Zoom");
