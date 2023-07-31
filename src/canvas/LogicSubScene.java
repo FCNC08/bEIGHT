@@ -184,9 +184,9 @@ public class LogicSubScene extends SubScene{
 					int new_pressed_x = (int) (me.getSceneX()-X+getXTranslate());
 					int new_pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
 					try {
+						remove(adding_WireDoublet);
 						adding_WireDoublet = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
-						add(adding_WireDoublet.getHorizontalWire());
-						add(adding_WireDoublet.getVerticalWire());
+						add(adding_WireDoublet);
 					}catch (Exception e) {
 						adding_WireDoublet = null;
 					}
@@ -251,23 +251,26 @@ public class LogicSubScene extends SubScene{
 		
 	}
 	
-	public void add(FunctionalCanvasComponent component) {
+	public void add(FunctionalCanvasComponent component) throws OcupationExeption {
 		short ID = generateRandomFunctionalComponent();
-		try {
-			for(Dot d : component.inputs) {
-				add(d);
-			}
-			for(Dot d : component.outputs) {
-				add(d);
-			}
-			//for()
-			
-			component.setLogicSubScene(this);
-			functional_canvas_component.put(ID, component);
-			root.getChildren().add(component.getImageView());
-		}catch(OcupationExeption oe) {
-			
+		for(Dot d : component.inputs) {
+			add(d);
 		}
+		for(Dot d : component.outputs) {
+			add(d);
+		}
+		
+		component.setLogicSubScene(this);
+		component.setId(ID);
+		functional_canvas_component.put(ID, component);
+		root.getChildren().add(component.getImageView());
+	}
+	
+	public void add(WireDoublet doublet) throws OcupationExeption {
+		add(doublet.getHorizontalWire());
+		add(doublet.getVerticalWire());
+		
+		
 	}
 	
 	public void add(SingleCanvasComponent component) throws OcupationExeption {
@@ -361,6 +364,27 @@ public class LogicSubScene extends SubScene{
 			component.printComponents();
 		}
 	}
+	
+	public void remove(FunctionalCanvasComponent component) {
+		for(Dot d : component.inputs) {
+			remove(d);
+		}
+		for(Dot d : component.outputs) {
+			remove(d);
+		}
+		functional_canvas_component.remove(component.getId());
+		root.getChildren().remove(component.getImageView());
+	}
+	
+	public void remove(WireDoublet doublet) {
+		remove(doublet.getHorizontalWire());
+		remove(doublet.getVerticalWire());
+	}
+	
+	public void remove(SingleCanvasComponent component) {
+		//TODO Remove SingleCanvasComponent from used array, replace it at the end with connected 
+	}
+	
 	
 	public short generateRandomSingleComponentID() {
 		short ID = (short) random.nextInt(1 << 15);

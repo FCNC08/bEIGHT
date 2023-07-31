@@ -89,7 +89,11 @@ public class ComponentChooser extends SubScene{
 				if(adding_component != null) {
 					adding_component.setX((int) logic_Scene.getXTranslate());
 					adding_component.setY((int) logic_Scene.getYTranslate());
-					logic_Scene.add(adding_component);
+					try {
+						logic_Scene.add(adding_component);
+					} catch (OcupationExeption e) {
+						e.printStackTrace();
+					}
 					adding_component = null;
 				}
 			}
