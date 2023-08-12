@@ -39,6 +39,7 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
+		System.out.println("Hallo Welt dies ist ein Test vom Laptop");
 		//Adding different Scenes
 		addStartScene();
 		addLogismArea(); 
