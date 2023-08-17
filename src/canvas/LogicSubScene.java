@@ -383,6 +383,20 @@ public class LogicSubScene extends SubScene{
 	
 	public void remove(SingleCanvasComponent component) {
 		//TODO Remove SingleCanvasComponent from used array, replace it at the end with connected 
+		if(component != null) {
+			if(component.rotation == CanvasComponent.HORIZONTAL) {
+				for(int x = component.getXPoint()+1; x<component.getXPoint()+component.getWidthPoint(); x++) {
+					if(used[x][component.getYPoint()] != component.getId()) {
+					}else {
+						
+					}
+				}
+			}else {
+				
+			}
+			single_canvas_components.remove(component.getId());
+			root.getChildren().remove(component.getImageView());
+		}
 	}
 	
 	
