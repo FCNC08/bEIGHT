@@ -1,6 +1,7 @@
 package canvas.components;
 
 import javafx.scene.paint.Color;
+import util.ErrorStateExeption;
 
 public class State {
 	public static boolean ERROR_MODE = false;

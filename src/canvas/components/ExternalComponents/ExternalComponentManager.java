@@ -1,5 +1,7 @@
 package canvas.components.ExternalComponents;
 
+import util.IllegalComponentExeption;
+
 public class ExternalComponentManager {
 	private boolean imageUsed = false;
 	private int width;

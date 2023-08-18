@@ -31,6 +31,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
+import util.OcupationExeption;
 
 public class LogicSubScene extends SubScene{
 	
