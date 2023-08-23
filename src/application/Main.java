@@ -3,6 +3,7 @@ package application;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.util.ArrayList;
+import java.util.Random;
 
 import canvas.ComponentChooser;
 import canvas.ComponentGroup;
@@ -13,6 +14,7 @@ import canvas.components.LogicComponent;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import canvas.components.StandardComponents.LogicComponents.ORGate;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import util.OcupationExeption;
 import javafx.scene.Group;
@@ -23,11 +25,17 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 
 public class Main extends Application {
+	
+	public static Random random = new Random();
 	
 	//ArrayList with the different Scenes and Runnables to change Scenes with run for example Maximization
 	ArrayList<Scene> Scenes = new ArrayList<>();
@@ -46,7 +54,7 @@ public class Main extends Application {
 		
 		//set Scene and saves Stage
 		MainStage = primaryStage;
-		changeScene(1);
+		changeScene(0);
 		MainStage.show();
 		
 	}
@@ -74,16 +82,43 @@ public class Main extends Application {
 		
 		//VBox to add with MenuBar
 		VBox vbox = new VBox(bar);
-		Scene scene = new Scene(vbox);
+		
+		Group root = new Group();
+		
+		//Adding MainScene(Scene used to show content)
+		SubScene MainScene = new SubScene(root, 1000, 500);
+		MainScene.heightProperty().bind(vbox.heightProperty());
+		MainScene.widthProperty().bind(vbox.widthProperty());
+		Group logicarea_root = new Group();
+		SubScene LogicArea = new SubScene(logicarea_root, MainScene.getWidth()/6, MainScene.getHeight()/3);
+		Text logicarea_heading = new Text("Open Logicarea");
+		logicarea_heading.setFont(new Font(40));
+		logicarea_root.getChildren().add(logicarea_heading);
+		EventHandler<MouseEvent> logicarea_click = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+				changeScene(1);
+			}
+		};
+		LogicArea.setLayoutX(MainScene.getWidth()/6);
+		LogicArea.setLayoutY(MainScene.getHeight()/3);
+		LogicArea.addEventFilter(MouseEvent.MOUSE_CLICKED, logicarea_click);
+		LogicArea.setFill(Color.GRAY);
+		
+		root.getChildren().add(LogicArea);
+		
+		vbox.getChildren().add(MainScene);
 		
 		//Adding Runnable to release maximization 
 		Runnables.add(new Runnable() {
 			@Override
 			public void run() {
-				MainStage.setMaximized(false);
+				MainStage.setMaximized(true);
+				MainStage.setResizable(false);
 			}});
 		
 		//Adding Scene
+		Scene scene = new Scene(vbox);
 		Scenes.add(scene);
 	}
 	
@@ -93,6 +128,8 @@ public class Main extends Application {
 		MenuBar bar = new MenuBar();
 		bar.getMenus().add(getThemeChoiceMenu());
 		VBox vbox = new VBox(bar);
+		vbox.setMinHeight(500);
+		vbox.setMinWidth(1000);
 		
 		//Adding SubScene
 		Group root = new Group();

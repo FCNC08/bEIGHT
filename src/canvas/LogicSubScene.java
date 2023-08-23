@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Random;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -11,6 +12,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 
+import application.Main;
 import canvas.components.CanvasComponent;
 import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
@@ -32,10 +34,9 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 import util.OcupationExeption;
+import util.ShortPair;
 
 public class LogicSubScene extends SubScene{
-	
-	public static Random random = new Random();
 	
 	public static int wire_height = 12;
 	public static int dot_radius = 7;
@@ -85,7 +86,7 @@ public class LogicSubScene extends SubScene{
 	private WireDoublet adding_WireDoublet;
 	public HashMap<Short, FunctionalCanvasComponent> functional_canvas_component;
 	public HashMap<Short, SingleCanvasComponent> single_canvas_components;
-	protected short[][] used;
+	protected ShortPair[][] used;
 	
 	private Group root;
 	
@@ -114,7 +115,7 @@ public class LogicSubScene extends SubScene{
 		width = Newwidth;
 		height = Newheight;
 		
-		used = new short[Newwidth/cross_distance][Newheight/cross_distance];
+		used = new ShortPair[Newwidth/cross_distance][Newheight/cross_distance];
 		
 		
 		WritableImage Test_Background = generateBackgroundImage();
@@ -141,6 +142,7 @@ public class LogicSubScene extends SubScene{
 		EventHandler<MouseEvent> dragging_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
+				System.out.println("Dragging");
 				if(me.isSecondaryButtonDown())
 				{
 					addXTranslate(moves_x-(me.getSceneX()-X));
@@ -148,6 +150,21 @@ public class LogicSubScene extends SubScene{
 					//setCursor(javafx.scene.Cursor.NONE);
 					moves_x = me.getSceneX()-X;
 					moves_y = me.getSceneY()-Y-25;
+				}else if(me.isPrimaryButtonDown()) {
+
+					if(adding_WireDoublet != null) {
+						int new_pressed_x = (int) (me.getSceneX()-X+getXTranslate());
+						int new_pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
+						try {
+							remove(adding_WireDoublet);
+							adding_WireDoublet = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
+							add(adding_WireDoublet);
+							System.out.println("Added Wire double 1");
+						}catch (Exception e) {
+							adding_WireDoublet = null;
+						}
+						
+					}
 				}
 			}
 		};		
@@ -159,13 +176,8 @@ public class LogicSubScene extends SubScene{
 				secondary = me.isSecondaryButtonDown();
 				
 				if(primary) {
-					adding = true;
 					pressed_x = (int) (me.getSceneX()-X+getXTranslate());
 					pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
-					if(last_focused_component != 0) {
-						getCanvasComponent(last_focused_component).setFocus(false);
-						last_focused_component= 0;
-					}
 					adding_WireDoublet = new WireDoublet();
 				}else if(secondary) {
 					moves_x = me.getSceneX()-X;
@@ -177,68 +189,56 @@ public class LogicSubScene extends SubScene{
 		EventHandler<MouseEvent> move_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
-				if(adding_CanvasComponent != null) {
-					
-				}
-				
-				if(adding_WireDoublet != null) {
-					int new_pressed_x = (int) (me.getSceneX()-X+getXTranslate());
-					int new_pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
-					try {
-						remove(adding_WireDoublet);
-						adding_WireDoublet = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
-						add(adding_WireDoublet);
-					}catch (Exception e) {
-						adding_WireDoublet = null;
-					}
-					
-				}
 			}
 		};
 		EventHandler<MouseEvent> released_Mouse_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
-				if(adding) {
+				if(adding_WireDoublet != null) {
+					try{
+					
+						add(adding_WireDoublet.getHorizontalWire());
+					}catch (Exception e) {}
 					try {
-						short id = used[roundToNextDot((int) (me.getSceneX()-X+getXTranslate()))/cross_distance][ roundToNextDot((int) (me.getSceneY()-Y-25+getYTranslate()))/cross_distance];
-						
-						int new_pressed_x = (int) (me.getSceneX()-X+getXTranslate());
-						int new_pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
-						
-						if(pressed_x == new_pressed_x && pressed_y == new_pressed_y) {
-							getCanvasComponent(id).setFocus(true);
-							getCanvasComponent(id).printComponents();
-							last_focused_component = id;
-						}else {
-							if(adding_WireDoublet != null) {
-								try{
-								
-									add(adding_WireDoublet.getHorizontalWire());
-								}catch (Exception e) {}
-								try {
-									add(adding_WireDoublet.getVerticalWire());
-								}catch (Exception e) {}
-								adding_WireDoublet = null;
-							}
-							
-							if(adding_CanvasComponent != null) {
-								
-								adding_CanvasComponent = null;
-							}
-						}
-						} catch (Exception e) {}
-					adding = false;
-					primary = false;
-				}else if(primary) {
-					//setCursor(javafx.scene.Cursor.OPEN_HAND);
+						add(adding_WireDoublet.getVerticalWire());
+					}catch (Exception e) {}
+					adding_WireDoublet = null;
+				}
+				
+				if(adding_CanvasComponent != null) {
+					
+					adding_CanvasComponent = null;
 				}
 			}
 		};
+		EventHandler<MouseEvent> click_Event_Handler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+				System.out.println("click");
+				if(me.isPrimaryButtonDown()) {
+					try {
+						
+					
+						short id = used[roundToNextDot((int) (me.getSceneX()-X+getXTranslate()))/cross_distance][ roundToNextDot((int) (me.getSceneY()-Y-25+getYTranslate()))/cross_distance].pickRandom();
+						if(last_focused_component != 0) {
+							getCanvasComponent(last_focused_component).setFocus(false);
+							last_focused_component= 0;
+						}
+						getCanvasComponent(id).setFocus(true);
+						getCanvasComponent(id).printComponents();
+						last_focused_component = id;
+					}catch(IllegalArgumentException iae) {
+					}
+				}
+				
+		}};
 		
-		addEventFilter(MouseEvent.MOUSE_DRAGGED, dragging_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_PRESSED, press_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_RELEASED, released_Mouse_Handler);
+		addEventFilter(MouseEvent.MOUSE_DRAGGED, dragging_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_MOVED, move_Event_Handler);
+		addEventFilter(MouseEvent.MOUSE_CLICKED, click_Event_Handler);
+		
 		
 		EventHandler<ScrollEvent> zoom_Event_Handler = new EventHandler<ScrollEvent>() {
 			@Override
@@ -270,7 +270,7 @@ public class LogicSubScene extends SubScene{
 	public void add(WireDoublet doublet) throws OcupationExeption {
 		add(doublet.getHorizontalWire());
 		add(doublet.getVerticalWire());
-		
+		System.out.println("Added WireDoublet");
 		
 	}
 	
@@ -285,9 +285,9 @@ public class LogicSubScene extends SubScene{
 			
 			if(component.rotation == CanvasComponent.HORIZONTAL) {
 				for(int x = component.getXPoint()+1; x < component.getXPoint()+component.getWidthPoint(); x++) {
-					loc_ID = used[x][component.getYPoint()];
+					loc_ID = used[x][component.getYPoint()].HorizontalShort;
 					if(loc_ID == 0) {
-						used[x][component.getYPoint()] = ID;
+						used[x][component.getYPoint()].HorizontalShort = ID;
 					}else if(loc_ID == 1){
 						throw new OcupationExeption();
 					}else {
@@ -298,9 +298,9 @@ public class LogicSubScene extends SubScene{
 					}
 				}
 				
-				loc_ID = used[component.getXPoint()][component.getYPoint()];
+				loc_ID = used[component.getXPoint()][component.getYPoint()].HorizontalShort;
 				if(loc_ID==0) {
-					used[component.getXPoint()][component.getYPoint()] = ID;
+					used[component.getXPoint()][component.getYPoint()].HorizontalShort = ID;
 				}else if(loc_ID==1) {
 					throw new OcupationExeption();
 				}else {
@@ -309,9 +309,9 @@ public class LogicSubScene extends SubScene{
 				}
 				
 				//Sets End/Start Point
-				loc_ID = used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()];
+				loc_ID = used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()].HorizontalShort;
 				if(loc_ID==0) {
-					used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()] = ID;
+					used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()].HorizontalShort = ID;
 				}else if(loc_ID==1) {
 					throw new OcupationExeption();
 				}else {
@@ -320,9 +320,9 @@ public class LogicSubScene extends SubScene{
 				}
 			}else {
 				for(int y = component.getYPoint()+1; y < component.getYPoint()+component.getHeightPoint(); y++) {
-					loc_ID = used[component.getXPoint()][y];
+					loc_ID = used[component.getXPoint()][y].VerticalShort;
 					if(loc_ID == 0) {
-						used[component.getXPoint()][y] = ID;
+						used[component.getXPoint()][y].VerticalShort = ID;
 					}else if(loc_ID == 1){
 						throw new OcupationExeption();
 					}else {
@@ -335,9 +335,9 @@ public class LogicSubScene extends SubScene{
 				
 	
 				//Sets End/Start Point
-				loc_ID = used[component.getXPoint()][component.getYPoint()];
+				loc_ID = used[component.getXPoint()][component.getYPoint()].VerticalShort;
 				if(loc_ID==0) {
-					used[component.getXPoint()][component.getYPoint()] = ID;
+					used[component.getXPoint()][component.getYPoint()].VerticalShort = ID;
 				}else if(loc_ID==1) {
 					throw new OcupationExeption();
 				}else {
@@ -345,9 +345,9 @@ public class LogicSubScene extends SubScene{
 					component.addComponent(loc_ID);
 				}
 				
-				loc_ID = used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()];
+				loc_ID = used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()].VerticalShort;
 				if(loc_ID==0) {
-					used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()] = ID;
+					used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()].VerticalShort = ID;
 				}else if(loc_ID==1) {
 					throw new OcupationExeption();
 				}else {
@@ -386,14 +386,13 @@ public class LogicSubScene extends SubScene{
 		//TODO Remove SingleCanvasComponent from used array, replace it at the end with connected 
 		if(component != null) {
 			if(component.rotation == CanvasComponent.HORIZONTAL) {
-				for(int x = component.getXPoint()+1; x<component.getXPoint()+component.getWidthPoint(); x++) {
-					if(used[x][component.getYPoint()] != component.getId()) {
-					}else {
-						
-					}
+				for(int x = component.getXPoint(); x<=component.getXPoint()+component.getWidthPoint(); x++) {
+					used[x][component.getYPoint()].HorizontalShort = 0;
 				}
 			}else {
-				
+				for(int y = component.getYPoint(); y <=component.getYPoint()+component.getWidthPoint(); y++) {
+					used[component.getXPoint()][y].VerticalShort = 0;
+				}
 			}
 			single_canvas_components.remove(component.getId());
 			root.getChildren().remove(component.getImageView());
@@ -402,7 +401,7 @@ public class LogicSubScene extends SubScene{
 	
 	
 	public short generateRandomSingleComponentID() {
-		short ID = (short) random.nextInt(1 << 15);
+		short ID = (short) Main.random.nextInt(1 << 15);
 		if(ID <= 1) {
 			return generateRandomSingleComponentID();
 		}
@@ -414,7 +413,7 @@ public class LogicSubScene extends SubScene{
 	}
 	
 	public short generateRandomFunctionalComponent() {
-		short ID = (short) random.nextInt(1 << 15);
+		short ID = (short) Main.random.nextInt(1 << 15);
 		if(ID <= 1) {
 			return generateRandomFunctionalComponent();
 		}
