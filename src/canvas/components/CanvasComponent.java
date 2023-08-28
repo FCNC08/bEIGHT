@@ -108,15 +108,25 @@ public abstract class CanvasComponent extends WritableImage{
 	public abstract void setFocus(boolean status);
 	
 	//Setter/Getter for X/Y position
+	public void addX(int X_coord){
+		this.X=this.X+X_coord;
+		this.point_X = (X_coord+LogicSubScene.wire_height/2)/LogicSubScene.cross_distance;
+		image_view.setLayoutX(image_view.getLayoutX()+X_coord);
+	}
+	public void addY(int Y_coord) {
+		this.Y=this.Y+Y_coord;
+		this.point_Y = (Y_coord+LogicSubScene.wire_height/2)/LogicSubScene.cross_distance;
+		image_view.setLayoutY(image_view.getLayoutY()+Y_coord);
+	}
 	public void setX(int X_coord){
 		this.X=X_coord;
 		this.point_X = (X_coord+LogicSubScene.wire_height/2)/LogicSubScene.cross_distance;
-		image_view.setLayoutX(image_view.getLayoutX()+X_coord);
+		image_view.setLayoutX(X_coord);
 	}
 	public void setY(int Y_coord) {
 		this.Y=Y_coord;
 		this.point_Y = (Y_coord+LogicSubScene.wire_height/2)/LogicSubScene.cross_distance;
-		image_view.setLayoutY(image_view.getLayoutY()+Y_coord);
+		image_view.setLayoutY(Y_coord);
 	}
 	public int getX() {
 		return X;

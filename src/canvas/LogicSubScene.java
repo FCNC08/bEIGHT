@@ -74,15 +74,17 @@ public class LogicSubScene extends SubScene{
 	
 	private short last_focused_component = 0;
 	
-	private boolean adding;
 	private boolean primary;
 	private boolean secondary;
+	
+	private EventHandler<MouseEvent> move_Event_Handler;
+	private EventHandler<MouseEvent> addFinal_Event_Handler;
 	
 	protected Camera camera;
 	protected Translate camera_position;
 	
 	
-	private CanvasComponent adding_CanvasComponent;
+	private FunctionalCanvasComponent adding_CanvasComponent;
 	private WireDoublet adding_WireDoublet;
 	public HashMap<Short, FunctionalCanvasComponent> functional_canvas_component;
 	public HashMap<Short, SingleCanvasComponent> single_canvas_components;
@@ -171,7 +173,7 @@ public class LogicSubScene extends SubScene{
 		EventHandler<MouseEvent> press_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
-				//Checks which Mousebutton is pressed to figure out which action to perform( try to build new Wire/moves Object or moves scene)
+				//Checks which Mousebutton is pressed to figure out which action to perform( try to build new Wire/moves Object or moves scene)				
 				primary = me.isPrimaryButtonDown();
 				secondary = me.isSecondaryButtonDown();
 				
@@ -186,11 +188,29 @@ public class LogicSubScene extends SubScene{
 				
 			}
 		};	
-		EventHandler<MouseEvent> move_Event_Handler = new EventHandler<MouseEvent>() {
+		move_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
+				System.out.println("adding");
+				adding_CanvasComponent.setXPoint(roundToNextDot((int) (me.getSceneX()+getXTranslate()-adding_CanvasComponent.getWidth()/2)));
+				adding_CanvasComponent.setYPoint(roundToNextDot((int) (me.getSceneY()+getYTranslate()-adding_CanvasComponent.getHeight()/2)));
 			}
 		};
+		addFinal_Event_Handler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+				removeTry(adding_CanvasComponent);
+				adding_CanvasComponent.setXPoint(roundToNextDot((int) (me.getSceneX()+getXTranslate())));
+				adding_CanvasComponent.setYPoint(roundToNextDot((int) (me.getSceneY()+getYTranslate())));
+
+				try {
+					addFinally(adding_CanvasComponent);
+				} catch (OcupationExeption e) {
+				}
+				adding_CanvasComponent = null;
+			}
+		};
+		
 		EventHandler<MouseEvent> released_Mouse_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
@@ -236,7 +256,6 @@ public class LogicSubScene extends SubScene{
 		addEventFilter(MouseEvent.MOUSE_PRESSED, press_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_RELEASED, released_Mouse_Handler);
 		addEventFilter(MouseEvent.MOUSE_DRAGGED, dragging_Event_Handler);
-		addEventFilter(MouseEvent.MOUSE_MOVED, move_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_CLICKED, click_Event_Handler);
 		
 		
@@ -252,7 +271,21 @@ public class LogicSubScene extends SubScene{
 		
 	}
 	
-	public void add(FunctionalCanvasComponent component) throws OcupationExeption {
+	
+	public void addTry(FunctionalCanvasComponent component) {
+		System.out.println("AddTry");
+		adding_CanvasComponent = component;
+		addEventFilter(MouseEvent.MOUSE_MOVED, move_Event_Handler);
+		addEventFilter(MouseEvent.MOUSE_CLICKED, addFinal_Event_Handler);
+		root.getChildren().add(component.getImageView());
+	}
+	public void removeTry(FunctionalCanvasComponent component){
+		adding_CanvasComponent = null;
+		removeEventFilter(MouseEvent.MOUSE_MOVED, move_Event_Handler);
+		removeEventFilter(MouseEvent.MOUSE_CLICKED, addFinal_Event_Handler);
+		root.getChildren().remove(component.getImageView());
+	}
+	public void addFinally(FunctionalCanvasComponent component) throws OcupationExeption {
 		short ID = generateRandomFunctionalComponent();
 		for(Dot d : component.inputs) {
 			add(d);

@@ -1,5 +1,7 @@
 package canvas;
 
+import org.bouncycastle.crypto.paddings.ZeroBytePadding;
+
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
 import javafx.event.EventHandler;
@@ -26,8 +28,6 @@ public class ComponentChooser extends SubScene{
 	
 	protected FunctionalCanvasComponent adding_component;
 	
-	private EventHandler<MouseEvent> press_Event_Handler;
-	
 	public ComponentChooser(LogicSubScene parent_logicScene,Group root, double Width, double Height, ComponentGroupings component_param) {
 		super(root, Width, Height);
 		this.width = Width;
@@ -39,7 +39,7 @@ public class ComponentChooser extends SubScene{
 		view_width = (int) (Width/2);
 		view_height = view_width;
 		
-		EventHandler<MouseEvent> standard_press_Event_Handler = new EventHandler<MouseEvent>() {
+		EventHandler<MouseEvent> press_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {				
 				if(me.getSource() instanceof ImageView) {
@@ -56,53 +56,27 @@ public class ComponentChooser extends SubScene{
 							adding_component = component.getClone(FunctionalCanvasComponent.SIZE_BIG);
 							System.out.println("Big");
 						}
+						System.out.println(adding_component);
 					}
 				}
 			}
 		};
 		
-		this.press_Event_Handler = standard_press_Event_Handler;
-		
-		EventHandler<MouseEvent> pressed_Event_Handler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent me) {
-			}
-		};
-		
-		EventHandler<MouseEvent> release_Event_Handler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent me) {
-				adding_component = null;
-			}
-		};
-		
-		EventHandler<MouseEvent> move_Event_Handler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent me) {
-				
-			}
-		};
 		
 		EventHandler<MouseEvent> exit_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
 				System.out.println("Leaving");
 				if(adding_component != null) {
-					adding_component.setX((int) logic_Scene.getXTranslate());
-					adding_component.setY((int) logic_Scene.getYTranslate());
-					try {
-						logic_Scene.add(adding_component);
-					} catch (OcupationExeption e) {
-						e.printStackTrace();
-					}
+					adding_component.setX((int) (logic_Scene.getXTranslate()+logic_Scene.Start_Width-adding_component.getHeight()));
+					adding_component.setY((int) (logic_Scene.getYTranslate()+me.getSceneY()-adding_component.getHeight()));
+					logic_Scene.addTry(adding_component);
 					adding_component = null;
 				}
 			}
-		};;
+		};
 		
-		addEventFilter(MouseEvent.MOUSE_PRESSED, pressed_Event_Handler);
-		addEventFilter(MouseEvent.MOUSE_RELEASED, release_Event_Handler);
-		addEventFilter(MouseEvent.MOUSE_MOVED, move_Event_Handler);
+		addEventFilter(MouseEvent.MOUSE_CLICKED, press_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_EXITED, exit_Event_Handler);
 		
 		
@@ -119,7 +93,6 @@ public class ComponentChooser extends SubScene{
 				view.setFitWidth(view_width);
 				view.setLayoutX(width*(count%2)*0.5);
 				view.setLayoutY(height);
-				view.addEventFilter(MouseEvent.MOUSE_CLICKED, press_Event_Handler);
 				height= height+(count%2)*view_height;
 				count++;
 				MainRoot.getChildren().add(view);

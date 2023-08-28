@@ -54,7 +54,7 @@ public class Main extends Application {
 		
 		//set Scene and saves Stage
 		MainStage = primaryStage;
-		changeScene(0);
+		changeScene(1);
 		MainStage.show();
 		
 	}
@@ -171,7 +171,7 @@ public class Main extends Application {
 		root.getChildren().add(chooser);
 		vbox.getChildren().add(MainScene);
 		try {
-			logicscene.add(and);
+			logicscene.addFinally(and);
 		} catch (OcupationExeption e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
