@@ -1,7 +1,9 @@
 package application;
 	
+import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Frame;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -124,12 +126,20 @@ public class Main extends Application {
 	
 	//Adding LogicScene
 	private void addLogismArea() {
+		//Size of screen
+		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+		
+		int width = screen.width;
+		int height = screen.height;
+		
+		//System.out.println("width: "+width+" height: " +height);
+		
 		//Adding MenuBar
 		MenuBar bar = new MenuBar();
 		bar.getMenus().add(getThemeChoiceMenu());
 		VBox vbox = new VBox(bar);
-		vbox.setMinHeight(500);
-		vbox.setMinWidth(1000);
+		vbox.setMinHeight(height);
+		vbox.setMinWidth(width);
 		
 		//Adding SubScene
 		Group root = new Group();
@@ -139,11 +149,11 @@ public class Main extends Application {
 		MainScene.setFill(Color.GRAY);
 		
 		//Adding LogicScene
-		LogicSubScene logicscene = LogicSubScene.init(LogicSubScene.cross_distance*60, LogicSubScene.cross_distance*35, 4); 
+		LogicSubScene logicscene = LogicSubScene.init(LogicSubScene.getNearesDot((int)(width*0.75)), LogicSubScene.getNearesDot((int)(height*0.9)), 4); 
 		logicscene.setFill(Color.WHITE);
 		
-		logicscene.addX(50);
-		logicscene.addY(25);
+		logicscene.addX((int)(width*0.05));
+		logicscene.addY((int)(height*0.01));
 		
 		ComponentGroupings grouping = new ComponentGroupings();
 		ComponentGroup group = new ComponentGroup();
@@ -156,9 +166,9 @@ public class Main extends Application {
 		grouping.add(group);
 		grouping.add(group_1);
 		
-		ComponentChooser chooser = new ComponentChooser(logicscene, new Group(),400, LogicSubScene.cross_distance*35, grouping);
-		chooser.setLayoutX(LogicSubScene.cross_distance*60+50);
-		chooser.setLayoutY(25);
+		ComponentChooser chooser = new ComponentChooser(logicscene, new Group(),width*0.15, LogicSubScene.getNearesDot((int)(height*0.9)), grouping);
+		chooser.setLayoutX(width*0.8);
+		chooser.setLayoutY(height*0.01);
 		
 		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2, 1); 
 		
