@@ -279,6 +279,7 @@ public class LogicSubScene extends SubScene{
 			}
 		};
 		addEventFilter(MouseEvent.MOUSE_MOVED, move_Event_Handler);
+		addEventFilter(MouseEvent.MOUSE_RELEASED, addFinal_Event_Handler);
 		root.getChildren().add(component.getImageView());
 	}
 	public void removeTry(FunctionalCanvasComponent component){
@@ -299,6 +300,7 @@ public class LogicSubScene extends SubScene{
 		component.setId(ID);
 		functional_canvas_component.put(ID, component);
 		root.getChildren().add(component.getImageView());
+		System.out.println("Add Finally");
 	}
 	
 	public void add(WireDoublet doublet) throws OcupationExeption {
