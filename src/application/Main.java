@@ -139,7 +139,7 @@ public class Main extends Application {
 		MainScene.setFill(Color.GRAY);
 		
 		//Adding LogicScene
-		LogicSubScene logicscene = LogicSubScene.init(LogicSubScene.cross_distance*60, LogicSubScene.cross_distance*35, 4); 
+		LogicSubScene logicscene = LogicSubScene.init(LogicSubScene.cross_distance*35, LogicSubScene.cross_distance*25, 4); 
 		logicscene.setFill(Color.WHITE);
 		
 		logicscene.addX(50);
@@ -157,7 +157,7 @@ public class Main extends Application {
 		grouping.add(group_1);
 		
 		ComponentChooser chooser = new ComponentChooser(logicscene, new Group(),400, LogicSubScene.cross_distance*35, grouping);
-		chooser.setLayoutX(LogicSubScene.cross_distance*60+50);
+		chooser.setLayoutX(LogicSubScene.cross_distance*35+100);
 		chooser.setLayoutY(25);
 		
 		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2, 1); 
