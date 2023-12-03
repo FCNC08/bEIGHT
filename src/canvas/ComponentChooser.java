@@ -1,6 +1,5 @@
 package canvas;
 
-//import org.bouncycastle.crypto.paddings.ZeroBytePadding;
 
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
@@ -41,19 +40,19 @@ public class ComponentChooser extends SubScene{
 		
 		EventHandler<MouseEvent> press_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
-			public void handle(MouseEvent me) {				
-				if(me.getSource() instanceof ImageView) {
-					ImageView view = (ImageView) me.getSource();
+			public void handle(MouseEvent me) {
+				if(me.getTarget() instanceof ImageView) {
+					ImageView view = (ImageView) me.getTarget();
 					if(view.getImage() instanceof FunctionalCanvasComponent) {
 						FunctionalCanvasComponent component = (FunctionalCanvasComponent) view.getImage();
 						if(me.getButton() == MouseButton.PRIMARY){
-							adding_component = component.getClone(FunctionalCanvasComponent.SIZE_MIDDLE);
+							setAddComponent(component.getClone(FunctionalCanvasComponent.SIZE_MIDDLE));
 							System.out.println("Middle");
 						}else if(me.getButton() == MouseButton.SECONDARY){
-							adding_component = component.getClone(FunctionalCanvasComponent.SIZE_SMALL);
+							setAddComponent(component.getClone(FunctionalCanvasComponent.SIZE_SMALL));
 							System.out.println("Small");
 						}else {
-							adding_component = component.getClone(FunctionalCanvasComponent.SIZE_BIG);
+							setAddComponent(component.getClone(FunctionalCanvasComponent.SIZE_BIG));
 							System.out.println("Big");
 						}
 						System.out.println(adding_component);
@@ -76,11 +75,18 @@ public class ComponentChooser extends SubScene{
 			}
 		};
 		
-		addEventFilter(MouseEvent.MOUSE_CLICKED, press_Event_Handler);
+		addEventFilter(MouseEvent.MOUSE_PRESSED, press_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_EXITED, exit_Event_Handler);
 		
 		
 		reloadDesign();
+	}
+	
+	private void setAddComponent(FunctionalCanvasComponent component) {
+		adding_component = component;
+	}
+	private FunctionalCanvasComponent getAddComponent() {
+		return adding_component;
 	}
 	
 	public void reloadDesign() {

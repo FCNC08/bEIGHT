@@ -16,6 +16,7 @@ import application.Main;
 import canvas.components.CanvasComponent;
 import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
+import canvas.components.LogicComponent;
 import canvas.components.SingleCanvasComponent;
 import canvas.components.StandardComponents.Wire;
 import canvas.components.StandardComponents.WireDoublet;
@@ -77,18 +78,19 @@ public class LogicSubScene extends SubScene{
 	private boolean primary;
 	private boolean secondary;
 	
-	private EventHandler<MouseEvent> move_Event_Handler;
-	private EventHandler<MouseEvent> addFinal_Event_Handler;
 	
 	protected Camera camera;
 	protected Translate camera_position;
 	
 	
 	private FunctionalCanvasComponent adding_CanvasComponent;
-	private WireDoublet adding_WireDoublet;
+	private WireDoublet[] adding_WireDoublet = new WireDoublet[1];
 	public HashMap<Short, FunctionalCanvasComponent> functional_canvas_component;
 	public HashMap<Short, SingleCanvasComponent> single_canvas_components;
 	protected ShortPair[][] used;
+	
+	private EventHandler<MouseEvent> move_Event_Handler;
+	private EventHandler<MouseEvent> addFinal_Event_Handler;
 	
 	private Group root;
 	
@@ -119,6 +121,11 @@ public class LogicSubScene extends SubScene{
 		
 		used = new ShortPair[Newwidth/cross_distance][Newheight/cross_distance];
 		
+		for(int x = 0; x <used.length; x++) {
+			for(int y = 0; y < used[0].length; y++) {
+				used[x][y] = new ShortPair();
+			}
+		}
 		
 		WritableImage Test_Background = generateBackgroundImage();
 		
@@ -141,10 +148,9 @@ public class LogicSubScene extends SubScene{
 		
 		root = Mainroot;
 		
-		EventHandler<MouseEvent> dragging_Event_Handler = new EventHandler<MouseEvent>() {
+		/*EventHandler<MouseEvent> dragging_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
-				System.out.println("Dragging");
 				if(me.isSecondaryButtonDown())
 				{
 					addXTranslate(moves_x-(me.getSceneX()-X));
@@ -154,73 +160,87 @@ public class LogicSubScene extends SubScene{
 					moves_y = me.getSceneY()-Y-25;
 				}else if(me.isPrimaryButtonDown()) {
 
-					if(adding_WireDoublet != null) {
+					if(adding_WireDoublet[0] != null) {
 						int new_pressed_x = (int) (me.getSceneX()-X+getXTranslate());
 						int new_pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
+						
 						try {
-							remove(adding_WireDoublet);
-							adding_WireDoublet = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
-							add(adding_WireDoublet);
+							remove(adding_WireDoublet[0]);
+							adding_WireDoublet[0] = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
+							add(adding_WireDoublet[0]);
 							System.out.println("Added Wire double 1");
 						}catch (Exception e) {
 							adding_WireDoublet = null;
 						}
 						
+					}else {
+						adding_WireDoublet[0] = new WireDoublet();
 					}
 				}
 			}
-		};		
+		};*/
+		EventHandler<MouseEvent> dragging_Event_Handler = new EventHandler<MouseEvent>() {
+		    @Override
+		    public void handle(MouseEvent me) {
+		        if (me.isSecondaryButtonDown()) {
+		            addXTranslate(moves_x - (me.getSceneX() - X));
+		            addYTranslate(moves_y - (me.getSceneY() - Y - 25));
+		            moves_x = me.getSceneX() - X;
+		            moves_y = me.getSceneY() - Y - 25;
+		        } else if (me.isPrimaryButtonDown()) {
+		            int new_pressed_x = (int) (me.getSceneX() - X + getXTranslate());
+		            int new_pressed_y = (int) (me.getSceneY() - Y - 25 + getYTranslate());
+
+		            if (adding_WireDoublet[0] != null) {
+		                try {
+		                    remove(adding_WireDoublet[0]);
+		                    adding_WireDoublet[0] = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
+		                    add(adding_WireDoublet[0]);
+		                    System.out.println("Modified Wire doublet");
+		                } catch (Exception e) {
+		                    // Handle exception, if needed
+		                    e.printStackTrace();
+		                }
+		            } else {
+		                adding_WireDoublet[0] = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
+		                try {
+							add(adding_WireDoublet[0]);
+						} catch (OcupationExeption e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		                System.out.println("Added Wire doublet");
+		            }
+		        }
+		    }
+		};
 		EventHandler<MouseEvent> press_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
-				//Checks which Mousebutton is pressed to figure out which action to perform( try to build new Wire/moves Object or moves scene)				
-				primary = me.isPrimaryButtonDown();
-				secondary = me.isSecondaryButtonDown();
-				
-				if(primary) {
+				//Checks which Mousebutton is pressed to figure out which action to perform( try to build new Wire/moves Object or moves scene)
+				System.out.println("pressed");
+				if(me.isPrimaryButtonDown()) {
 					pressed_x = (int) (me.getSceneX()-X+getXTranslate());
 					pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
-					adding_WireDoublet = new WireDoublet();
-				}else if(secondary) {
+					adding_WireDoublet[0] = new WireDoublet();
+				}else if(me.isSecondaryButtonDown()) {
 					moves_x = me.getSceneX()-X;
 					moves_y = me.getSceneY()-Y-25;
 				}
 				
 			}
-		};	
-		move_Event_Handler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent me) {
-				System.out.println("adding");
-				adding_CanvasComponent.setXPoint(roundToNextDot((int) (me.getSceneX()+getXTranslate()-adding_CanvasComponent.getWidth()/2)));
-				adding_CanvasComponent.setYPoint(roundToNextDot((int) (me.getSceneY()+getYTranslate()-adding_CanvasComponent.getHeight()/2)));
-			}
-		};
-		addFinal_Event_Handler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent me) {
-				removeTry(adding_CanvasComponent);
-				adding_CanvasComponent.setXPoint(roundToNextDot((int) (me.getSceneX()+getXTranslate())));
-				adding_CanvasComponent.setYPoint(roundToNextDot((int) (me.getSceneY()+getYTranslate())));
-
-				try {
-					addFinally(adding_CanvasComponent);
-				} catch (OcupationExeption e) {
-				}
-				adding_CanvasComponent = null;
-			}
 		};
 		
-		EventHandler<MouseEvent> released_Mouse_Handler = new EventHandler<MouseEvent>() {
+		/*EventHandler<MouseEvent> released_Mouse_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
 				if(adding_WireDoublet != null) {
 					try{
 					
-						add(adding_WireDoublet.getHorizontalWire());
+						add(adding_WireDoublet[0].getHorizontalWire());
 					}catch (Exception e) {}
 					try {
-						add(adding_WireDoublet.getVerticalWire());
+						add(adding_WireDoublet[0].getVerticalWire());
 					}catch (Exception e) {}
 					adding_WireDoublet = null;
 				}
@@ -230,6 +250,31 @@ public class LogicSubScene extends SubScene{
 					adding_CanvasComponent = null;
 				}
 			}
+		};*/
+		EventHandler<MouseEvent> released_Mouse_Handler = new EventHandler<MouseEvent>() {
+		    @Override
+		    public void handle(MouseEvent me) {
+		        if (adding_WireDoublet[0] != null) {
+		            try {
+		            	System.out.println(adding_WireDoublet[0].getHorizontalWire());
+		                add(adding_WireDoublet[0].getHorizontalWire());
+		            } catch (Exception e) {
+		                // Handle exception, if needed
+		                e.printStackTrace();
+		            }
+		            try {
+		                add(adding_WireDoublet[0].getVerticalWire());
+		            } catch (Exception e) {
+		                // Handle exception, if needed
+		                e.printStackTrace();
+		            }
+		            adding_WireDoublet[0] = null; // Reset WireDoublet on release
+		        }
+
+		        if (adding_CanvasComponent != null) {
+		            adding_CanvasComponent = null;
+		        }
+		    }
 		};
 		EventHandler<MouseEvent> click_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
@@ -271,18 +316,42 @@ public class LogicSubScene extends SubScene{
 		
 	}
 	
+	private FunctionalCanvasComponent getAddComponent() {
+		System.out.println(adding_CanvasComponent);
+		return adding_CanvasComponent;
+	}
 	
 	public void addTry(FunctionalCanvasComponent component) {
-		System.out.println("AddTry");
 		adding_CanvasComponent = component;
+		addFinal_Event_Handler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+				System.out.println(adding_CanvasComponent);
+				removeTry(adding_CanvasComponent);
+				adding_CanvasComponent.setXPoint(getNearesDot((int) (me.getSceneX()+getXTranslate())));
+				adding_CanvasComponent.setYPoint(getNearesDot((int) (me.getSceneY()+getYTranslate())));
+
+				try {
+					addFinally(adding_CanvasComponent);
+				} catch (OcupationExeption e) {
+				}
+				adding_CanvasComponent = null;
+			}
+		};
+		move_Event_Handler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+				adding_CanvasComponent.setXPoint(getNearesDot((int) (me.getSceneX()+getXTranslate()-adding_CanvasComponent.getWidth()/2)));
+				adding_CanvasComponent.setYPoint(getNearesDot((int) (me.getSceneY()+getYTranslate()-adding_CanvasComponent.getHeight()/2)));
+			}
+		};
 		addEventFilter(MouseEvent.MOUSE_MOVED, move_Event_Handler);
-		addEventFilter(MouseEvent.MOUSE_CLICKED, addFinal_Event_Handler);
+		addEventFilter(MouseEvent.MOUSE_RELEASED, addFinal_Event_Handler);
 		root.getChildren().add(component.getImageView());
 	}
 	public void removeTry(FunctionalCanvasComponent component){
-		adding_CanvasComponent = null;
 		removeEventFilter(MouseEvent.MOUSE_MOVED, move_Event_Handler);
-		removeEventFilter(MouseEvent.MOUSE_CLICKED, addFinal_Event_Handler);
+		removeEventFilter(MouseEvent.MOUSE_CLICKED, addFinal_Event_Handler); 
 		root.getChildren().remove(component.getImageView());
 	}
 	public void addFinally(FunctionalCanvasComponent component) throws OcupationExeption {
@@ -298,6 +367,7 @@ public class LogicSubScene extends SubScene{
 		component.setId(ID);
 		functional_canvas_component.put(ID, component);
 		root.getChildren().add(component.getImageView());
+		System.out.println("Add Finally");
 	}
 	
 	public void add(WireDoublet doublet) throws OcupationExeption {
@@ -421,6 +491,7 @@ public class LogicSubScene extends SubScene{
 			if(component.rotation == CanvasComponent.HORIZONTAL) {
 				for(int x = component.getXPoint(); x<=component.getXPoint()+component.getWidthPoint(); x++) {
 					used[x][component.getYPoint()].HorizontalShort = 0;
+					component.printComponents();
 				}
 			}else {
 				for(int y = component.getYPoint(); y <=component.getYPoint()+component.getWidthPoint(); y++) {
