@@ -148,29 +148,8 @@ public class Main extends Application {
 		MainScene.widthProperty().bind(vbox.widthProperty());
 		MainScene.setFill(Color.GRAY);
 		
-		//Adding LogicScene
-
-		LogicSubScene logicscene = LogicSubScene.init(LogicSubScene.getNearesDot((int)(width*0.75)), LogicSubScene.getNearesDot((int)(height*0.9)), 4); 
-
-		logicscene.setFill(Color.WHITE);
+		LogicSubSceneContainer logic_container = new LogicSubSceneContainer(width, height);
 		
-		logicscene.addX((int)(width*0.05));
-		logicscene.addY((int)(height*0.01));
-		
-		ComponentGroupings grouping = new ComponentGroupings();
-		ComponentGroup group = new ComponentGroup();
-		group.add(ANDGate.getANDGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
-		group.add(ORGate.getORGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
-		group.add(ANDGate.getANDGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
-		group.add(ORGate.getORGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
-		ComponentGroup group_1 = new ComponentGroup();
-		
-		grouping.add(group);
-		grouping.add(group_1);
-		
-		ComponentChooser chooser = new ComponentChooser(logicscene, new Group(),width*0.15, LogicSubScene.getNearesDot((int)(height*0.9)), grouping);
-		chooser.setLayoutX(width*0.8);
-		chooser.setLayoutY(height*0.01);
 		
 		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2, 1); 
 		
@@ -179,11 +158,10 @@ public class Main extends Application {
 		
 		//LogicSubSceneContainer logicscene = new LogicSubSceneContainer(LogicSubScene.cross_distance*70, LogicSubScene.cross_distance*35, 4);
 		
-		root.getChildren().add(logicscene);
-		root.getChildren().add(chooser);
+		root.getChildren().add(logic_container);
 		vbox.getChildren().add(MainScene);
 		try {
-			logicscene.addFinally(and);
+			logic_container.logic_subscene.addFinally(and);
 		} catch (OcupationExeption e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -193,7 +171,7 @@ public class Main extends Application {
 		MenuItem standard = new MenuItem("Standard-Zoom");
 		standard.setOnAction(e -> {
 			e.consume();
-			logicscene.setStandardZoom();
+			logic_container.logic_subscene.setStandardZoom();
 		});
 		translate.getItems().add(standard);
 		bar.getMenus().add(translate);
@@ -211,7 +189,7 @@ public class Main extends Application {
 			String filename = fd.getFile();
 			if(directory!=null && filename != null) {
 				String filepath = directory+filename;
-				logicscene.SaveAsPDF(filepath);
+				logic_container.logic_subscene.SaveAsPDF(filepath);
 			}
 		});
 		file.getItems().add(savingpdf);
