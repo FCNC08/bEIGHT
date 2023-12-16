@@ -350,8 +350,11 @@ public class LogicSubScene extends SubScene{
 		root.getChildren().add(component.getImageView());
 	}
 	public void removeTry(FunctionalCanvasComponent component){
-		removeEventFilter(MouseEvent.MOUSE_MOVED, move_Event_Handler);
-		removeEventFilter(MouseEvent.MOUSE_CLICKED, addFinal_Event_Handler); 
+		
+		//removeEventFilter(MouseEvent.MOUSE_MOVED, move_Event_Handler);
+		//removeEventFilter(MouseEvent.MOUSE_CLICKED, addFinal_Event_Handler); 
+		move_Event_Handler = null;
+		addFinal_Event_Handler = null;
 		root.getChildren().remove(component.getImageView());
 	}
 	public void addFinally(FunctionalCanvasComponent component) throws OcupationExeption {
