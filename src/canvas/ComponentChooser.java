@@ -75,7 +75,7 @@ public class ComponentChooser extends SubScene{
 			}
 		};
 		
-		addEventFilter(MouseEvent.MOUSE_PRESSED, press_Event_Handler);
+		//addEventFilter(MouseEvent.MOUSE_PRESSED, press_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_EXITED, exit_Event_Handler);
 		
 		

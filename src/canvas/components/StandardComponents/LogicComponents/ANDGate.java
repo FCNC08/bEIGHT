@@ -1,6 +1,5 @@
 package canvas.components.StandardComponents.LogicComponents;
 
-import canvas.components.CanvasComponent;
 import canvas.components.LogicComponent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -60,20 +59,6 @@ public class ANDGate extends LogicComponent{
 	public void setFocus(boolean status) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	protected void createImageView() {
-		image_view= new ImageView();
-		image_view.setImage(this);
-		image_view.setRotate(getRotation());
-		image_view.setLayoutX(image_view.getLayoutX() + X);
-		image_view.setLayoutY(image_view.getLayoutY() + Y);
-		
-		if(rotation == CanvasComponent.VERTICAL) {
-			image_view.setLayoutY(image_view.getLayoutY()+0.5*width-0.5*getHeight());
-			image_view.setLayoutX(image_view.getLayoutX()-0.5*width+0.5*getHeight());
-		}
 	}
 
 	@Override
