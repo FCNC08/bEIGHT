@@ -14,6 +14,7 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	
 	public SingleCanvasComponent(int NewWidth, int NewHeight) {
 		super(NewWidth, NewHeight);
+		connected_Components = new ArrayList<>();
 	}
 	
 	public void setState(State newState) {

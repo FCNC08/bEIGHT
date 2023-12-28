@@ -27,8 +27,7 @@ public class LogicSubSceneContainer extends SubScene{
 		logic_subscene = LogicSubScene.init(LogicSubScene.getNearesDot((int)(width*0.75)), LogicSubScene.getNearesDot((int)(height*0.9)), 4); 
 
 		logic_subscene.setFill(Color.WHITE);
-		
-		
+				
 		logic_subscene.addX((int) (width*0.05));
 		logic_subscene.addY((int) (height*0.01));
 
@@ -44,7 +43,6 @@ public class LogicSubSceneContainer extends SubScene{
 		grouping.add(group);
 		grouping.add(group_1);
 		
-
 		component_chooser = new ComponentChooser(logic_subscene, new Group(),width*0.15, LogicSubScene.getNearesDot((int)(height*0.9)), grouping);
 		
 		System.out.println(component_chooser.getBoundsInParent());

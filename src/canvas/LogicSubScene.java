@@ -356,12 +356,14 @@ public class LogicSubScene extends SubScene{
 				}
 				
 				//Sets End/Start Point
-				loc_ID = used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()].HorizontalShort;
+				loc_ID = used[component.getXPoint()+component.getWidthPoint()][component.getYPoint()].HorizontalShort;
+				System.out.println(loc_ID);
 				if(loc_ID==0) {
 					used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()].HorizontalShort = ID;
 				}else if(loc_ID==1) {
 					throw new OcupationExeption();
 				}else {
+					System.out.println("test");
 					getCanvasComponent(loc_ID).addComponent(ID);
 					component.addComponent(loc_ID);
 				}
@@ -410,6 +412,111 @@ public class LogicSubScene extends SubScene{
 			
 			single_canvas_components.put(ID, component); 
 			component.printComponents();
+		}
+	}
+	public void add(Dot component) throws OcupationExeption {
+		if(component != null) {
+			
+		
+			short ID = generateRandomSingleComponentID();		
+			ShortPair loc_ID;
+			
+			System.out.println(ID);
+			
+			loc_ID = used[component.point_X][component.point_Y];
+			
+			if(loc_ID.Dot == 0) {
+				used[component.point_X][component.point_Y].Dot = ID;
+			}else if(loc_ID.Dot == 1) {
+				throw new OcupationExeption();
+			}else {
+				getCanvasComponent(loc_ID.Dot).addComponent(ID);
+				component.addComponent(loc_ID.Dot);
+			}
+			/*
+			if(component.rotation == CanvasComponent.HORIZONTAL) {
+				for(int x = component.getXPoint()+1; x < component.getXPoint()+component.getWidthPoint(); x++) {
+					loc_ID = used[x][component.getYPoint()].HorizontalShort;
+					if(loc_ID == 0) {
+						used[x][component.getYPoint()].HorizontalShort = ID;
+					}else if(loc_ID == 1){
+						throw new OcupationExeption();
+					}else {
+						if(getCanvasComponent(loc_ID).checkEnd(x, component.getYPoint())) {
+							getCanvasComponent(loc_ID).addComponent(ID);
+							component.addComponent(loc_ID);
+						}
+					}
+				}
+				
+				loc_ID = used[component.getXPoint()][component.getYPoint()].HorizontalShort;
+				if(loc_ID==0) {
+					used[component.getXPoint()][component.getYPoint()].HorizontalShort = ID;
+				}else if(loc_ID==1) {
+					throw new OcupationExeption();
+				}else {
+					getCanvasComponent(loc_ID).addComponent(ID);
+					component.addComponent(loc_ID);
+				}
+				
+				//Sets End/Start Point
+				loc_ID = used[component.getXPoint()+component.getWidthPoint()][component.getYPoint()].HorizontalShort;
+				System.out.println(loc_ID);
+				if(loc_ID==0) {
+					used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()].HorizontalShort = ID;
+				}else if(loc_ID==1) {
+					throw new OcupationExeption();
+				}else {
+					System.out.println("test");
+					getCanvasComponent(loc_ID).addComponent(ID);
+					component.addComponent(loc_ID);
+				}
+			}else {
+				for(int y = component.getYPoint()+1; y < component.getYPoint()+component.getHeightPoint(); y++) {
+					loc_ID = used[component.getXPoint()][y].VerticalShort;
+					if(loc_ID == 0) {
+						used[component.getXPoint()][y].VerticalShort = ID;
+					}else if(loc_ID == 1){
+						throw new OcupationExeption();
+					}else {
+						if(getCanvasComponent(loc_ID).checkEnd(component.getXPoint(), y)) {
+							getCanvasComponent(loc_ID).addComponent(ID);
+							component.addComponent(loc_ID);
+						}
+					}
+				}
+				
+	
+				//Sets End/Start Point
+				loc_ID = used[component.getXPoint()][component.getYPoint()].VerticalShort;
+				if(loc_ID==0) {
+					used[component.getXPoint()][component.getYPoint()].VerticalShort = ID;
+				}else if(loc_ID==1) {
+					throw new OcupationExeption();
+				}else {
+					getCanvasComponent(loc_ID).addComponent(ID);
+					component.addComponent(loc_ID);
+				}
+				
+				loc_ID = used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()].VerticalShort;
+				if(loc_ID==0) {
+					used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()].VerticalShort = ID;
+				}else if(loc_ID==1) {
+					throw new OcupationExeption();
+				}else {
+					getCanvasComponent(loc_ID).addComponent(ID);
+					component.addComponent(loc_ID);
+				}
+				
+				
+			}*/
+			component.setLogicSubScene(this);
+			component.setId(ID);
+			root.getChildren().add(component.getImageView());
+			
+			single_canvas_components.put(ID, component); 
+			component.printComponents();
+			System.out.println("Line: 519");
 		}
 	}
 	
