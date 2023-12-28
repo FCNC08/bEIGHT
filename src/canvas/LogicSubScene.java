@@ -73,11 +73,7 @@ public class LogicSubScene extends SubScene{
 	private double moves_x;
 	private double moves_y;
 	
-	private short last_focused_component = 0;
-	
-	private boolean primary;
-	private boolean secondary;
-	
+	private short last_focused_component = 0;	
 	
 	protected Camera camera;
 	protected Translate camera_position;
@@ -147,38 +143,6 @@ public class LogicSubScene extends SubScene{
 		functional_canvas_component = new HashMap<>();
 		
 		root = Mainroot;
-		
-		/*EventHandler<MouseEvent> dragging_Event_Handler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent me) {
-				if(me.isSecondaryButtonDown())
-				{
-					addXTranslate(moves_x-(me.getSceneX()-X));
-					addYTranslate(moves_y-(me.getSceneY()-Y-25));
-					//setCursor(javafx.scene.Cursor.NONE);
-					moves_x = me.getSceneX()-X;
-					moves_y = me.getSceneY()-Y-25;
-				}else if(me.isPrimaryButtonDown()) {
-
-					if(adding_WireDoublet[0] != null) {
-						int new_pressed_x = (int) (me.getSceneX()-X+getXTranslate());
-						int new_pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
-						
-						try {
-							remove(adding_WireDoublet[0]);
-							adding_WireDoublet[0] = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
-							add(adding_WireDoublet[0]);
-							System.out.println("Added Wire double 1");
-						}catch (Exception e) {
-							adding_WireDoublet = null;
-						}
-						
-					}else {
-						adding_WireDoublet[0] = new WireDoublet();
-					}
-				}
-			}
-		};*/
 		EventHandler<MouseEvent> dragging_Event_Handler = new EventHandler<MouseEvent>() {
 		    @Override
 		    public void handle(MouseEvent me) {
@@ -206,7 +170,6 @@ public class LogicSubScene extends SubScene{
 		                try {
 							add(adding_WireDoublet[0]);
 						} catch (OcupationExeption e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 		                System.out.println("Added Wire doublet");
@@ -230,27 +193,7 @@ public class LogicSubScene extends SubScene{
 				
 			}
 		};
-		
-		/*EventHandler<MouseEvent> released_Mouse_Handler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent me) {
-				if(adding_WireDoublet != null) {
-					try{
-					
-						add(adding_WireDoublet[0].getHorizontalWire());
-					}catch (Exception e) {}
-					try {
-						add(adding_WireDoublet[0].getVerticalWire());
-					}catch (Exception e) {}
-					adding_WireDoublet = null;
-				}
-				
-				if(adding_CanvasComponent != null) {
-					
-					adding_CanvasComponent = null;
-				}
-			}
-		};*/
+
 		EventHandler<MouseEvent> released_Mouse_Handler = new EventHandler<MouseEvent>() {
 		    @Override
 		    public void handle(MouseEvent me) {
@@ -303,7 +246,6 @@ public class LogicSubScene extends SubScene{
 		addEventFilter(MouseEvent.MOUSE_DRAGGED, dragging_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_CLICKED, click_Event_Handler);
 		
-		
 		EventHandler<ScrollEvent> zoom_Event_Handler = new EventHandler<ScrollEvent>() {
 			@Override
 			public void handle(ScrollEvent se) {
@@ -312,7 +254,6 @@ public class LogicSubScene extends SubScene{
 		};
 		
 		addEventFilter(ScrollEvent.SCROLL, zoom_Event_Handler);
-		
 		
 	}
 	
@@ -627,7 +568,12 @@ public class LogicSubScene extends SubScene{
 		Y = getLayoutY()+ADD_Y;
 		setLayoutY(Y);
 	}
-	
+	public double getX() {
+		return X;
+	}
+	public double getY() {
+		return Y;
+	}
 	public void setStandardZoom() {
 		camera_position.setZ(multiplier);
 	}

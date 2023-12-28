@@ -148,13 +148,13 @@ public class Main extends Application {
 		MainScene.widthProperty().bind(vbox.widthProperty());
 		MainScene.setFill(Color.GRAY);
 		
-		LogicSubSceneContainer logic_container = new LogicSubSceneContainer(width, height);
+		LogicSubSceneContainer logic_container = LogicSubSceneContainer.init(width, height);
 		
 		
 		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2, 1); 
 		
-		and.setX(800);
-		and.setY(800);
+		and.setX(1300);
+		and.setY(1000);
 		
 		//LogicSubSceneContainer logicscene = new LogicSubSceneContainer(LogicSubScene.cross_distance*70, LogicSubScene.cross_distance*35, 4);
 		
@@ -207,6 +207,8 @@ public class Main extends Application {
 		
 		//Adding Scene
 		Scenes.add(scene);
+		
+		
 	}
 	
 	//Changing Scene method

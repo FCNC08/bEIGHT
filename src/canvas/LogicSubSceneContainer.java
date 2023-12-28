@@ -12,17 +12,18 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import util.OcupationExeption;
 
-public class LogicSubSceneContainer extends HBox{
+public class LogicSubSceneContainer extends SubScene{
 	
 	public LogicSubScene logic_subscene;
 	public SubScene component_chooser;
 	private FunctionalCanvasComponent adding_component;
-	private double last_x = 0;
-	private double last_y = 0;
-	public LogicSubSceneContainer(int width, int height) {
+	private Group root;
+	public LogicSubSceneContainer(int width, int height, Group Mainroot) {
+		super(Mainroot, width, height);
+		this.root = Mainroot;
 		//Adding LogicScene
-
 		logic_subscene = LogicSubScene.init(LogicSubScene.getNearesDot((int)(width*0.75)), LogicSubScene.getNearesDot((int)(height*0.9)), 4); 
 
 		logic_subscene.setFill(Color.WHITE);
@@ -34,10 +35,10 @@ public class LogicSubSceneContainer extends HBox{
 		//Creates example ComponentChooser TODO Adding Filesystem
 		ComponentGroupings grouping = new ComponentGroupings();
 		ComponentGroup group = new ComponentGroup();
-		group.add(ANDGate.getANDGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
-		group.add(ORGate.getORGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
-		group.add(ANDGate.getANDGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
-		group.add(ORGate.getORGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
+		group.add(ANDGate.getSolidANDGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
+		group.add(ORGate.getSolidORGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
+		group.add(ANDGate.getSolidANDGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
+		group.add(ORGate.getSolidORGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
 		ComponentGroup group_1 = new ComponentGroup();
 		
 		grouping.add(group);
@@ -51,8 +52,8 @@ public class LogicSubSceneContainer extends HBox{
 		component_chooser.setLayoutY(height*0.01);
 		
 		
-		getChildren().add(logic_subscene);
-		getChildren().add(component_chooser);
+		root.getChildren().add(logic_subscene);
+		root.getChildren().add(component_chooser);
 		EventHandler<MouseEvent> createNewLogicComponent = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
@@ -72,13 +73,10 @@ public class LogicSubSceneContainer extends HBox{
 								System.out.println("Big");
 								adding_component = component.getClone(FunctionalCanvasComponent.SIZE_BIG);
 							}
-							adding_component.setX(0);
-							adding_component.setY(0);
-							getChildren().add(adding_component.getImageView());
-							last_x = me.getX();
-							last_y = me.getY();
-							adding_component.addX((int) me.getX());
-							adding_component.addY((int) me.getY());
+							adding_component.setX((int) (me.getX()-logic_subscene.getX()));
+							adding_component.setY((int) (me.getY()-logic_subscene.getY()));
+							root.getChildren().add(adding_component.getImageView());
+							
 						}
 					}
 				}
@@ -88,10 +86,8 @@ public class LogicSubSceneContainer extends HBox{
 			@Override
 			public void handle(MouseEvent me) {
 				if(adding_component != null) {
-					adding_component.addX((int) (me.getX()-last_x));
-					adding_component.addY((int) (me.getY()-last_y));
-					last_x = me.getX();
-					last_y = me.getY();
+					adding_component.setX((int) (me.getX()-logic_subscene.getX()));
+					adding_component.setY((int) (me.getY()-logic_subscene.getY()));
 					System.out.println("Adding: "+adding_component.getX()+"  "+adding_component.getY());
 					System.out.println("ImageView: "+adding_component.getImageView().getLayoutX()+"  "+adding_component.getImageView().getLayoutY());
 				}
@@ -104,6 +100,13 @@ public class LogicSubSceneContainer extends HBox{
 				if(logic_subscene.getLayoutX() < me.getX()&&(logic_subscene.getLayoutX()+logic_subscene.getWidth())>me.getX()&&logic_subscene.getLayoutY()<me.getY()&&(logic_subscene.getLayoutY()+logic_subscene.getHeight())>me.getY()) {
 					System.out.println(adding_component);
 					if(adding_component != null) {
+						adding_component.setX((int) (me.getX()-logic_subscene.getX()+logic_subscene.getXTranslate()));
+						adding_component.setY((int) (me.getY()-logic_subscene.getY()+logic_subscene.getYTranslate()));
+						try {
+							logic_subscene.addFinally(adding_component);
+						} catch (OcupationExeption e) {
+							e.printStackTrace();
+						}
 						System.out.println(adding_component.getX()+"  "+adding_component.getY());
 						adding_component = null;
 					}
@@ -114,5 +117,9 @@ public class LogicSubSceneContainer extends HBox{
 		addEventFilter(MouseEvent.MOUSE_PRESSED, createNewLogicComponent);
 		addEventFilter(MouseEvent.MOUSE_RELEASED, addNewLogicComponent);
 		addEventFilter(MouseEvent.MOUSE_DRAGGED, moveNewLogicComponent);
+	}
+	
+	public static LogicSubSceneContainer init(int width, int height) {
+		return new LogicSubSceneContainer(width, height, new Group());
 	}
 }

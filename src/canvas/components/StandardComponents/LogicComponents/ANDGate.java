@@ -3,6 +3,9 @@ package canvas.components.StandardComponents.LogicComponents;
 import canvas.components.LogicComponent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.paint.Color;
 
 public class ANDGate extends LogicComponent{
 
@@ -19,6 +22,49 @@ public class ANDGate extends LogicComponent{
 	}
 	
 	public static ANDGate getANDGATE(byte size,int inputs, int outputs) {
+		int height;
+		int width;
+		switch (size) {
+        case SIZE_BIG:
+            width = StandardWidth_big;
+            height = StandardHeight_big;
+            break;
+        case SIZE_MIDDLE:
+            width = StandardWidth_middle;
+            height = StandardHeight_middle;
+            break;
+        case SIZE_SMALL:
+            width = StandardWidth_small;
+            height = StandardHeight_small;
+            break;
+        default:
+            width = 1;
+            height = 1;
+            break;
+		}
+		ANDGate component = new ANDGate(size, width,  height, inputs, outputs);
+		ImageView temp_view = new ImageView(LogicComponent_Image);
+		temp_view.setFitHeight(height);
+		temp_view.setFitWidth(width);
+		temp_view.snapshot(null, component);
+		temp_view = null;
+		PixelReader reader = component.getPixelReader();
+		PixelWriter writer = component.getPixelWriter();
+		Color background = reader.getColor(0, 0);
+		for(int x = 0; x < width; x++) {
+			for(int y = 0; y< height; y++) {
+				if(background.equals(reader.getColor(x, y))) {
+					writer.setColor(x, y, Color.TRANSPARENT);
+				}
+			}
+		}
+		reader = null;
+		writer = null;
+		System.gc();
+		return component;
+	}
+	
+	public static ANDGate getSolidANDGATE(byte size,int inputs, int outputs) {
 		int height;
 		int width;
 		switch (size) {
