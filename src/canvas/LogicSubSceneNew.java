@@ -18,6 +18,8 @@ import javafx.scene.transform.Translate;
 public class LogicSubSceneNew extends Canvas{
 public static Random random = new Random();
 	
+
+	//NOT USED
 	public static int wire_height = 12;
 	public static int dot_radius = 7;
 	public static int maxed_dot_radius = 20;

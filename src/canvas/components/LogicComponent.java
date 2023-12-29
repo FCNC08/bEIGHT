@@ -17,6 +17,7 @@ public abstract class LogicComponent extends FunctionalCanvasComponent{
 	
 	@Override
 	protected void createImageView() {
+		//Creating ImageView with changing the direction of the ImageView
 		image_view= new ImageView();
 		image_view.setImage(this);
 		image_view.setRotate(getRotation());

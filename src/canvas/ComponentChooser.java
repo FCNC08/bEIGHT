@@ -28,6 +28,7 @@ public class ComponentChooser extends SubScene{
 	protected FunctionalCanvasComponent adding_component;
 	
 	public ComponentChooser(LogicSubScene parent_logicScene,Group root, double Width, double Height, ComponentGroupings component_param) {
+		//Initializing Component Chooser with bounds
 		super(root, Width, Height);
 		this.width = Width;
 		this.height = Height;
@@ -38,9 +39,11 @@ public class ComponentChooser extends SubScene{
 		view_width = (int) (Width/2);
 		view_height = view_width;
 		
+		//press Event Handler used to clone LogicComponents now replaced by the dragging system of LogicSubSceneContainer
 		EventHandler<MouseEvent> press_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
+				//Getting Component out of the clicked Imageview
 				if(me.getTarget() instanceof ImageView) {
 					ImageView view = (ImageView) me.getTarget();
 					if(view.getImage() instanceof FunctionalCanvasComponent) {
@@ -61,7 +64,7 @@ public class ComponentChooser extends SubScene{
 			}
 		};
 		
-		
+		//Exit EventHandler used to add Component to LogicSubScene but now replaced by LogicSubSceneContainer
 		EventHandler<MouseEvent> exit_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
@@ -90,6 +93,7 @@ public class ComponentChooser extends SubScene{
 	}
 	
 	public void reloadDesign() {
+		//Calculating position for each choosable Component in Chooser
 		int count = 0;
 		double height = 0;
 		for(ComponentGroup group : grouping) {
@@ -103,6 +107,7 @@ public class ComponentChooser extends SubScene{
 				count++;
 				MainRoot.getChildren().add(view);
 			}
+			//Starting new Line in ComponentChooser later used with pop-uo-menues	
 			 
 			Rectangle Seperator = new Rectangle(width, 20);
 			Seperator.setLayoutY(height);

@@ -3,6 +3,7 @@ package util;
 import application.Main;
 
 public class ShortPair {
+	//IDs for a horizontal/Vertical Wire and a Dot in one place used in used array
 	public short HorizontalShort;
 	public short VerticalShort;
 	public short Dot;

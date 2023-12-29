@@ -34,6 +34,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 		this.input_count = input_count;
 		this.output_count = output_count;
 		
+		//Initializing each Dot 
 		inputs = new Dot[input_count];
 		outputs = new Dot[output_count];
 		for(int i = 0; i<input_count; i++) {
@@ -54,6 +55,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 	}
 	
 	protected void setStandardDotLocations() {
+		//creates dot position depending of the width and the dot count
 		int standard_y_distance = height/(input_count+1);
 		int y_location = standard_y_distance+getY();
 		int x_location = getX();
@@ -78,6 +80,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 	public abstract FunctionalCanvasComponent getClone(byte size);
 	
 	protected State[] getInputStates() {
+		//Getting all InputStates of each dot
 		State[] states = new State[inputs.length];
 		for(int i = 0; i < inputs.length; i++) {
 			states[i] = inputs[i].getState();
@@ -86,6 +89,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 	}
 	
 	protected void setOutputStates(State[] states) {
+		//Setting all InputStates of each dot
 		if(states.length != outputs.length) {
 			throw new IllegalArgumentException();
 		}else {

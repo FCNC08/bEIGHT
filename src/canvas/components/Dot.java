@@ -6,11 +6,13 @@ public class Dot  extends SingleCanvasComponent{
 	
 	FunctionalCanvasComponent parent;
 	
+	//Initializing it with the size of a half wireheight
 	public Dot(FunctionalCanvasComponent parent) {
 		super(LogicSubScene.wire_height/2, LogicSubScene.wire_height/2);
 		this.parent =  parent;
 	}
 	
+	//Changing the State of a dot changes => simulating the parent again
 	protected void change() {
 		parent.simulate();
 	}
@@ -24,6 +26,7 @@ public class Dot  extends SingleCanvasComponent{
 		
 	}
 	
+	//Painting Circleimage
 	protected void paintCircle() {
 		for(int x = 0; x <width; x++) {
 			for(int y = 0; y < height; y++) {

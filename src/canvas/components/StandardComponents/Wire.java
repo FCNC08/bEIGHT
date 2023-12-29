@@ -15,6 +15,7 @@ public class Wire extends SingleCanvasComponent{
 	protected boolean focus;
 	
 	public Wire(int Startwidth){
+		//Creating Wire with height and painting it using PaintWire()
 		super(Startwidth, LogicSubScene.wire_height);
 		setHeight(LogicSubScene.wire_height/2);
 		width = Startwidth;
@@ -27,6 +28,7 @@ public class Wire extends SingleCanvasComponent{
 	private void PaintWire() {
 		clearPixels();
 		Color c = getColor();
+		//Painting each pixel with a pixelwriter in the WritableImage
 		for(int x = LogicSubScene.wire_height/4; x < width; x++) {
 			for(int y = LogicSubScene.wire_height/4; y < getHeight()-LogicSubScene.wire_height/4; y++) {
 				pwriter.setColor(x, y, c);
@@ -44,6 +46,7 @@ public class Wire extends SingleCanvasComponent{
 	}
 	
 	public void change() {
+		//Changing the state means changing the state of each connected component
 		for(short i: connected_Components) {
 			SingleCanvasComponent c = logic_scene.getCanvasComponent(i);
 			if(c.getSetState() == LogicSubScene.actual_set_state) {
@@ -63,6 +66,7 @@ public class Wire extends SingleCanvasComponent{
 	
 	@Override
 	public void setFocus(boolean focus) {
+		//Setting focus and adding Squares at the end or printing the wire new if it turns off
 		if(focus != this.focus) {
 			if(focus) {
 				for(int x = 2; x < LogicSubScene.wire_height-1; x ++) {

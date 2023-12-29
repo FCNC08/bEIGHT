@@ -22,6 +22,7 @@ public class ORGate extends LogicComponent{
 	}
 	
 	public static ORGate getORGATE(byte size,int inputs, int outputs) {
+		//Creating a ORGate with default sizes
 		int height;
 		int width;
 		switch (size) {
@@ -43,11 +44,13 @@ public class ORGate extends LogicComponent{
             break;
 		}
 		ORGate component = new ORGate(size, width,  height, inputs, outputs);
+		//Painting the StandardImage for ORGates in the WritableImage 
 		ImageView temp_view = new ImageView(LogicComponent_Image);
 		temp_view.setFitHeight(height);
 		temp_view.setFitWidth(width);
 		temp_view.snapshot(null, component);
 		temp_view = null;
+		//Removing all Backgroundpixels (Color of pixel 1|1
 		PixelReader reader = component.getPixelReader();
 		PixelWriter writer = component.getPixelWriter();
 		Color background = reader.getColor(0, 0);
@@ -63,6 +66,7 @@ public class ORGate extends LogicComponent{
 	}
 
 	public static ORGate getSolidORGATE(byte size,int inputs, int outputs) {
+		//Creating a ORGate like getORGate without removing the Background used in ComponentChooser
 		int height;
 		int width;
 		switch (size) {

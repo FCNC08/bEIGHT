@@ -84,10 +84,12 @@ public abstract class CanvasComponent extends WritableImage{
 		System.gc();
 	}
 	
+	//Adding Connection to LogicSubScene
 	public void setLogicSubScene(LogicSubScene parentScene) {
 		this.logic_scene = parentScene;
 	}
 	
+	//Cleaning all Pixels
 	public void clearPixels() {
 		Color invisible = new Color(1.0, 1.0, 1.0, 0.0);
 		for(int x=0; x <width; x++) {

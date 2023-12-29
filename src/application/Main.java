@@ -7,14 +7,9 @@ import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Random;
 
-import canvas.ComponentChooser;
-import canvas.ComponentGroup;
-import canvas.ComponentGroupings;
-import canvas.LogicSubScene;
 import canvas.LogicSubSceneContainer;
 import canvas.components.LogicComponent;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
-import canvas.components.StandardComponents.LogicComponents.ORGate;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
@@ -26,11 +21,9 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -156,7 +149,7 @@ public class Main extends Application {
 		and.setX(1300);
 		and.setY(1000);
 		
-		//LogicSubSceneContainer logicscene = new LogicSubSceneContainer(LogicSubScene.cross_distance*70, LogicSubScene.cross_distance*35, 4);
+		//LogicSubSceneContainer 
 		
 		root.getChildren().add(logic_container);
 		vbox.getChildren().add(MainScene);

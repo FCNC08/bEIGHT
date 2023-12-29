@@ -40,6 +40,7 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	protected abstract void change();
 
 	public boolean checkEnd(int x, int y) {
+		//Checks if a coord is on the End of a wire
 		if(rotation == HORIZONTAL) {
 			return (x==getXPoint()&&y==getYPoint())||(x==(getXPoint()+getHeightPoint())&&y==getYPoint());
 		}else {
@@ -47,6 +48,7 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 		}
 	}
 	
+	//Adding/Removing connectedComponents
 	public void addComponent(short ID) {
 		connected_Components.add(ID);
 	}

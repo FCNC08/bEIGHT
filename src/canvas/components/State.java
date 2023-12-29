@@ -43,6 +43,7 @@ public class State {
 	}
 	
 	public Color getColor() {
+		//Getting each color depending of the State
 		if(mode == STANDARD_MODE) {
 			if(state == ON_ERROR) {
 				return on;

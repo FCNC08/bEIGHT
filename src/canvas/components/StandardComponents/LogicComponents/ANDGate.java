@@ -14,7 +14,6 @@ public class ANDGate extends LogicComponent{
 	
 	public ANDGate(byte size, int width, int height, int input_count, int output_count) {
 		super(size, width, height, input_count, output_count);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public static void setStandardImage(Image standard_image) {
@@ -22,6 +21,7 @@ public class ANDGate extends LogicComponent{
 	}
 	
 	public static ANDGate getANDGATE(byte size,int inputs, int outputs) {
+		//Creating a ANDGate with standard sizes
 		int height;
 		int width;
 		switch (size) {
@@ -42,6 +42,7 @@ public class ANDGate extends LogicComponent{
             height = 1;
             break;
 		}
+		//Creating it/painting the Image
 		ANDGate component = new ANDGate(size, width,  height, inputs, outputs);
 		ImageView temp_view = new ImageView(LogicComponent_Image);
 		temp_view.setFitHeight(height);
@@ -51,6 +52,7 @@ public class ANDGate extends LogicComponent{
 		PixelReader reader = component.getPixelReader();
 		PixelWriter writer = component.getPixelWriter();
 		Color background = reader.getColor(0, 0);
+		//Removing all background/Color of the pixel 0|0
 		for(int x = 0; x < width; x++) {
 			for(int y = 0; y< height; y++) {
 				if(background.equals(reader.getColor(x, y))) {
@@ -65,6 +67,8 @@ public class ANDGate extends LogicComponent{
 	}
 	
 	public static ANDGate getSolidANDGATE(byte size,int inputs, int outputs) {
+		//Creating like getANDGate without removing the background
+		//Used in ComponentChooser
 		int height;
 		int width;
 		switch (size) {
@@ -109,6 +113,7 @@ public class ANDGate extends LogicComponent{
 
 	@Override
 	public LogicComponent getClone(byte size) {
+		//Function to clone a component in this case a ANDGate
 		ANDGate gate = ANDGate.getANDGATE(size, input_count, output_count);
 		return gate;
 	}

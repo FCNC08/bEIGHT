@@ -43,6 +43,7 @@ public class LogicSubSceneContainer extends SubScene{
 		grouping.add(group);
 		grouping.add(group_1);
 		
+		//Adding ComponentChooser and set the layout
 		component_chooser = new ComponentChooser(logic_subscene, new Group(),width*0.15, LogicSubScene.getNearesDot((int)(height*0.9)), grouping);
 		
 		System.out.println(component_chooser.getBoundsInParent());
@@ -52,6 +53,8 @@ public class LogicSubSceneContainer extends SubScene{
 		
 		root.getChildren().add(logic_subscene);
 		root.getChildren().add(component_chooser);
+		
+		//pressing EventHandler to create a clone of the pressed Component and adding it to LogicSubSceneContainer
 		EventHandler<MouseEvent> createNewLogicComponent = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
@@ -83,6 +86,7 @@ public class LogicSubSceneContainer extends SubScene{
 		EventHandler<MouseEvent> moveNewLogicComponent = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
+				//Moving Component to mouseposition while dragging it
 				if(adding_component != null) {
 					adding_component.setX((int) (me.getX()-logic_subscene.getX()));
 					adding_component.setY((int) (me.getY()-logic_subscene.getY()));
@@ -95,6 +99,7 @@ public class LogicSubSceneContainer extends SubScene{
 		EventHandler<MouseEvent> addNewLogicComponent = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
+				//Adding it to the LogicSubScene if it is dragged into the SubScene and adding all Offset in the Subscene
 				if(logic_subscene.getLayoutX() < me.getX()&&(logic_subscene.getLayoutX()+logic_subscene.getWidth())>me.getX()&&logic_subscene.getLayoutY()<me.getY()&&(logic_subscene.getLayoutY()+logic_subscene.getHeight())>me.getY()) {
 					System.out.println(adding_component);
 					if(adding_component != null) {
@@ -118,6 +123,7 @@ public class LogicSubSceneContainer extends SubScene{
 	}
 	
 	public static LogicSubSceneContainer init(int width, int height) {
+		//Initializing Container with new Group
 		return new LogicSubSceneContainer(width, height, new Group());
 	}
 }

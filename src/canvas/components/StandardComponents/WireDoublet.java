@@ -3,7 +3,7 @@ package canvas.components.StandardComponents;
 public class WireDoublet {
 	public Wire verticalWire;
 	public Wire horizontalWire;
-	
+	//Container of two Wires one horizontal one vertical
 	public WireDoublet() {
 	}
 	
