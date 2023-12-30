@@ -137,7 +137,7 @@ public abstract class CanvasComponent extends WritableImage{
 		return Y;
 	}
 	
-	//Setter/Getter for X/Y position in Dots
+	//Setter/Getter for X/Y position in Points
 	public void setXPoint(int point_x) {
 		this.X = point_x*LogicSubScene.cross_distance;
 		this.point_X = point_x;

@@ -56,22 +56,43 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 	
 	protected void setStandardDotLocations() {
 		//creates dot position depending of the width and the dot count
-		int standard_y_distance = height/(input_count+1);
-		int y_location = standard_y_distance+getY();
-		int x_location = getX();
-		for(Dot d : inputs) {
-			d.setY(LogicSubScene.getNearesDot(y_location));
-			d.setX(LogicSubScene.getNearesDot(x_location));
-			y_location+=standard_y_distance;
-		}
-		
-		standard_y_distance = height/(output_count+1);
-		y_location = standard_y_distance+getY();
-		x_location = getX()+width;
-		for(Dot d : outputs) {
-			d.setY(LogicSubScene.getNearesDot(y_location));
-			d.setX(LogicSubScene.getNearesDot(x_location));
-			y_location+=standard_y_distance;
+		int distance = width/(inputs.length+1);
+		int y = Y;
+		int x= X;
+		if(rotation==HORIZONTAL) {
+			x+=distance*0.5;
+			for(Dot d : inputs) {
+				d.setX(x);
+				d.setY(y);
+				x+=distance;
+			}
+			distance = width/(outputs.length);
+			x = X;
+			x+=distance*0.5;
+			y = Y+height;
+			for(Dot d : outputs) {
+				d.setX(x);
+				d.setY(y);
+				x+=distance;
+			}
+			
+		}else {
+			y+=distance*0.5;
+			for(Dot d : inputs) {
+				d.setX(x);
+				d.setY(y);
+				y+=distance;
+			}
+			
+			distance = width/(outputs.length);
+			x=X+height;
+			y=Y;
+			y+=distance*0.5;
+			for(Dot d : outputs) {
+				d.setX(x);
+				d.setY(y);
+				y+=distance;
+			}
 		}
 	}
 	
@@ -97,5 +118,61 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 				outputs[i].setState(states[i]);
 			}
 		}
+	}
+	
+	//Setter/Getter for X/Y position
+	@Override
+	public void addX(int X_coord){
+		this.X=this.X+X_coord;
+		this.point_X = (X_coord+LogicSubScene.wire_height/2)/LogicSubScene.cross_distance;
+		image_view.setLayoutX(image_view.getLayoutX()+X_coord);
+		for(Dot d: inputs) {
+			d.addX(X_coord);
+		}
+		for(Dot d: outputs) {
+			d.addX(X_coord);
+		}
+	}
+	@Override
+	public void addY(int Y_coord) {
+		this.Y=this.Y+Y_coord;
+		this.point_Y = (Y_coord+LogicSubScene.wire_height/2)/LogicSubScene.cross_distance;
+		image_view.setLayoutY(image_view.getLayoutY()+Y_coord);
+		for(Dot d: inputs) {
+			d.addY(Y_coord);
+		}
+		for(Dot d: inputs) {
+			d.addY(Y_coord);
+		}
+	}
+	@Override
+	public void setX(int X_coord){
+		this.X=X_coord;
+		this.point_X = (X_coord+LogicSubScene.wire_height/2)/LogicSubScene.cross_distance;
+		image_view.setLayoutX(X_coord);
+		setStandardDotLocations();		
+	}
+	@Override
+	public void setY(int Y_coord) {
+		this.Y=Y_coord;
+		this.point_Y = (Y_coord+LogicSubScene.wire_height/2)/LogicSubScene.cross_distance;
+		image_view.setLayoutY(Y_coord);
+		setStandardDotLocations();
+	}
+	
+	//Setter/Getter for X/Y position in Dots
+	@Override
+	public void setXPoint(int point_x) {
+		this.X = point_x*LogicSubScene.cross_distance;
+		this.point_X = point_x;
+		image_view.setLayoutX(image_view.getLayoutX()+X);
+		setStandardDotLocations();
+	}
+	@Override
+	public void setYPoint(int point_y) {
+		this.Y = point_y*LogicSubScene.cross_distance;
+		this.point_Y = point_y;
+		image_view.setLayoutX(image_view.getLayoutX()+X);
+		setStandardDotLocations();
 	}
 }

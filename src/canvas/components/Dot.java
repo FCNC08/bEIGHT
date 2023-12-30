@@ -1,6 +1,7 @@
 package canvas.components;
 
 import canvas.LogicSubScene;
+import javafx.scene.shape.Circle;
 
 public class Dot  extends SingleCanvasComponent{
 	
@@ -10,6 +11,7 @@ public class Dot  extends SingleCanvasComponent{
 	public Dot(FunctionalCanvasComponent parent) {
 		super(LogicSubScene.wire_height/2, LogicSubScene.wire_height/2);
 		this.parent =  parent;
+		paintCircle();
 	}
 	
 	//Changing the State of a dot changes => simulating the parent again
@@ -28,13 +30,13 @@ public class Dot  extends SingleCanvasComponent{
 	
 	//Painting Circleimage
 	protected void paintCircle() {
-		for(int x = 0; x <width; x++) {
-			for(int y = 0; y < height; y++) {
-				if(Math.sqrt(Math.abs(x-width/2)*Math.abs(x-width/2)+Math.abs(y-height/2)*Math.abs(y-height/2))<=width/2) {
-					pwriter.setColor(x, y, getColor());
-				}
-			}
-		}
+		Circle c = new Circle();
+		c.setFill(getColor());
+		c.setRadius(height/2);
+		c.setCenterX(width/2);
+		c.setCenterY(height/2);
+		c.snapshot(null, this);
+		c = null;
 	}
 	
 
