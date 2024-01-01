@@ -10,11 +10,11 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 	public static final byte SIZE_MIDDLE = 1;
 	public static final byte SIZE_SMALL = 0;
 	
-	protected static int StandardWidth_big = 400, StandardHeight_big = 400; 
+	protected static int StandardWidth_big = 200, StandardHeight_big = 200; 
 	
-	protected static int StandardWidth_middle = 200, StandardHeight_middle = 200;
+	protected static int StandardWidth_middle = 100, StandardHeight_middle = 100;
 	
-	protected static int StandardWidth_small = 100, StandardHeight_small = 100; 
+	protected static int StandardWidth_small = 50, StandardHeight_small = 50; 
 	
 	protected byte Size;
 	
@@ -54,12 +54,12 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 		return null;
 	}
 	
-	protected void setStandardDotLocations() {
+	public void setStandardDotLocations() {
 		//creates dot position depending of the width and the dot count
 		int distance = width/(inputs.length+1);
 		int y = Y;
 		int x= X;
-		if(rotation==HORIZONTAL) {
+		if(rotation==VERTICAL) {
 			x+=distance*0.5;
 			for(Dot d : inputs) {
 				d.setX(x);

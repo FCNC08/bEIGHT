@@ -271,7 +271,7 @@ public class LogicSubScene extends SubScene{
 		
 	}
 	
-	private FunctionalCanvasComponent getAddComponent() {
+	/*private FunctionalCanvasComponent getAddComponent() {
 		System.out.println(adding_CanvasComponent);
 		return adding_CanvasComponent;
 	}
@@ -315,10 +315,12 @@ public class LogicSubScene extends SubScene{
 		move_Event_Handler = null;
 		addFinal_Event_Handler = null;
 		root.getChildren().remove(component.getImageView());
-	}
-	public void addFinally(FunctionalCanvasComponent component) throws OcupationExeption {
+	}*/
+	public void add(FunctionalCanvasComponent component) throws OcupationExeption {
 		short ID = generateRandomFunctionalComponent();
-		//Adding each Dot(Comunication between wires and Components) 
+		root.getChildren().add(component.getImageView());
+		component.setStandardDotLocations();
+		//Adding each Dot(Communication between wires and Components) 
 		for(Dot d : component.inputs) {
 			add(d);
 		}
@@ -329,7 +331,6 @@ public class LogicSubScene extends SubScene{
 		component.setLogicSubScene(this);
 		component.setId(ID);
 		functional_canvas_component.put(ID, component);
-		root.getChildren().add(component.getImageView());
 		//TODO blocking area where the gate is located
 		System.out.println("Add Finally");
 	}
@@ -439,8 +440,6 @@ public class LogicSubScene extends SubScene{
 	}
 	public void add(Dot component) throws OcupationExeption {
 		if(component != null) {
-			
-		
 			short ID = generateRandomSingleComponentID();		
 			ShortPair loc_ID;
 			

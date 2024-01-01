@@ -39,7 +39,7 @@ public class ComponentChooser extends SubScene{
 		view_width = (int) (Width/2);
 		view_height = view_width;
 		
-		//press Event Handler used to clone LogicComponents now replaced by the dragging system of LogicSubSceneContainer
+		/*//press Event Handler used to clone LogicComponents now replaced by the dragging system of LogicSubSceneContainer
 		EventHandler<MouseEvent> press_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
@@ -80,7 +80,7 @@ public class ComponentChooser extends SubScene{
 		
 		//addEventFilter(MouseEvent.MOUSE_PRESSED, press_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_EXITED, exit_Event_Handler);
-		
+		*/
 		
 		reloadDesign();
 	}

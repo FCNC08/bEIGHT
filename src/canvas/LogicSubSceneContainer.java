@@ -106,7 +106,7 @@ public class LogicSubSceneContainer extends SubScene{
 						adding_component.setX((int) (me.getX()-logic_subscene.getX()+logic_subscene.getXTranslate()));
 						adding_component.setY((int) (me.getY()-logic_subscene.getY()+logic_subscene.getYTranslate()));
 						try {
-							logic_subscene.addFinally(adding_component);
+							logic_subscene.add(adding_component);
 						} catch (OcupationExeption e) {
 							e.printStackTrace();
 						}

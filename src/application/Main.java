@@ -154,7 +154,7 @@ public class Main extends Application {
 		root.getChildren().add(logic_container);
 		vbox.getChildren().add(MainScene);
 		try {
-			logic_container.logic_subscene.addFinally(and);
+			logic_container.logic_subscene.add(and);
 		} catch (OcupationExeption e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
