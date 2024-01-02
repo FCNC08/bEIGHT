@@ -56,7 +56,8 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 	
 	public void setStandardDotLocations() {
 		//creates dot position depending of the width and the dot count
-		int distance = width/(inputs.length+1);
+		System.out.println(width);
+		int distance = width/(inputs.length);
 		int y = Y;
 		int x= X;
 		if(rotation==VERTICAL) {
@@ -66,7 +67,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 				d.setY(y);
 				x+=distance;
 			}
-			distance = width/(outputs.length);
+			distance = width/(outputs.length+1);
 			x = X;
 			x+=distance*0.5;
 			y = Y+height;
@@ -77,8 +78,12 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 			}
 			
 		}else {
+			System.out.println("Y: "+Y);
+			System.out.println("Y2: "+(Y+width));
 			y+=distance*0.5;
+			System.out.println("distance: "+distance);
 			for(Dot d : inputs) {
+				System.out.println("DOT"+x+" "+y);
 				d.setX(x);
 				d.setY(y);
 				y+=distance;
@@ -173,6 +178,26 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 		this.Y = point_y*LogicSubScene.cross_distance;
 		this.point_Y = point_y;
 		image_view.setLayoutX(image_view.getLayoutX()+X);
+		setStandardDotLocations();
+	}
+	
+	//Overrides method to change dot location
+	@Override
+	public void setRotation(boolean New_Rotation) {
+		if(New_Rotation != rotation)
+		{		if(New_Rotation == VERTICAL){
+			//Changing Location relative to rotation
+			setX((int) (0.5*width-0.5*height));
+			setY((int) (-0.5*width+0.5*height));
+			
+			}else if(New_Rotation == HORIZONTAL) {
+				setX((int) (-0.5*width+0.5*height));
+				setY((int) (0.5*width-0.5*height));
+			}
+		}
+		
+		rotation = New_Rotation;
+		image_view.setRotate(getRotation());
 		setStandardDotLocations();
 	}
 }

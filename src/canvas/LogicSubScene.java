@@ -318,6 +318,7 @@ public class LogicSubScene extends SubScene{
 	}*/
 	public void add(FunctionalCanvasComponent component) throws OcupationExeption {
 		short ID = generateRandomFunctionalComponent();
+		System.out.println("ELEMENT: "+component.getX()+" "+component.getY());
 		root.getChildren().add(component.getImageView());
 		component.setStandardDotLocations();
 		//Adding each Dot(Communication between wires and Components) 

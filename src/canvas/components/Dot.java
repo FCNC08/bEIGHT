@@ -60,6 +60,20 @@ public class Dot  extends SingleCanvasComponent{
 		writer = null;
 		System.gc();
 	}
-	
+	@Override
+	public void setRotation(boolean New_Rotation) {
+		if(New_Rotation != rotation && New_Rotation == VERTICAL){
+			//Changing Location relative to rotation
+			setX((int) (0.5*width-0.5*height));
+			setY((int) (-0.5*width+0.5*height));
+			
+		}else if(New_Rotation != rotation && New_Rotation == HORIZONTAL) {
+			setX((int) (-0.5*width+0.5*height));
+			setY((int) (0.5*width-0.5*height));
+		}
+		
+		rotation = New_Rotation;
+		image_view.setRotate(getRotation());
+	}
 
 }
