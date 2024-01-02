@@ -85,9 +85,6 @@ public class LogicSubScene extends SubScene{
 	public HashMap<Short, SingleCanvasComponent> single_canvas_components;
 	protected ShortPair[][] used;
 	
-	private EventHandler<MouseEvent> move_Event_Handler;
-	private EventHandler<MouseEvent> addFinal_Event_Handler;
-	
 	private Group root;
 	
 	public static void setTheme() {
@@ -249,6 +246,10 @@ public class LogicSubScene extends SubScene{
 						getCanvasComponent(id).printComponents();
 						last_focused_component = id;
 					}catch(IllegalArgumentException iae) {
+					}
+				}else if(me.isSecondaryButtonDown()) {
+					if(me.isStillSincePress()) {
+						
 					}
 				}
 				
