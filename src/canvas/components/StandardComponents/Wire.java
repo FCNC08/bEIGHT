@@ -23,6 +23,7 @@ public class Wire extends SingleCanvasComponent{
 		pwriter = getPixelWriter();
 		connected_Components = new ArrayList<>();
 		PaintWire();
+		createImageView();
 	}
 	
 	private void PaintWire() {
@@ -96,7 +97,6 @@ public class Wire extends SingleCanvasComponent{
 		}
 	}
 	public ImageView getImageView() {
-		createImageView();
 		return image_view;
 	}
 

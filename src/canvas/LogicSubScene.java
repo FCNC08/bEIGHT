@@ -163,9 +163,9 @@ public class LogicSubScene extends SubScene{
 		            	//Checking if a WireDoublet already exists
 		                try {
 		                	//Trys to remove old WireDoublet(doesn't work) and adding new Wiredoublet with new coordinates
-		                    remove(adding_WireDoublet[0]);
+		                    removeTry(adding_WireDoublet[0]);
 		                    adding_WireDoublet[0] = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
-		                    add(adding_WireDoublet[0]);
+		                    addTry(adding_WireDoublet[0]);
 		                    System.out.println("Modified Wire doublet");
 		                } catch (Exception e) {
 		                    // Handle exception, if needed
@@ -175,7 +175,7 @@ public class LogicSubScene extends SubScene{
 		            	//No wiredoublet exists so it creates a new and adds it to the SubScene
 		                adding_WireDoublet[0] = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
 		                try {
-							add(adding_WireDoublet[0]);
+							addTry(adding_WireDoublet[0]);
 						} catch (OcupationExeption e) {
 							e.printStackTrace();
 						}
@@ -206,7 +206,7 @@ public class LogicSubScene extends SubScene{
 		    @Override
 		    public void handle(MouseEvent me) {
 		    	//Adding Wiredoublet finally
-		        if (adding_WireDoublet[0] != null) {
+		        /*if (adding_WireDoublet[0] != null) {
 		            try {
 		            	System.out.println(adding_WireDoublet[0].getHorizontalWire());
 		                add(adding_WireDoublet[0].getHorizontalWire());
@@ -221,7 +221,7 @@ public class LogicSubScene extends SubScene{
 		                e.printStackTrace();
 		            }
 		            adding_WireDoublet[0] = null; // Reset WireDoublet on release
-		        }
+		        }*/
 
 		        if (adding_CanvasComponent != null) {
 		            adding_CanvasComponent = null;
@@ -337,6 +337,19 @@ public class LogicSubScene extends SubScene{
 		System.out.println("Add Finally");
 	}
 	
+	public void addTry(WireDoublet doublet) throws OcupationExeption {
+		//Adding each Wire of a WireDoublet
+		if(doublet.getHorizontalWire() != null) {
+			root.getChildren().add(doublet.getHorizontalWire().getImageView());
+			System.out.println(root.getChildren().contains(doublet.getHorizontalWire().getImageView()));
+		}
+		if(doublet.getVerticalWire() != null) {
+			root.getChildren().add(doublet.getVerticalWire().getImageView());
+		}
+		System.out.println("Added try WireDoublet");
+		
+	}
+	
 	public void add(WireDoublet doublet) throws OcupationExeption {
 		//Adding each Wire of a WireDoublet
 		add(doublet.getHorizontalWire());
@@ -344,7 +357,6 @@ public class LogicSubScene extends SubScene{
 		System.out.println("Added WireDoublet");
 		
 	}
-	
 	public void add(SingleCanvasComponent component) throws OcupationExeption {
 		if(component != null) {
 				
@@ -481,6 +493,17 @@ public class LogicSubScene extends SubScene{
 		root.getChildren().remove(component.getImageView());
 	}
 	
+	public void removeTry(WireDoublet doublet) {
+		if(doublet.getHorizontalWire() != null) {
+			root.getChildren().remove(doublet.getHorizontalWire().getImageView());
+			System.out.println("Removed Horizontal");
+		}
+		if(doublet.getVerticalWire() != null) {
+			root.getChildren().remove(doublet.getVerticalWire().getImageView());
+			System.out.println("Removed Vertical");
+		}
+		System.out.println("Removed Try Wiredoublet");
+	}
 	public void remove(WireDoublet doublet) {
 		remove(doublet.getHorizontalWire());
 		remove(doublet.getVerticalWire());
