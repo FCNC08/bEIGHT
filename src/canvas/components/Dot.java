@@ -31,7 +31,7 @@ public class Dot  extends SingleCanvasComponent{
 	protected void createImageView() {
 		image_view= new ImageView();
 		image_view.setImage(this);
-		image_view.setRotate(getRotation());
+		image_view.setRotate(getRotationDegree());
 		image_view.setLayoutX(X);
 		image_view.setLayoutY(Y);
 	}
@@ -73,7 +73,7 @@ public class Dot  extends SingleCanvasComponent{
 		}
 		
 		rotation = New_Rotation;
-		image_view.setRotate(getRotation());
+		image_view.setRotate(getRotationDegree());
 	}
 
 }

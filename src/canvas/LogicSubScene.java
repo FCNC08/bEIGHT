@@ -27,6 +27,7 @@ import javafx.scene.Group;
 import javafx.scene.ImageCursor;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
@@ -80,7 +81,7 @@ public class LogicSubScene extends SubScene{
 	
 	
 	private FunctionalCanvasComponent adding_CanvasComponent;
-	private WireDoublet[] adding_WireDoublet = new WireDoublet[1];
+	private WireDoublet adding_WireDoublet;
 	public HashMap<Short, FunctionalCanvasComponent> functional_canvas_component;
 	public HashMap<Short, SingleCanvasComponent> single_canvas_components;
 	protected ShortPair[][] used;
@@ -159,13 +160,13 @@ public class LogicSubScene extends SubScene{
 		            int new_pressed_x = (int) (me.getSceneX() - X + getXTranslate());
 		            int new_pressed_y = (int) (me.getSceneY() - Y - 25 + getYTranslate());
 
-		            if (adding_WireDoublet[0] != null) {
+		            if (adding_WireDoublet != null) {
 		            	//Checking if a WireDoublet already exists
 		                try {
 		                	//Trys to remove old WireDoublet(doesn't work) and adding new Wiredoublet with new coordinates
-		                    removeTry(adding_WireDoublet[0]);
-		                    adding_WireDoublet[0] = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
-		                    addTry(adding_WireDoublet[0]);
+		                    removeTry(adding_WireDoublet);
+		                    adding_WireDoublet = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
+		                    addTry(adding_WireDoublet);
 		                    System.out.println("Modified Wire doublet");
 		                } catch (Exception e) {
 		                    // Handle exception, if needed
@@ -173,9 +174,9 @@ public class LogicSubScene extends SubScene{
 		                }
 		            } else {
 		            	//No wiredoublet exists so it creates a new and adds it to the SubScene
-		                adding_WireDoublet[0] = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
+		                adding_WireDoublet = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
 		                try {
-							addTry(adding_WireDoublet[0]);
+							addTry(adding_WireDoublet);
 						} catch (OcupationExeption e) {
 							e.printStackTrace();
 						}
@@ -193,7 +194,6 @@ public class LogicSubScene extends SubScene{
 				if(me.isPrimaryButtonDown()) {
 					pressed_x = (int) (me.getSceneX()-X+getXTranslate());
 					pressed_y = (int) (me.getSceneY()-Y-25+getYTranslate());
-					adding_WireDoublet[0] = new WireDoublet();
 				}else if(me.isSecondaryButtonDown()) {
 					moves_x = me.getSceneX()-X;
 					moves_y = me.getSceneY()-Y-25;
@@ -206,22 +206,23 @@ public class LogicSubScene extends SubScene{
 		    @Override
 		    public void handle(MouseEvent me) {
 		    	//Adding Wiredoublet finally
-		        /*if (adding_WireDoublet[0] != null) {
+		        if (adding_WireDoublet != null) {
+		        	removeTry(adding_WireDoublet);
 		            try {
-		            	System.out.println(adding_WireDoublet[0].getHorizontalWire());
-		                add(adding_WireDoublet[0].getHorizontalWire());
+		            	System.out.println(adding_WireDoublet.getHorizontalWire());
+		                add(adding_WireDoublet.getHorizontalWire());
 		            } catch (Exception e) {
 		                // Handle exception, if needed
 		                e.printStackTrace();
 		            }
 		            try {
-		                add(adding_WireDoublet[0].getVerticalWire());
+		                add(adding_WireDoublet.getVerticalWire());
 		            } catch (Exception e) {
 		                // Handle exception, if needed
 		                e.printStackTrace();
 		            }
-		            adding_WireDoublet[0] = null; // Reset WireDoublet on release
-		        }*/
+		            adding_WireDoublet = null; // Reset WireDoublet on release
+		        }
 
 		        if (adding_CanvasComponent != null) {
 		            adding_CanvasComponent = null;
@@ -249,7 +250,16 @@ public class LogicSubScene extends SubScene{
 					}
 				}else if(me.isSecondaryButtonDown()) {
 					if(me.isStillSincePress()) {
+						System.out.println("Still");
 						
+						if(me.getTarget() instanceof ImageView) {
+							Image img = ((ImageView) me.getTarget()).getImage();
+							if(img instanceof CanvasComponent) {
+								CanvasComponent component = (CanvasComponent) img;
+								component.setRotation(!component.getRotation());
+								System.out.println("ROTATE");
+							}
+						}
 					}
 				}
 				
@@ -604,8 +614,25 @@ public class LogicSubScene extends SubScene{
 	
 	public WireDoublet getWires(int start_X, int start_Y, int end_X, int end_Y) throws IllegalArgumentException{
 		//Generating WireDoublet with two Wires
-		int round_start_x = roundToNextDot(start_X);
-		int round_start_y = roundToNextDot(start_Y);
+		boolean error = false;
+		int round_start_x;
+		int round_start_y;
+		try {
+			round_start_x = roundToNextDot(start_X);
+		}catch(Exception e) {
+			round_start_x = getNearesDot(start_X);
+			error = true;
+		}
+		try {
+			round_start_y = roundToNextDot(start_Y);
+		}catch(Exception e) {
+			if(error) {
+				throw new IllegalArgumentException();
+			}else {
+				round_start_y = getNearesDot(start_X);
+			}
+		}
+		round_start_y = roundToNextDot(start_Y);
 		int round_end_x = getNearesDot(end_X);
 		int round_end_y = getNearesDot(end_Y);
 		
@@ -626,11 +653,11 @@ public class LogicSubScene extends SubScene{
 			wire_horizontal.setState(CanvasComponent.UNSET);
 			
 			doublet.setHorizontalWire(wire_horizontal);
+			wire_horizontal.setRotation(CanvasComponent.HORIZONTAL);
 		}
 		//Checking if there is a vertical Wire and generating it if yes
 		if(round_start_y!=round_end_y) {
 			Wire wire_vertical = new Wire(Math.abs(round_start_y-round_end_y)+wire_height*3/4);
-			wire_vertical.setRotation(CanvasComponent.VERTICAL);
 			if(round_start_y>=round_end_y) {
 				wire_vertical.setY(round_end_y-wire_height/2);
 			}else {
@@ -639,6 +666,7 @@ public class LogicSubScene extends SubScene{
 			wire_vertical.setX(round_end_x-wire_height/2);
 			
 			wire_vertical.setState(CanvasComponent.UNSET);
+			wire_vertical.setRotation(CanvasComponent.VERTICAL);
 			
 			doublet.setVerticalWire(wire_vertical);
 		}

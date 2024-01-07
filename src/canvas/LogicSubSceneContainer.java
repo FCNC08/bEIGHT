@@ -97,11 +97,11 @@ public class LogicSubSceneContainer extends SubScene{
 		EventHandler<MouseEvent> addNewLogicComponent = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
-				root.getChildren().remove(adding_component);
-				//Adding it to the LogicSubScene if it is dragged into the SubScene and adding all Offset in the Subscene
-				if(logic_subscene.getLayoutX() < me.getX()&&(logic_subscene.getLayoutX()+logic_subscene.getWidth())>me.getX()&&logic_subscene.getLayoutY()<me.getY()&&(logic_subscene.getLayoutY()+logic_subscene.getHeight())>me.getY()) {
-					System.out.println(adding_component);
-					if(adding_component != null) {
+				if(adding_component != null) {
+					root.getChildren().remove(adding_component.getImageView());
+					//Adding it to the LogicSubScene if it is dragged into the SubScene and adding all Offset in the Subscene
+					if(logic_subscene.getLayoutX() < me.getX()&&(logic_subscene.getLayoutX()+logic_subscene.getWidth())>me.getX()&&logic_subscene.getLayoutY()<me.getY()&&(logic_subscene.getLayoutY()+logic_subscene.getHeight())>me.getY()) {
+						System.out.println(adding_component);
 						adding_component.setX((int) (me.getX()-logic_subscene.getX()+logic_subscene.getXTranslate()));
 						adding_component.setY((int) (me.getY()-logic_subscene.getY()+logic_subscene.getYTranslate()));
 						try {
@@ -110,8 +110,9 @@ public class LogicSubSceneContainer extends SubScene{
 							e.printStackTrace();
 						}
 					}
+					adding_component = null;
 				}
-				adding_component = null;
+				
 					
 			}
 		};

@@ -197,7 +197,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 		}
 		
 		rotation = New_Rotation;
-		image_view.setRotate(getRotation());
+		image_view.setRotate(getRotationDegree());
 		setStandardDotLocations();
 	}
 }

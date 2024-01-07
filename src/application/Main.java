@@ -30,6 +30,8 @@ import javafx.scene.text.Text;
 
 public class Main extends Application {
 	
+	
+	
 	public static Random random = new Random();
 	
 	//ArrayList with the different Scenes and Runnables to change Scenes with run for example Maximization
@@ -55,6 +57,35 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) {
+		//Adding lines to output
+		System.setOut(new java.io.PrintStream(System.out) {
+
+            private StackTraceElement getCallSite() {
+                for (StackTraceElement e : Thread.currentThread()
+                        .getStackTrace())
+                    if (!e.getMethodName().equals("getStackTrace")
+                            && !e.getClassName().equals(getClass().getName()))
+                        return e;
+                return null;
+            }
+
+            @Override
+            public void println(String s) {
+                println((Object) s);
+            }
+
+            @Override
+            public void println(Object o) {
+                StackTraceElement e = getCallSite();
+                String callSite = e == null ? "??" :
+                    String.format("%s.%s(%s:%d)",
+                                  e.getClassName(),
+                                  e.getMethodName(),
+                                  e.getFileName(),
+                                  e.getLineNumber());
+                super.println(o + "\t\tat " + callSite);
+            }
+        });
 		launch(args);
 	}
 	

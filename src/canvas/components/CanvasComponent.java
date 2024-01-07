@@ -172,26 +172,19 @@ public abstract class CanvasComponent extends WritableImage{
 	}
 	
 	//Setter/Getter for rotation
-	public void setRotation(boolean New_Rotation) {
-		if(New_Rotation != rotation && New_Rotation == VERTICAL){
-			//Changing Location relative to rotation
-			setX((int) (0.5*width-0.5*height));
-			setY((int) (-0.5*width+0.5*height));
-			
-		}else if(New_Rotation != rotation && New_Rotation == HORIZONTAL) {
-			setX((int) (-0.5*width+0.5*height));
-			setY((int) (0.5*width-0.5*height));
-		}
-		
+	public void setRotation(boolean New_Rotation) {		
 		rotation = New_Rotation;
-		image_view.setRotate(getRotation());
+		createImageView();
 	}
-	protected int getRotation() {
+	protected int getRotationDegree() {
 		if(rotation) {
 			return 0;
 		}else {
 			return 90;
 		}
+	}
+	public boolean getRotation() {
+		return rotation;
 	}
 	
 	protected abstract void createImageView();
