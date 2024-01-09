@@ -18,8 +18,10 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	}
 	
 	public void setState(State newState) {
-		state = newState;
-		change();
+		if(!state.isEqual(newState)) {
+			state = newState;
+			change();
+		}
 	}
 	public State getState() {
 		return state;

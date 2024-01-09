@@ -8,7 +8,7 @@ public class State {
 	public static boolean STANDARD_MODE = true;
 	
 	public static boolean ON_ERROR = true;
-	public static boolean OFF_UNSET = true;
+	public static boolean OFF_UNSET = false;
 	
 	public static boolean DARK_MODE = true;
 	public static boolean WHITE_MODE = false;
@@ -60,10 +60,14 @@ public class State {
 	}
 	
 	public boolean getStateBoolean() throws ErrorStateExeption{
-		if(mode = ERROR_MODE) {
+		if(mode == ERROR_MODE) {
 			throw new ErrorStateExeption();
 		}else {
 			return state;
 		}
+	}
+	
+	public boolean isEqual(State s2) {
+		return mode==s2.mode && state == s2.state;
 	}
 }

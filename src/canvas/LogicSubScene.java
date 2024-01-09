@@ -18,6 +18,7 @@ import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
 import canvas.components.SingleCanvasComponent;
+import canvas.components.State;
 import canvas.components.StandardComponents.Wire;
 import canvas.components.StandardComponents.WireDoublet;
 import javafx.embed.swing.SwingFXUtils;
@@ -335,6 +336,8 @@ public class LogicSubScene extends SubScene{
 		//Adding each Dot(Communication between wires and Components) 
 		for(Dot d : component.inputs) {
 			add(d);
+			d.setState(new State(true, Main.random.nextBoolean()));
+		
 		}
 		for(Dot d : component.outputs) {
 			add(d);
@@ -486,8 +489,8 @@ public class LogicSubScene extends SubScene{
 			root.getChildren().add(component.getImageView());
 			
 			single_canvas_components.put(ID, component); 
-			component.printComponents();
-			System.out.println("Line: 519");
+			//component.printComponents();
+			//System.out.println("Line: 519");
 		}
 	}
 	

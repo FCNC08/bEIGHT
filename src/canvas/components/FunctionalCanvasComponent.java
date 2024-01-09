@@ -56,7 +56,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 	
 	public void setStandardDotLocations() {
 		//creates dot position depending of the width and the dot count
-		System.out.println(width);
+		//System.out.println(width);
 		int distance = width/(inputs.length);
 		int y = Y;
 		int x= X;
@@ -78,12 +78,12 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 			}
 			
 		}else {
-			System.out.println("Y: "+Y);
-			System.out.println("Y2: "+(Y+width));
+			//System.out.println("Y: "+Y);
+			//System.out.println("Y2: "+(Y+width));
 			y+=distance*0.5;
-			System.out.println("distance: "+distance);
+			//System.out.println("distance: "+distance);
 			for(Dot d : inputs) {
-				System.out.println("DOT"+x+" "+y);
+				//System.out.println("DOT"+x+" "+y);
 				d.setX(x);
 				d.setY(y);
 				y+=distance;

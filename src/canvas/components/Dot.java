@@ -20,6 +20,7 @@ public class Dot  extends SingleCanvasComponent{
 	
 	//Changing the State of a dot changes => simulating the parent again
 	protected void change() {
+		paintCircle();
 		parent.simulate();
 	}
 
