@@ -336,7 +336,7 @@ public class LogicSubScene extends SubScene{
 		//Adding each Dot(Communication between wires and Components) 
 		for(Dot d : component.inputs) {
 			add(d);
-			d.setState(new State(true, Main.random.nextBoolean()));
+			d.setState(State.getState(true, Main.random.nextBoolean()));
 		
 		}
 		for(Dot d : component.outputs) {

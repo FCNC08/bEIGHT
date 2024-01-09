@@ -117,11 +117,11 @@ public class ANDGate extends LogicComponent{
 				output_state = output_state&&b;
 			}
 			for(Dot d: outputs) {
-				d.setState(new State(State.STANDARD_MODE, output_state ? State.ON_ERROR: State.OFF_UNSET));
+				d.setState(State.getState(State.STANDARD_MODE, output_state ? State.ON_ERROR: State.OFF_UNSET));
 			}
 		}catch(ErrorStateExeption e) {
 			for(Dot o:outputs) {
-				o.setState(new State(State.ERROR_MODE, State.ON_ERROR));
+				o.setState(State.getState(State.ERROR_MODE, State.ON_ERROR));
 			}
 		}
 		
