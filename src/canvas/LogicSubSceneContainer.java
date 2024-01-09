@@ -7,6 +7,7 @@ import canvas.components.StandardComponents.LogicComponents.NANDGate;
 import canvas.components.StandardComponents.LogicComponents.NORGate;
 import canvas.components.StandardComponents.LogicComponents.NOTGate;
 import canvas.components.StandardComponents.LogicComponents.ORGate;
+import canvas.components.StandardComponents.LogicComponents.XNORGate;
 import canvas.components.StandardComponents.LogicComponents.XORGate;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -14,7 +15,6 @@ import javafx.scene.SubScene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import util.OcupationExeption;
 
@@ -43,6 +43,7 @@ public class LogicSubSceneContainer extends SubScene{
 		group.add(ORGate.getSolidORGATE(LogicComponent.SIZE_MIDDLE, 2));
 		group.add(NORGate.getSolidNORGATE(LogicComponent.SIZE_MIDDLE ,2));
 		group.add(XORGate.getSolidXORGATE(LogicComponent.SIZE_MIDDLE ,2));
+		group.add(XNORGate.getSolidXNORGATE(LogicComponent.SIZE_MIDDLE, 2));
 		group.add(NOTGate.getSolidNOTGATE(LogicComponent.SIZE_MIDDLE));
 		ComponentGroup group_1 = new ComponentGroup();
 		
@@ -108,7 +109,7 @@ public class LogicSubSceneContainer extends SubScene{
 					//Adding it to the LogicSubScene if it is dragged into the SubScene and adding all Offset in the Subscene
 					if(logic_subscene.getLayoutX() < me.getX()&&(logic_subscene.getLayoutX()+logic_subscene.getWidth())>me.getX()&&logic_subscene.getLayoutY()<me.getY()&&(logic_subscene.getLayoutY()+logic_subscene.getHeight())>me.getY()) {
 						System.out.println(adding_component);
-						adding_component.setX((int) (me.getX()-logic_subscene.getX()+logic_subscene.getXTranslate()));
+						adding_component.setX((int) (me.getX()-logic_subscene.getX()+logic_subscene.getXTranslate())-adding_component.width/2);
 						adding_component.setY((int) (me.getY()-logic_subscene.getY()+logic_subscene.getYTranslate()));
 						try {
 							logic_subscene.add(adding_component);

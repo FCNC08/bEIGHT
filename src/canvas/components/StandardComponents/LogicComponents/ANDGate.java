@@ -55,7 +55,7 @@ public class ANDGate extends LogicComponent{
 		//Removing all background/Color of the pixel 0|0
 		PixelReader reader = component.getPixelReader();
 		PixelWriter writer = component.getPixelWriter();
-		Color background = reader.getColor(width-1, height-1);
+		Color background = reader.getColor(width/2, height/2);
 		for(int x = 0; x < width; x++) {
 			for(int y = 0; y< height; y++) {
 				if(background.equals(reader.getColor(x, y))) {

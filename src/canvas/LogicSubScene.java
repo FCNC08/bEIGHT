@@ -4,8 +4,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Random;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -16,7 +14,6 @@ import application.Main;
 import canvas.components.CanvasComponent;
 import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
-import canvas.components.LogicComponent;
 import canvas.components.SingleCanvasComponent;
 import canvas.components.State;
 import canvas.components.StandardComponents.Wire;
@@ -25,13 +22,13 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
-import javafx.scene.ImageCursor;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
@@ -206,6 +203,20 @@ public class LogicSubScene extends SubScene{
 		    @Override
 		    public void handle(MouseEvent me) {
 		    	//Adding Wiredoublet finally
+		    	if(me.isSecondaryButtonDown()) {
+		    		if((me.getSceneX()-X)==moves_x&&(me.getSceneY()-Y-25)==moves_y) {
+						System.out.println("Still");
+						
+						if(me.getTarget() instanceof ImageView) {
+							Image img = ((ImageView) me.getTarget()).getImage();
+							if(img instanceof CanvasComponent) {
+								CanvasComponent component = (CanvasComponent) img;
+								component.setRotation(!component.getRotation());
+								System.out.println("ROTATE");
+							}
+						}
+					}
+		    	}
 		        if (adding_WireDoublet != null) {
 		        	removeTry(adding_WireDoublet);
 		            try {
@@ -234,7 +245,7 @@ public class LogicSubScene extends SubScene{
 			public void handle(MouseEvent me) {
 				//Used to highlight a component but not working 
 				System.out.println("click");
-				if(me.isPrimaryButtonDown()) {
+				if(me.getButton()==MouseButton.PRIMARY) {
 					try {
 						
 					
@@ -248,7 +259,7 @@ public class LogicSubScene extends SubScene{
 						last_focused_component = id;
 					}catch(IllegalArgumentException iae) {
 					}
-				}else if(me.isSecondaryButtonDown()) {
+				}else if(me.getButton()==MouseButton.SECONDARY) {
 					if(me.isStillSincePress()) {
 						System.out.println("Still");
 						

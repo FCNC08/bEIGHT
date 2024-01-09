@@ -10,22 +10,21 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import util.ErrorStateExeption;
 
-public class ORGate extends LogicComponent{
+public class XNORGate extends LogicComponent{
 
-	public static Image LogicComponent_Image = new Image("OR.png");
+	public static Image LogicComponent_Image = new Image("XNOR.png");
 	
 	
-	public ORGate(byte size, int width, int height, int input_count) {
+	public XNORGate(byte size, int width, int height, int input_count) {
 		super(size, width, height, input_count);
-		// TODO Auto-generated constructor stub
 	}
 	
 	public static void setStandardImage(Image standard_image) {
 		LogicComponent_Image = standard_image;
 	}
 	
-	public static ORGate getORGATE(byte size,int inputs, int outputs) {
-		//Creating a ORGate with default sizes
+	public static XNORGate getXNORGate(byte size,int inputs) {
+		//Creating a ANDGate with standard sizes
 		int height;
 		int width;
 		switch (size) {
@@ -46,17 +45,17 @@ public class ORGate extends LogicComponent{
             height = 1;
             break;
 		}
-		ORGate component = new ORGate(size, width,  height, inputs);
-		//Painting the StandardImage for ORGates in the WritableImage 
+		//Creating it/painting the Image
+		XNORGate component = new XNORGate(size, width,  height, inputs);
 		ImageView temp_view = new ImageView(LogicComponent_Image);
 		temp_view.setFitHeight(height);
 		temp_view.setFitWidth(width);
 		temp_view.snapshot(null, component);
 		temp_view = null;
-		//Removing all Backgroundpixels (Color of pixel 1|1
+		//Removing all background/Color of the pixel 0|0
 		PixelReader reader = component.getPixelReader();
 		PixelWriter writer = component.getPixelWriter();
-		Color background = reader.getColor(width/2, height/2 );
+		Color background = reader.getColor(width/2, height/2);
 		for(int x = 0; x < width; x++) {
 			for(int y = 0; y< height; y++) {
 				if(background.equals(reader.getColor(x, y))) {
@@ -64,12 +63,15 @@ public class ORGate extends LogicComponent{
 				}
 			}
 		}
+		reader = null;
+		writer = null;
 		System.gc();
 		return component;
 	}
-
-	public static ORGate getSolidORGATE(byte size,int inputs) {
-		//Creating a ORGate like getORGate without removing the Background used in ComponentChooser
+	
+	public static XNORGate getSolidXNORGATE(byte size,int inputs) {
+		//Creating like getANDGate without removing the background
+		//Used in ComponentChooser
 		int height;
 		int width;
 		switch (size) {
@@ -90,7 +92,7 @@ public class ORGate extends LogicComponent{
             height = 1;
             break;
 		}
-		ORGate component = new ORGate(size, width,  height, inputs);
+		XNORGate component = new XNORGate(size, width,  height, inputs);
 		ImageView temp_view = new ImageView(LogicComponent_Image);
 		temp_view.setFitHeight(height);
 		temp_view.setFitWidth(width);
@@ -99,6 +101,7 @@ public class ORGate extends LogicComponent{
 		System.gc();
 		return component;
 	}
+
 	@Override
 	public void simulate() {
 		State[] input = getInputStates();
@@ -111,8 +114,9 @@ public class ORGate extends LogicComponent{
 			System.out.println("lenght of bool:"+bool_states.length);
 			for(boolean b : bool_states) {
 				System.out.println(b);
-				output_state = output_state||b;
+				output_state = output_state^b;
 			}
+			output_state = !output_state;
 			for(Dot d: outputs) {
 				d.setState(State.getState(State.STANDARD_MODE, output_state ? State.ON_ERROR: State.OFF_UNSET));
 			}
@@ -121,6 +125,7 @@ public class ORGate extends LogicComponent{
 				o.setState(State.getState(State.ERROR_MODE, State.ON_ERROR));
 			}
 		}
+		
 	}
 
 	@Override
@@ -128,10 +133,11 @@ public class ORGate extends LogicComponent{
 		// TODO Auto-generated method stub
 		
 	}
-	
+
 	@Override
 	public LogicComponent getClone(byte size) {
-		ORGate gate = ORGate.getORGATE(size, input_count, output_count);
+		//Function to clone a component in this case a ANDGate
+		XNORGate gate = XNORGate.getXNORGate(size, input_count);
 		return gate;
 	}
 }
