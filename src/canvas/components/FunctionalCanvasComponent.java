@@ -200,4 +200,20 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent{
 		image_view.setRotate(getRotationDegree());
 		setStandardDotLocations();
 	}
+	
+
+	@Override
+	protected void createImageView() {
+		//Creating ImageView with changing the direction of the ImageView
+		image_view= new ImageView();
+		image_view.setImage(this);
+		image_view.setRotate(getRotationDegree());
+		image_view.setLayoutX(X);
+		image_view.setLayoutY(Y);
+		
+		if(rotation == CanvasComponent.VERTICAL) {
+			image_view.setLayoutY(image_view.getLayoutY()+0.5*width-0.5*getHeight());
+			image_view.setLayoutX(image_view.getLayoutX()-0.5*width+0.5*getHeight());
+		}
+	}
 }

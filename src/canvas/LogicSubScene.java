@@ -168,7 +168,6 @@ public class LogicSubScene extends SubScene{
 		                    removeTry(adding_WireDoublet);
 		                    adding_WireDoublet = getWires(pressed_x, pressed_y, new_pressed_x, new_pressed_y);
 		                    addTry(adding_WireDoublet);
-		                    System.out.println("Modified Wire doublet");
 		                } catch (Exception e) {
 		                    // Handle exception, if needed
 		                    e.printStackTrace();
@@ -359,7 +358,6 @@ public class LogicSubScene extends SubScene{
 		if(doublet.getVerticalWire() != null) {
 			root.getChildren().add(doublet.getVerticalWire().getImageView());
 		}
-		System.out.println("Added try WireDoublet");
 		
 	}
 	
@@ -509,13 +507,10 @@ public class LogicSubScene extends SubScene{
 	public void removeTry(WireDoublet doublet) {
 		if(doublet.getHorizontalWire() != null) {
 			root.getChildren().remove(doublet.getHorizontalWire().getImageView());
-			System.out.println("Removed Horizontal");
 		}
 		if(doublet.getVerticalWire() != null) {
 			root.getChildren().remove(doublet.getVerticalWire().getImageView());
-			System.out.println("Removed Vertical");
 		}
-		System.out.println("Removed Try Wiredoublet");
 	}
 	public void remove(WireDoublet doublet) {
 		remove(doublet.getHorizontalWire());
@@ -523,7 +518,6 @@ public class LogicSubScene extends SubScene{
 	}
 	
 	public void remove(SingleCanvasComponent component) {
-		//TODO Remove SingleCanvasComponent from used array, replace it at the end with connected 
 		if(component != null) {
 			if(component.rotation == CanvasComponent.HORIZONTAL) {
 				//Removing Horizontal/Vertical ID from used 
