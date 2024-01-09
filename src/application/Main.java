@@ -175,7 +175,7 @@ public class Main extends Application {
 		LogicSubSceneContainer logic_container = LogicSubSceneContainer.init(width, height);
 		
 		
-		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2, 1); 
+		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2); 
 		
 		and.setX(1300);
 		and.setY(1000);

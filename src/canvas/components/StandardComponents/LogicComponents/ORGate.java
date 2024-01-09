@@ -15,8 +15,8 @@ public class ORGate extends LogicComponent{
 	public static Image LogicComponent_Image = new Image("OR.png");
 	
 	
-	public ORGate(byte size, int width, int height, int input_count, int output_count) {
-		super(size, width, height, input_count, output_count);
+	public ORGate(byte size, int width, int height, int input_count) {
+		super(size, width, height, input_count);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -46,7 +46,7 @@ public class ORGate extends LogicComponent{
             height = 1;
             break;
 		}
-		ORGate component = new ORGate(size, width,  height, inputs, outputs);
+		ORGate component = new ORGate(size, width,  height, inputs);
 		//Painting the StandardImage for ORGates in the WritableImage 
 		ImageView temp_view = new ImageView(LogicComponent_Image);
 		temp_view.setFitHeight(height);
@@ -68,7 +68,7 @@ public class ORGate extends LogicComponent{
 		return component;
 	}
 
-	public static ORGate getSolidORGATE(byte size,int inputs, int outputs) {
+	public static ORGate getSolidORGATE(byte size,int inputs) {
 		//Creating a ORGate like getORGate without removing the Background used in ComponentChooser
 		int height;
 		int width;
@@ -90,7 +90,7 @@ public class ORGate extends LogicComponent{
             height = 1;
             break;
 		}
-		ORGate component = new ORGate(size, width,  height, inputs, outputs);
+		ORGate component = new ORGate(size, width,  height, inputs);
 		ImageView temp_view = new ImageView(LogicComponent_Image);
 		temp_view.setFitHeight(height);
 		temp_view.setFitWidth(width);

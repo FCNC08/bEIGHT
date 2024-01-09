@@ -15,15 +15,15 @@ public class ANDGate extends LogicComponent{
 	public static Image LogicComponent_Image = new Image("AND.png");
 	
 	
-	public ANDGate(byte size, int width, int height, int input_count, int output_count) {
-		super(size, width, height, input_count, output_count);
+	public ANDGate(byte size, int width, int height, int input_count) {
+		super(size, width, height, input_count);
 	}
 	
 	public static void setStandardImage(Image standard_image) {
 		LogicComponent_Image = standard_image;
 	}
 	
-	public static ANDGate getANDGATE(byte size,int inputs, int outputs) {
+	public static ANDGate getANDGATE(byte size,int inputs) {
 		//Creating a ANDGate with standard sizes
 		int height;
 		int width;
@@ -46,7 +46,7 @@ public class ANDGate extends LogicComponent{
             break;
 		}
 		//Creating it/painting the Image
-		ANDGate component = new ANDGate(size, width,  height, inputs, outputs);
+		ANDGate component = new ANDGate(size, width,  height, inputs);
 		ImageView temp_view = new ImageView(LogicComponent_Image);
 		temp_view.setFitHeight(height);
 		temp_view.setFitWidth(width);
@@ -69,7 +69,7 @@ public class ANDGate extends LogicComponent{
 		return component;
 	}
 	
-	public static ANDGate getSolidANDGATE(byte size,int inputs, int outputs) {
+	public static ANDGate getSolidANDGATE(byte size,int inputs) {
 		//Creating like getANDGate without removing the background
 		//Used in ComponentChooser
 		int height;
@@ -92,7 +92,7 @@ public class ANDGate extends LogicComponent{
             height = 1;
             break;
 		}
-		ANDGate component = new ANDGate(size, width,  height, inputs, outputs);
+		ANDGate component = new ANDGate(size, width,  height, inputs);
 		ImageView temp_view = new ImageView(LogicComponent_Image);
 		temp_view.setFitHeight(height);
 		temp_view.setFitWidth(width);
@@ -136,7 +136,7 @@ public class ANDGate extends LogicComponent{
 	@Override
 	public LogicComponent getClone(byte size) {
 		//Function to clone a component in this case a ANDGate
-		ANDGate gate = ANDGate.getANDGATE(size, input_count, output_count);
+		ANDGate gate = ANDGate.getANDGATE(size, input_count);
 		return gate;
 	}
 }

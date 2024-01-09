@@ -3,7 +3,11 @@ package canvas;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
+import canvas.components.StandardComponents.LogicComponents.NANDGate;
+import canvas.components.StandardComponents.LogicComponents.NORGate;
+import canvas.components.StandardComponents.LogicComponents.NOTGate;
 import canvas.components.StandardComponents.LogicComponents.ORGate;
+import canvas.components.StandardComponents.LogicComponents.XORGate;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
@@ -34,10 +38,12 @@ public class LogicSubSceneContainer extends SubScene{
 		//Creates example ComponentChooser TODO Adding Filesystem
 		ComponentGroupings grouping = new ComponentGroupings();
 		ComponentGroup group = new ComponentGroup();
-		group.add(ANDGate.getSolidANDGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
-		group.add(ORGate.getSolidORGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
-		group.add(ANDGate.getSolidANDGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
-		group.add(ORGate.getSolidORGATE(LogicComponent.SIZE_MIDDLE ,2, 1));
+		group.add(ANDGate.getSolidANDGATE(LogicComponent.SIZE_MIDDLE ,2));
+		group.add(NANDGate.getSolidNANDGATE(LogicComponent.SIZE_MIDDLE ,2));
+		group.add(ORGate.getSolidORGATE(LogicComponent.SIZE_MIDDLE, 2));
+		group.add(NORGate.getSolidNORGATE(LogicComponent.SIZE_MIDDLE ,2));
+		group.add(XORGate.getSolidXORGATE(LogicComponent.SIZE_MIDDLE ,2));
+		group.add(NOTGate.getSolidNOTGATE(LogicComponent.SIZE_MIDDLE));
 		ComponentGroup group_1 = new ComponentGroup();
 		
 		grouping.add(group);
