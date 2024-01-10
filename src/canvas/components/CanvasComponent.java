@@ -22,8 +22,6 @@ public abstract class CanvasComponent extends WritableImage{
 	//Objects rotation, id
 	public boolean rotation;  
 	
-	protected short id;
-	
 	//SetState for missing double simulation
 	protected boolean set_state = false;
 	
@@ -160,15 +158,6 @@ public abstract class CanvasComponent extends WritableImage{
 	}
 	public int getHeightPoint() {
 		return (width+LogicSubScene.cross_distance/2)/LogicSubScene.cross_distance;
-	}
-	
-	
-	//Setter/Getter for ID (in a Hashmap)
-	public void setId(short ID){
-		id = ID;
-	}
-	public short getId() {
-		return id;
 	}
 	
 	//Setter/Getter for rotation

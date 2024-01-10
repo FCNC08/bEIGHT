@@ -4,11 +4,12 @@ import java.util.ArrayList;
 
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import util.ComponentBox;
 
 public abstract class SingleCanvasComponent extends CanvasComponent {
 
 
-	protected ArrayList<Short> connected_Components;
+	protected ArrayList<SingleCanvasComponent> connected_Components;
 	
 	protected State state = new State(State.ERROR_MODE, State.OFF_UNSET);
 	
@@ -51,18 +52,22 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	}
 	
 	//Adding/Removing connectedComponents
-	public void addComponent(short ID) {
-		if(ID>1) {
-			connected_Components.add(ID);
+	public void addComponent(SingleCanvasComponent connecting_comp) {
+		if(connecting_comp != null && connecting_comp != ComponentBox.occupied) {
+			connected_Components.add(connecting_comp);
 		}
 	}
-	public void removeComponent(short ID) {
-		connected_Components.remove(ID);
+	public void removeComponent(SingleCanvasComponent connected_comp) {
+		if(connected_Components.contains(connected_comp)) {
+			connected_Components.remove(connected_comp);
+		}
+	}
+	public ArrayList<SingleCanvasComponent> getConnectedComponents(){
+		return connected_Components;
 	}
 	public void printComponents() {
-		for(short i : connected_Components) {
+		for(SingleCanvasComponent i : connected_Components) {
 			System.out.print(i+" 	");
 		}
-		System.out.println(id);
 	}
 }

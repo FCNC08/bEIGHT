@@ -47,8 +47,8 @@ public class Wire extends SingleCanvasComponent{
 	
 	public void change() {
 		//Changing the state means changing the state of each connected component
-		for(short i: connected_Components) {
-			SingleCanvasComponent c = logic_scene.getCanvasComponent(i);
+		for(SingleCanvasComponent i: connected_Components) {
+			SingleCanvasComponent c = i;
 			if(c.getSetState() == LogicSubScene.actual_set_state) {
 				if (this.state !=c.getState()) {
 					c.setState(ERR);
@@ -69,8 +69,8 @@ public class Wire extends SingleCanvasComponent{
 		//Setting focus and adding Squares at the end or printing the wire new if it turns off
 		if(focus != this.focus) {
 			if(focus) {
-				for(int x = 2; x < LogicSubScene.wire_height-1; x ++) {
-					for(int y = 2; y < LogicSubScene.wire_height-1; y++) {
+				for(int x = 1; x < LogicSubScene.wire_height-1; x ++) {
+					for(int y = 1; y < LogicSubScene.wire_height-1; y++) {
 						pwriter.setColor(x, y, LogicSubScene.focus_square_main);
 					}
 				}
@@ -83,8 +83,8 @@ public class Wire extends SingleCanvasComponent{
 					pwriter.setColor(1, x, LogicSubScene.focus_square_secondary);
 					pwriter.setColor(LogicSubScene.wire_height-1, x, LogicSubScene.focus_square_secondary);
 				}
-				for(int x = (int) getWidth(); x > getWidth()-LogicSubScene.wire_height; x--) {
-					for(int y = (int) getHeight(); y > getHeight()-LogicSubScene.wire_height; y--) {
+				for(int x = (int) getWidth()-1; x < getWidth()-LogicSubScene.wire_height; x--) {
+					for(int y = (int) getHeight()-1; y > getHeight()-LogicSubScene.wire_height; y--) {
 						pwriter.setColor(x, y, LogicSubScene.focus_square_main);
 					}
 				}
