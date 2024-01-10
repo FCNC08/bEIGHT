@@ -1,4 +1,4 @@
 package util;
 
-public class OcupationExeption extends Exception{
+public class OcupationExeption extends Exception {
 }
