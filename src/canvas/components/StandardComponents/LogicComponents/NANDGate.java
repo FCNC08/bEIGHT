@@ -133,4 +133,13 @@ public class NANDGate extends LogicComponent {
 		NANDGate gate = NANDGate.getNANDGATE(size, input_count);
 		return gate;
 	}
+	
+	@Override
+	protected void resetStandardImage() {
+		ImageView temp_view = new ImageView(LogicComponent_Image);
+		temp_view.setFitHeight(height);
+		temp_view.setFitWidth(width);
+		temp_view.snapshot(null, this);
+		System.gc();
+	}
 }

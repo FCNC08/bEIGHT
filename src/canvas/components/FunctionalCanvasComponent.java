@@ -198,6 +198,86 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 
 	@Override
 	public void setFocus(boolean focus) {
+		if (focus != this.focus) {
+			if (focus) {
+				// Painting the inner square of the focus square in top left corner
+				for (int x = 1; x < LogicSubScene.wire_height - 1; x++) {
+					for (int y = 1; y < LogicSubScene.wire_height - 1; y++) {
+						pwriter.setColor(x, y, LogicSubScene.focus_square_main);
+					}
+				}
+				// Painting outlines for focus square in top left corner
+				for (int x = 0; x < LogicSubScene.wire_height; x++) {
+					// Painting horizontal lines
+					pwriter.setColor(x, 0, LogicSubScene.focus_square_secondary);
+					pwriter.setColor(x, LogicSubScene.wire_height - 1, LogicSubScene.focus_square_secondary);
+
+					// Paint vertical lines
+					pwriter.setColor(0, x, LogicSubScene.focus_square_secondary);
+					pwriter.setColor(LogicSubScene.wire_height - 1, x, LogicSubScene.focus_square_secondary);
+				}
+
+				// Painting the inner square of the focus square in top right corner
+				for (int x = (int) getWidth() - 2; x > getWidth() - LogicSubScene.wire_height + 1; x--) {
+					for (int y = 0; y < LogicSubScene.wire_height - 1; y++) {
+						pwriter.setColor(x, y, LogicSubScene.focus_square_main);
+					}
+				}
+				// Painting outlines for focus square in top right corner
+				// Painting horizontal lines
+				for (int x = (int) getWidth() - 1; x > getWidth() - LogicSubScene.wire_height; x--) {
+					pwriter.setColor(x, 0, LogicSubScene.focus_square_secondary);
+					pwriter.setColor(x, LogicSubScene.wire_height - 1, LogicSubScene.focus_square_secondary);
+				}
+				// Painting vertical lines
+				for (int y = 0; y < LogicSubScene.wire_height; y++) {
+					pwriter.setColor((int) getWidth() - 1, y, LogicSubScene.focus_square_secondary);
+					pwriter.setColor((int) getWidth() - LogicSubScene.wire_height + 1, y, LogicSubScene.focus_square_secondary);
+				}
+
+				// Painting the inner square of the focus square in bottom left corner
+				for (int x = 1; x < LogicSubScene.wire_height - 1; x++) {
+					for (int y = (int) getHeight() - 2; y > getHeight() - LogicSubScene.wire_height + 1; y--) {
+						pwriter.setColor(x, y, LogicSubScene.focus_square_main);
+					}
+				}
+				// Painting outlines for focus square in bottom left corner
+				// Painting horizontal lines
+				for (int x = 0; x < LogicSubScene.wire_height; x++) {
+					pwriter.setColor(x, (int) getHeight() - 1, LogicSubScene.focus_square_secondary);
+					pwriter.setColor(x, (int) getHeight() - LogicSubScene.wire_height + 1,
+							LogicSubScene.focus_square_secondary);
+
+				}
+				// Painting vertical lines
+				for (int y = (int) getHeight() - 1; y > getHeight() - LogicSubScene.wire_height; y--) {
+					pwriter.setColor(0, y, LogicSubScene.focus_square_secondary);
+					pwriter.setColor(LogicSubScene.wire_height-1, y, LogicSubScene.focus_square_secondary);
+				}
+				
+				//Painting the inner square of the focus square in bottom right corner
+				for(int x = (int) getWidth() - 2; x > getWidth() - LogicSubScene.wire_height + 1; x--) {
+					for(int y = (int) getHeight() - 2; y > getHeight() - LogicSubScene.wire_height + 1; y--) {
+						pwriter.setColor(x, y, LogicSubScene.focus_square_main);
+					}
+				}
+				//Painting outlines for focus square in bottom right corner
+				//Painting horizontal lines
+				for(int x = (int) getWidth()-1; x > getWidth() - LogicSubScene.wire_height; x--) {
+					pwriter.setColor(x, (int) getHeight()-1, LogicSubScene.focus_square_secondary);
+					pwriter.setColor(x, (int) getHeight()-LogicSubScene.wire_height+1, LogicSubScene.focus_square_secondary);
+				}
+				//Painting vertical lines
+				for(int y = (int) getHeight()-1; y > getHeight()-LogicSubScene.wire_height; y--) {
+					pwriter.setColor((int) getHeight()-1, y, LogicSubScene.focus_square_secondary);
+					pwriter.setColor((int) getWidth()-LogicSubScene.wire_height+1, y, LogicSubScene.focus_square_secondary);
+				}
+			}else {
+				resetStandardImage();
+				System.out.println("Reset");
+			}
+			this.focus = focus;
+		}
 
 	}
 
@@ -215,4 +295,6 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 			image_view.setLayoutX(image_view.getLayoutX() - 0.5 * width + 0.5 * getHeight());
 		}
 	}
+	
+	protected abstract void resetStandardImage();
 }

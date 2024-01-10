@@ -3,6 +3,7 @@ package canvas.components;
 import canvas.LogicSubScene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
@@ -21,6 +22,9 @@ public abstract class CanvasComponent extends WritableImage {
 
 	// Objects rotation, id
 	public boolean rotation;
+	
+	//Is Component focused
+	protected boolean focus;
 
 	// SetState for missing double simulation
 	protected boolean set_state = false;
@@ -51,6 +55,7 @@ public abstract class CanvasComponent extends WritableImage {
 		width = NewWidth;
 		height = NewHeight;
 
+		pwriter = getPixelWriter();
 		// Adding standard values
 		rotation = HORIZONTAL;
 		this.createImageView();

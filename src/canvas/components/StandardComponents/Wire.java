@@ -10,17 +10,12 @@ import javafx.scene.paint.Color;
 
 public class Wire extends SingleCanvasComponent {
 
-	protected boolean front_dot = false;
-	protected boolean back_dot = false;
-	protected boolean focus;
-
 	public Wire(int Startwidth) {
 		// Creating Wire with height and painting it using PaintWire()
 		super(Startwidth, LogicSubScene.wire_height);
 		setHeight(LogicSubScene.wire_height / 2);
 		width = Startwidth;
 		focus = false;
-		pwriter = getPixelWriter();
 		connected_Components = new ArrayList<>();
 		PaintWire();
 	}
@@ -36,14 +31,6 @@ public class Wire extends SingleCanvasComponent {
 		}
 
 		c = null;
-	}
-
-	public void setFrontDot(boolean set) {
-		front_dot = set;
-	}
-
-	public void setBackDot(boolean set) {
-		back_dot = set;
 	}
 
 	public void change() {

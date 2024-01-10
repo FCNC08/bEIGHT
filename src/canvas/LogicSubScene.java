@@ -224,6 +224,7 @@ public class LogicSubScene extends SubScene {
 				if (me.getButton() == MouseButton.PRIMARY) {
 					if (last_focused_component != null) {
 						last_focused_component.setFocus(false);
+						System.out.println("Entfokused");
 						last_focused_component = null;
 					}
 					if (me.isStillSincePress()) {
@@ -324,6 +325,7 @@ public class LogicSubScene extends SubScene {
 		for (int x = component.getXPoint(); x <= (component.getXPoint() + component.getHeightPoint()); x++) {
 			for (int y = component.getYPoint(); y <= (component.getXPoint() + component.getHeightPoint()); y++) {
 				if (used[x][y].HorizontalComponent != null) {
+					System.out.println(used[x][y].HorizontalComponent);
 					throw new OcupationExeption();
 				} else {
 					used[x][y].HorizontalComponent = ComponentBox.occupied;
@@ -358,6 +360,29 @@ public class LogicSubScene extends SubScene {
 		add(doublet.getVerticalWire());
 		System.out.println("Added WireDoublet");
 
+	}
+
+	public void add(Dot component) throws OcupationExeption {
+		if (component != null) {
+			ComponentBox loc_ID;
+
+			// Checking Point where Dot is added and connecting it to other
+			// SingleCanvasComponents
+			loc_ID = used[component.point_X][component.point_Y];
+			System.out.println(component.point_X + " " + component.point_Y);
+
+			if (loc_ID.Dot == null) {
+				used[component.point_X][component.point_Y].Dot = component;
+			} else {
+				loc_ID.Dot.addComponent(component);
+				component.addComponent(loc_ID.Dot);
+			}
+
+			component.setLogicSubScene(this);
+			root.getChildren().add(component.getImageView());
+			// component.printComponents();
+			// System.out.println("Line: 519");
+		}
 	}
 
 	public void add(SingleCanvasComponent component) throws OcupationExeption {
@@ -459,29 +484,6 @@ public class LogicSubScene extends SubScene {
 			component.setLogicSubScene(this);
 			root.getChildren().add(component.getImageView());
 			component.printComponents();
-		}
-	}
-
-	public void add(Dot component) throws OcupationExeption {
-		if (component != null) {
-			ComponentBox loc_ID;
-
-			// Checking Point where Dot is added and connecting it to other
-			// SingleCanvasComponents
-			loc_ID = used[component.point_X][component.point_Y];
-			System.out.println(component.point_X + " " + component.point_Y);
-
-			if (loc_ID.Dot == null) {
-				used[component.point_X][component.point_Y].Dot = component;
-			} else {
-				loc_ID.Dot.addComponent(component);
-				component.addComponent(loc_ID.Dot);
-			}
-
-			component.setLogicSubScene(this);
-			root.getChildren().add(component.getImageView());
-			// component.printComponents();
-			// System.out.println("Line: 519");
 		}
 	}
 

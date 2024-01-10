@@ -20,5 +20,10 @@ public class Register extends MemoryCanvasComponent {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	protected void resetStandardImage() {
+		
+	}
 
 }

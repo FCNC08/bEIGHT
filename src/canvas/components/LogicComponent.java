@@ -1,7 +1,6 @@
 package canvas.components;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 public abstract class LogicComponent extends FunctionalCanvasComponent {
 

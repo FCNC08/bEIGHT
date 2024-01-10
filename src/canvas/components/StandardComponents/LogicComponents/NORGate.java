@@ -133,4 +133,13 @@ public class NORGate extends LogicComponent {
 		NORGate gate = NORGate.getNORGATE(size, input_count);
 		return gate;
 	}
+	
+	@Override
+	protected void resetStandardImage() {
+		ImageView temp_view = new ImageView(LogicComponent_Image);
+		temp_view.setFitHeight(height);
+		temp_view.setFitWidth(width);
+		temp_view.snapshot(null, this);
+		System.gc();
+	}
 }
