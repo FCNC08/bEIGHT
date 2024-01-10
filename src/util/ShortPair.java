@@ -15,6 +15,12 @@ public class ShortPair {
 		this.Dot = Dot;
 	}
 	public short pickRandom() {
+		if(HorizontalShort < 2&&VerticalShort>1) {
+			return VerticalShort;
+		}
+		if(VerticalShort < 2&&HorizontalShort > 1) {
+			return VerticalShort;
+		}
 		return Main.random.nextBoolean()? this.HorizontalShort : this.VerticalShort;
 	}
 }

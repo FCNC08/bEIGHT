@@ -364,7 +364,6 @@ public class LogicSubScene extends SubScene{
 		//Adding each Wire of a WireDoublet
 		if(doublet.getHorizontalWire() != null) {
 			root.getChildren().add(doublet.getHorizontalWire().getImageView());
-			System.out.println(root.getChildren().contains(doublet.getHorizontalWire().getImageView()));
 		}
 		if(doublet.getVerticalWire() != null) {
 			root.getChildren().add(doublet.getVerticalWire().getImageView());
@@ -383,84 +382,94 @@ public class LogicSubScene extends SubScene{
 		if(component != null) {
 				
 			short ID = generateRandomSingleComponentID();		
-			short loc_ID;
+			ShortPair loc_ID;
 			
 			System.out.println(ID);
 			//Checking other elements blocking the Wire/connecting wires together
 			if(component.rotation == CanvasComponent.HORIZONTAL) {
 				//Checking for horizontal and adding the ID to the Horizonzal Short in ShortPair
 				for(int x = component.getXPoint()+1; x < component.getXPoint()+component.getWidthPoint(); x++) {
-					loc_ID = used[x][component.getYPoint()].HorizontalShort;
-					if(loc_ID == 0) {
+					loc_ID = used[x][component.getYPoint()];
+					if(loc_ID.HorizontalShort == 0) {
 						used[x][component.getYPoint()].HorizontalShort = ID;
-					}else if(loc_ID == 1){
+					}else if(loc_ID.HorizontalShort == 1){
 						throw new OcupationExeption();
 					}else {
-						if(getCanvasComponent(loc_ID).checkEnd(x, component.getYPoint())) {
-							getCanvasComponent(loc_ID).addComponent(ID);
-							component.addComponent(loc_ID);
-						}
+						//if(getCanvasComponent(loc_ID.HorizontalShort).checkEnd(x, component.getYPoint())) {
+							getCanvasComponent(loc_ID.HorizontalShort).addComponent(ID);
+							component.addComponent(loc_ID.HorizontalShort);
+							component.addComponent(loc_ID.VerticalShort);
+							component.addComponent(loc_ID.Dot);
+					//	}
 					}
 				}
 				
-				loc_ID = used[component.getXPoint()][component.getYPoint()].HorizontalShort;
-				if(loc_ID==0) {
+				loc_ID = used[component.getXPoint()][component.getYPoint()];
+				if(loc_ID.HorizontalShort==0) {
 					used[component.getXPoint()][component.getYPoint()].HorizontalShort = ID;
-				}else if(loc_ID==1) {
+				}else if(loc_ID.HorizontalShort==1) {
 					throw new OcupationExeption();
 				}else {
-					getCanvasComponent(loc_ID).addComponent(ID);
-					component.addComponent(loc_ID);
+					getCanvasComponent(loc_ID.VerticalShort).addComponent(ID);
+					component.addComponent(loc_ID.VerticalShort);
 				}
 				
 				//Sets End/Start Point
-				loc_ID = used[component.getXPoint()+component.getWidthPoint()][component.getYPoint()].HorizontalShort;
-				System.out.println(loc_ID);
-				if(loc_ID==0) {
+				loc_ID = used[component.getXPoint()+component.getWidthPoint()][component.getYPoint()];
+				System.out.println((component.getXPoint()+component.getWidthPoint())+" "+component.getYPoint());
+				//System.out.println(loc_ID);
+				if(loc_ID.HorizontalShort==0) {
 					used[component.getXPoint()+component.getHeightPoint()][component.getYPoint()].HorizontalShort = ID;
-				}else if(loc_ID==1) {
+				}else if(loc_ID.HorizontalShort==1) {
 					throw new OcupationExeption();
 				}else {
 					System.out.println("test");
-					getCanvasComponent(loc_ID).addComponent(ID);
-					component.addComponent(loc_ID);
+					getCanvasComponent(loc_ID.HorizontalShort).addComponent(ID);
+					component.addComponent(loc_ID.VerticalShort);
+					component.addComponent(loc_ID.Dot);
 				}
 			}else {
 				//Same as for Horizontal with Vertical
 				for(int y = component.getYPoint()+1; y < component.getYPoint()+component.getHeightPoint(); y++) {
-					loc_ID = used[component.getXPoint()][y].VerticalShort;
-					if(loc_ID == 0) {
+					loc_ID = used[component.getXPoint()][y];
+					if(loc_ID.VerticalShort == 0) {
 						used[component.getXPoint()][y].VerticalShort = ID;
-					}else if(loc_ID == 1){
+					}else if(loc_ID.VerticalShort == 1){
 						throw new OcupationExeption();
 					}else {
-						if(getCanvasComponent(loc_ID).checkEnd(component.getXPoint(), y)) {
-							getCanvasComponent(loc_ID).addComponent(ID);
-							component.addComponent(loc_ID);
+						if(getCanvasComponent(loc_ID.VerticalShort).checkEnd(component.getXPoint(), y)) {
+							getCanvasComponent(loc_ID.VerticalShort).addComponent(ID);
+							component.addComponent(loc_ID.VerticalShort);
+							component.addComponent(loc_ID.HorizontalShort);
+							component.addComponent(loc_ID.Dot);
 						}
 					}
 				}
 				
 	
 				//Sets End/Start Point
-				loc_ID = used[component.getXPoint()][component.getYPoint()].VerticalShort;
-				if(loc_ID==0) {
+				loc_ID = used[component.getXPoint()][component.getYPoint()];
+				if(loc_ID.VerticalShort==0) {
 					used[component.getXPoint()][component.getYPoint()].VerticalShort = ID;
-				}else if(loc_ID==1) {
+				}else if(loc_ID.VerticalShort==1) {
 					throw new OcupationExeption();
 				}else {
-					getCanvasComponent(loc_ID).addComponent(ID);
-					component.addComponent(loc_ID);
+					getCanvasComponent(loc_ID.VerticalShort).addComponent(ID);
+					component.addComponent(loc_ID.VerticalShort);
+					component.addComponent(loc_ID.HorizontalShort);
+					component.addComponent(loc_ID.Dot);
 				}
 				
-				loc_ID = used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()].VerticalShort;
-				if(loc_ID==0) {
+				loc_ID = used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()];
+				if(loc_ID.VerticalShort==0) {
 					used[component.getXPoint()][component.getYPoint()+component.getHeightPoint()].VerticalShort = ID;
-				}else if(loc_ID==1) {
+				}else if(loc_ID.VerticalShort==1) {
 					throw new OcupationExeption();
 				}else {
-					getCanvasComponent(loc_ID).addComponent(ID);
-					component.addComponent(loc_ID);
+					getCanvasComponent(loc_ID.VerticalShort).addComponent(ID);
+					component.addComponent(loc_ID.VerticalShort);
+					component.addComponent(loc_ID.HorizontalShort);
+					component.addComponent(loc_ID.Dot);
 				}
 				
 				
@@ -483,6 +492,7 @@ public class LogicSubScene extends SubScene{
 			
 			//Checking Point where Dot is added and connecting it to other SingleCanvasComponents
 			loc_ID = used[component.point_X][component.point_Y];
+			System.out.println(component.point_X+" "+component.point_Y);
 			
 			if(loc_ID.Dot == 0) {
 				used[component.point_X][component.point_Y].Dot = ID;

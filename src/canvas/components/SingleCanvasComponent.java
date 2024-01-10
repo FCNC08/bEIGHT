@@ -52,7 +52,9 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	
 	//Adding/Removing connectedComponents
 	public void addComponent(short ID) {
-		connected_Components.add(ID);
+		if(ID>1) {
+			connected_Components.add(ID);
+		}
 	}
 	public void removeComponent(short ID) {
 		connected_Components.remove(ID);
