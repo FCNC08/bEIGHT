@@ -78,7 +78,6 @@ public class Wire extends SingleCanvasComponent {
 					}
 				}
 			} else {
-				System.out.println("test");
 				PaintWire();
 			}
 			this.focus = focus;
