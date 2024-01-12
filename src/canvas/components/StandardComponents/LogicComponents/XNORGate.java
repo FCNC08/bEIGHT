@@ -140,6 +140,19 @@ public class XNORGate extends LogicComponent {
 		temp_view.setFitHeight(height);
 		temp_view.setFitWidth(width);
 		temp_view.snapshot(null, this);
+		// Removing all background/Color of the pixel 0|0
+				PixelReader reader = getPixelReader();
+				PixelWriter writer = getPixelWriter();
+				Color background = reader.getColor(width / 2, height / 2);
+				for (int x = 0; x < width; x++) {
+					for (int y = 0; y < height; y++) {
+						if (background.equals(reader.getColor(x, y))) {
+							writer.setColor(x, y, Color.TRANSPARENT);
+						}
+					}
+				}
+				reader = null;
+				writer = null;
 		System.gc();
 	}
 }
