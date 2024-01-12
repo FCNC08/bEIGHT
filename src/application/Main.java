@@ -21,6 +21,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -45,7 +46,7 @@ public class Main extends Application {
 		System.out.println("Hallo Welt dies ist ein Test vom Laptop");
 		// Adding different Scenes
 		addStartScene();
-		addLogismArea();
+		addLogicArea();
 
 		// set Scene and saves Stage
 		MainStage = primaryStage;
@@ -142,7 +143,7 @@ public class Main extends Application {
 	}
 
 	// Adding LogicScene
-	private void addLogismArea() {
+	private void addLogicArea() {
 		// Size of screen
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -171,7 +172,7 @@ public class Main extends Application {
 
 		and.setX(1300);
 		and.setY(1000);
-
+		
 		// LogicSubSceneContainer
 
 		root.getChildren().add(logic_container);
@@ -212,6 +213,15 @@ public class Main extends Application {
 		bar.getMenus().add(file);
 
 		Scene scene = new Scene(vbox);
+		
+		EventHandler<KeyEvent> key_event_handler = new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent ke) {
+				logic_container.triggerKeyEvent(ke);
+			}
+		};
+		
+		scene.addEventFilter(KeyEvent.KEY_PRESSED, key_event_handler);
 
 		// Adding Runnable to maximize and resize
 		Runnables.add(new Runnable() {

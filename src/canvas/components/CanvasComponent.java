@@ -94,10 +94,9 @@ public abstract class CanvasComponent extends WritableImage {
 
 	// Cleaning all Pixels
 	public void clearPixels() {
-		Color invisible = new Color(1.0, 1.0, 1.0, 0.0);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				pwriter.setColor(x, y, invisible);
+				pwriter.setColor(x, y, Color.TRANSPARENT);
 			}
 		}
 	}

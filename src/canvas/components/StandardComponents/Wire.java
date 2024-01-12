@@ -13,7 +13,7 @@ public class Wire extends SingleCanvasComponent {
 	public Wire(int Startwidth) {
 		// Creating Wire with height and painting it using PaintWire()
 		super(Startwidth, LogicSubScene.wire_height);
-		setHeight(LogicSubScene.wire_height / 2);
+		// setHeight(LogicSubScene.wire_height / 2);
 		width = Startwidth;
 		focus = false;
 		connected_Components = new ArrayList<>();
@@ -58,25 +58,36 @@ public class Wire extends SingleCanvasComponent {
 		// turns off
 		if (focus != this.focus) {
 			if (focus) {
-				for (int x = 1; x < LogicSubScene.wire_height - 1; x++) {
-					for (int y = 1; y < LogicSubScene.wire_height - 1; y++) {
+
+				for (int y = 1; y < LogicSubScene.wire_height - 1; y++) {
+					for (int x = 1; x < LogicSubScene.wire_height - 1; x++) {
+						// Painting inner square of the focus square at the start
+						pwriter.setColor(x, y, LogicSubScene.focus_square_main);
+					}
+					for (int x = width - 1; x > width - LogicSubScene.wire_height + 1; x--) {
+						// Painting inner square of the focus square at the end
 						pwriter.setColor(x, y, LogicSubScene.focus_square_main);
 					}
 				}
 				for (int x = 1; x < LogicSubScene.wire_height; x++) {
-					// Paint horizontal lines
-					pwriter.setColor(x, 1, LogicSubScene.focus_square_secondary);
+					// Painting horizontal outlines at the start
+					pwriter.setColor(x, 0, LogicSubScene.focus_square_secondary);
 					pwriter.setColor(x, LogicSubScene.wire_height - 1, LogicSubScene.focus_square_secondary);
 
-					// Paint vertical lines
-					pwriter.setColor(1, x, LogicSubScene.focus_square_secondary);
+					// Painting vertical outlines at the start
+					pwriter.setColor(0, x, LogicSubScene.focus_square_secondary);
 					pwriter.setColor(LogicSubScene.wire_height - 1, x, LogicSubScene.focus_square_secondary);
+
+					// Painting horizontal outlines at the end
+					pwriter.setColor(x + width - LogicSubScene.wire_height, 0, LogicSubScene.focus_square_secondary);
+					pwriter.setColor(x + width - LogicSubScene.wire_height, LogicSubScene.wire_height - 1,
+							LogicSubScene.focus_square_secondary);
+
+					// Painting vertical outlines at the end
+					pwriter.setColor(width - 1, x, LogicSubScene.focus_square_secondary);
+					pwriter.setColor(width - LogicSubScene.wire_height + 1, x, LogicSubScene.focus_square_secondary);
 				}
-				for (int x = (int) getWidth() - 1; x < getWidth() - LogicSubScene.wire_height; x--) {
-					for (int y = (int) getHeight() - 1; y > getHeight() - LogicSubScene.wire_height; y--) {
-						pwriter.setColor(x, y, LogicSubScene.focus_square_main);
-					}
-				}
+				pwriter.setColor(0, 0, LogicSubScene.focus_square_secondary);
 			} else {
 				PaintWire();
 			}

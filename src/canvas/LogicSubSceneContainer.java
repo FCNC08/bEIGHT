@@ -13,6 +13,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
@@ -140,5 +141,8 @@ public class LogicSubSceneContainer extends SubScene {
 	public static LogicSubSceneContainer init(int width, int height) {
 		// Initializing Container with new Group
 		return new LogicSubSceneContainer(width, height, new Group());
+	}
+	public void triggerKeyEvent(KeyEvent ke) {
+		logic_subscene.triggerKeyEvent(ke);
 	}
 }
