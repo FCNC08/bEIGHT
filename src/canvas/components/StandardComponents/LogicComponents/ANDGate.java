@@ -110,7 +110,6 @@ public class ANDGate extends LogicComponent {
 				bool_states[i] = input[i].getStateBoolean();
 			}
 			boolean output_state = true;
-			System.out.println("lenght of bool:" + bool_states.length);
 			for (boolean b : bool_states) {
 				System.out.println(b);
 				output_state = output_state && b;

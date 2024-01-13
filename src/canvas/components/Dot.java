@@ -9,7 +9,7 @@ import javafx.scene.shape.Circle;
 
 public class Dot extends SingleCanvasComponent {
 
-	FunctionalCanvasComponent parent;
+	public FunctionalCanvasComponent parent;
 
 	// Initializing it with the size of a half wireheight
 	public Dot(FunctionalCanvasComponent parent) {

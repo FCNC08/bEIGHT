@@ -131,43 +131,72 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	// Setter/Getter for X/Y position
 	@Override
 	public void addX(int X_coord) {
-		this.X = this.X + X_coord;
-		this.point_X = (X_coord + LogicSubScene.wire_height / 2) / LogicSubScene.cross_distance;
-		image_view.setLayoutX(image_view.getLayoutX() + X_coord);
+		int overflow = (X+X_coord+point_X_rest)%LogicSubScene.cross_distance;
+		if(overflow<=LogicSubScene.cross_distance) {
+			this.X = (X+X_coord+point_X_rest)-overflow;
+			this.point_X_rest = overflow;
+		}else {
+			this.X = (X+X_coord+point_X_rest)+LogicSubScene.cross_distance-overflow;
+			this.point_X_rest = -overflow;
+		}
+		System.out.println(point_X_rest+" ");
+		this.point_X = X/LogicSubScene.cross_distance;
+		image_view.setLayoutX(X);
 		for (Dot d : inputs) {
-			d.addX(X_coord);
+			logic_scene.move(d, X_coord, 0);
 		}
 		for (Dot d : outputs) {
-			d.addX(X_coord);
+			logic_scene.move(d, X_coord, 0);
 		}
 	}
 
 	@Override
 	public void addY(int Y_coord) {
-		this.Y = this.Y + Y_coord;
-		this.point_Y = (Y_coord + LogicSubScene.wire_height / 2) / LogicSubScene.cross_distance;
-		image_view.setLayoutY(image_view.getLayoutY() + Y_coord);
-		for (Dot d : inputs) {
-			d.addY(Y_coord);
+		int overflow = (Y+Y_coord+point_Y_rest)%LogicSubScene.cross_distance;
+		if(overflow<=LogicSubScene.cross_distance) {
+			this.Y = (Y+Y_coord+point_Y_rest)-overflow;
+			this.point_Y_rest = overflow;
+		}else {
+			this.Y = (Y+Y_coord+point_Y_rest)+LogicSubScene.cross_distance-overflow;
+			this.point_Y_rest = -overflow;
 		}
+		this.point_Y = Y/LogicSubScene.cross_distance;
+		image_view.setLayoutY(Y);
 		for (Dot d : inputs) {
-			d.addY(Y_coord);
+			logic_scene.move(d, 0, Y_coord);
+		}
+		for (Dot d : outputs) {
+			logic_scene.move(d, 0, Y_coord);
 		}
 	}
 
 	@Override
 	public void setX(int X_coord) {
-		this.X = X_coord;
-		this.point_X = (X_coord + LogicSubScene.wire_height / 2) / LogicSubScene.cross_distance;
-		image_view.setLayoutX(X_coord);
+		int overflow = (X_coord)%LogicSubScene.cross_distance;
+		if(overflow<=LogicSubScene.cross_distance) {
+			this.X = (X_coord)-overflow;
+			this.point_X_rest = 0;
+		}else {
+			this.X = (X_coord)+LogicSubScene.cross_distance-overflow;
+			this.point_X_rest = 0;
+		}
+		this.point_X = X/LogicSubScene.cross_distance;
+		image_view.setLayoutX(X);
 		setStandardDotLocations();
 	}
 
 	@Override
 	public void setY(int Y_coord) {
-		this.Y = Y_coord;
-		this.point_Y = (Y_coord + LogicSubScene.wire_height / 2) / LogicSubScene.cross_distance;
-		image_view.setLayoutY(Y_coord);
+		int overflow = (Y_coord)%LogicSubScene.cross_distance;
+		if(overflow<=LogicSubScene.cross_distance) {
+			this.Y = (Y_coord)-overflow;
+			this.point_Y_rest = 0;
+		}else {
+			this.Y = (Y_coord)+LogicSubScene.cross_distance-overflow;
+			this.point_Y_rest = 0;
+		}
+		this.point_Y = Y/LogicSubScene.cross_distance;
+		image_view.setLayoutY(Y);
 		setStandardDotLocations();
 	}
 
@@ -232,7 +261,8 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				// Painting vertical lines
 				for (int y = 0; y < LogicSubScene.wire_height; y++) {
 					pwriter.setColor((int) getWidth() - 1, y, LogicSubScene.focus_square_secondary);
-					pwriter.setColor((int) getWidth() - LogicSubScene.wire_height + 1, y, LogicSubScene.focus_square_secondary);
+					pwriter.setColor((int) getWidth() - LogicSubScene.wire_height + 1, y,
+							LogicSubScene.focus_square_secondary);
 				}
 
 				// Painting the inner square of the focus square in bottom left corner
@@ -252,27 +282,29 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				// Painting vertical lines
 				for (int y = (int) getHeight() - 1; y > getHeight() - LogicSubScene.wire_height; y--) {
 					pwriter.setColor(0, y, LogicSubScene.focus_square_secondary);
-					pwriter.setColor(LogicSubScene.wire_height-1, y, LogicSubScene.focus_square_secondary);
+					pwriter.setColor(LogicSubScene.wire_height - 1, y, LogicSubScene.focus_square_secondary);
 				}
-				
-				//Painting the inner square of the focus square in bottom right corner
-				for(int x = (int) getWidth() - 2; x > getWidth() - LogicSubScene.wire_height + 1; x--) {
-					for(int y = (int) getHeight() - 2; y > getHeight() - LogicSubScene.wire_height + 1; y--) {
+
+				// Painting the inner square of the focus square in bottom right corner
+				for (int x = (int) getWidth() - 2; x > getWidth() - LogicSubScene.wire_height + 1; x--) {
+					for (int y = (int) getHeight() - 2; y > getHeight() - LogicSubScene.wire_height + 1; y--) {
 						pwriter.setColor(x, y, LogicSubScene.focus_square_main);
 					}
 				}
-				//Painting outlines for focus square in bottom right corner
-				//Painting horizontal lines
-				for(int x = (int) getWidth()-1; x > getWidth() - LogicSubScene.wire_height; x--) {
-					pwriter.setColor(x, (int) getHeight()-1, LogicSubScene.focus_square_secondary);
-					pwriter.setColor(x, (int) getHeight()-LogicSubScene.wire_height+1, LogicSubScene.focus_square_secondary);
+				// Painting outlines for focus square in bottom right corner
+				// Painting horizontal lines
+				for (int x = (int) getWidth() - 1; x > getWidth() - LogicSubScene.wire_height; x--) {
+					pwriter.setColor(x, (int) getHeight() - 1, LogicSubScene.focus_square_secondary);
+					pwriter.setColor(x, (int) getHeight() - LogicSubScene.wire_height + 1,
+							LogicSubScene.focus_square_secondary);
 				}
-				//Painting vertical lines
-				for(int y = (int) getHeight()-1; y > getHeight()-LogicSubScene.wire_height; y--) {
-					pwriter.setColor((int) getHeight()-1, y, LogicSubScene.focus_square_secondary);
-					pwriter.setColor((int) getWidth()-LogicSubScene.wire_height+1, y, LogicSubScene.focus_square_secondary);
+				// Painting vertical lines
+				for (int y = (int) getHeight() - 1; y > getHeight() - LogicSubScene.wire_height; y--) {
+					pwriter.setColor((int) getHeight() - 1, y, LogicSubScene.focus_square_secondary);
+					pwriter.setColor((int) getWidth() - LogicSubScene.wire_height + 1, y,
+							LogicSubScene.focus_square_secondary);
 				}
-			}else {
+			} else {
 				resetStandardImage();
 				System.out.println("Reset");
 			}
@@ -295,6 +327,6 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 			image_view.setLayoutX(image_view.getLayoutX() - 0.5 * width + 0.5 * getHeight());
 		}
 	}
-	
+
 	protected abstract void resetStandardImage();
 }

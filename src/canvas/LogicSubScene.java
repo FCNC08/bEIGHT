@@ -1,6 +1,5 @@
 package canvas;
 
-import java.awt.RenderingHints.Key;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -69,6 +68,8 @@ public class LogicSubScene extends SubScene {
 	protected double X = 0;
 	protected double Y = 0;
 
+	private int moves_focused_x;
+	private int moves_focused_y;
 	private int pressed_x;
 	private int pressed_y;
 	private double moves_x;
@@ -112,7 +113,7 @@ public class LogicSubScene extends SubScene {
 		// Array of ComponentBoxes
 		// Declares the Componentsids in each point on the area
 		used = new ComponentBox[Newwidth / cross_distance][Newheight / cross_distance];
-
+		
 		for (int x = 0; x < used.length; x++) {
 			for (int y = 0; y < used[0].length; y++) {
 				used[x][y] = new ComponentBox();
@@ -147,8 +148,26 @@ public class LogicSubScene extends SubScene {
 					moves_y = me.getSceneY() - Y - 25;
 
 				} else if (me.isPrimaryButtonDown()) {
-
-					if (adding_WireDoublet != null) {
+					boolean moved = false;
+					if(me.getTarget() instanceof ImageView) {
+						ImageView view = (ImageView) me.getTarget();
+						if(view.getImage() instanceof CanvasComponent) {
+							CanvasComponent component = (CanvasComponent) view.getImage();
+							if(component == last_focused_component) {
+								try {
+									move(component,(int) ((me.getSceneX()-X+getXTranslate())-moves_focused_x),(int) ((me.getSceneY()-Y+25+getYTranslate())-moves_focused_y));
+									moves_focused_x = (int) (me.getSceneX()-X+getXTranslate());
+									moves_focused_y = (int) (me.getSceneY()-Y+25+getYTranslate());
+									moved = true;
+								} catch (OcupationExeption e) {
+									e.printStackTrace();
+									moved = false;
+								}
+							}
+							
+						}
+					}
+					if (adding_WireDoublet != null&&!moved) {
 						// Checking if a WireDoublet already exists
 						try {
 							// Trys to remove old WireDoublet(doesn't work) and adding new Wiredoublet with
@@ -160,7 +179,7 @@ public class LogicSubScene extends SubScene {
 							System.out.println("Exeption");
 							adding_WireDoublet = null;
 						}
-					} else {
+					} else if(!moved) {
 						try {
 							// No wiredoublet exists so it creates a new and adds it to the SubScene
 							adding_WireDoublet = getWires(pressed_x, pressed_y, (int) (me.getSceneX() - X + getXTranslate()), (int) (me.getSceneY() - Y - 25 + getYTranslate()));
@@ -182,8 +201,8 @@ public class LogicSubScene extends SubScene {
 				System.out.println("pressed");
 				// Setting the coord to createWire/moveScene
 				if (me.isPrimaryButtonDown()) {
-					pressed_x = (int) (me.getSceneX() - X + getXTranslate());
-					pressed_y = (int) (me.getSceneY() - Y - 25 + getYTranslate());
+					moves_focused_x = pressed_x = (int) (me.getSceneX() - X + getXTranslate());
+					moves_focused_y = pressed_y = (int) (me.getSceneY() - Y - 25 + getYTranslate());
 				} else if (me.isSecondaryButtonDown()) {
 					moves_x = me.getSceneX() - X;
 					moves_y = me.getSceneY() - Y - 25;
@@ -233,8 +252,10 @@ public class LogicSubScene extends SubScene {
 							Image img = ((ImageView) me.getTarget()).getImage();
 							if (img instanceof CanvasComponent) {
 								CanvasComponent comp = (CanvasComponent) img;
-								comp.setFocus(true);
-								last_focused_component = comp;
+								if(!(comp instanceof Dot)) {
+									comp.setFocus(true);
+									last_focused_component = comp;
+								}
 							}
 						}
 					}
@@ -285,15 +306,7 @@ public class LogicSubScene extends SubScene {
 		System.out.println("ELEMENT: " + component.getX() + " " + component.getY());
 		root.getChildren().add(component.getImageView());
 		component.setStandardDotLocations();
-		// Adding each Dot(Communication between wires and Components)
-		for (Dot d : component.inputs) {
-			add(d);
-			d.setState(State.getState(true, Main.random.nextBoolean()));
-
-		}
-		for (Dot d : component.outputs) {
-			add(d);
-		}
+		
 		for (int x = component.getXPoint(); x <= (component.getXPoint() + component.getHeightPoint()); x++) {
 			for (int y = component.getYPoint(); y <= (component.getXPoint() + component.getHeightPoint()); y++) {
 				if (used[x][y].HorizontalComponent != null) {
@@ -308,6 +321,15 @@ public class LogicSubScene extends SubScene {
 					used[x][y].VerticalComponent = ComponentBox.occupied;
 				}
 			}
+		}
+		// Adding each Dot(Communication between wires and Components)
+		for (Dot d : component.inputs) {
+			add(d);
+			d.setState(State.getState(true, Main.random.nextBoolean()));
+
+		}
+		for (Dot d : component.outputs) {
+			add(d);
 		}
 		// Adding component to the ID-System
 		component.setLogicSubScene(this);
@@ -335,18 +357,8 @@ public class LogicSubScene extends SubScene {
 
 	public void add(Dot component) throws OcupationExeption {
 		if (component != null) {
-			ComponentBox loc_ID;
-
-			// Checking Point where Dot is added and connecting it to other
-			// SingleCanvasComponents
-			loc_ID = used[component.point_X][component.point_Y];
-			System.out.println(component.point_X + " " + component.point_Y);
-
-			if (loc_ID.Dot == null) {
+			if (used[component.point_X][component.point_Y].Dot == null) {
 				used[component.point_X][component.point_Y].Dot = component;
-			} else {
-				loc_ID.Dot.addComponent(component);
-				component.addComponent(loc_ID.Dot);
 			}
 
 			component.setLogicSubScene(this);
@@ -533,7 +545,183 @@ public class LogicSubScene extends SubScene {
 			root.getChildren().remove(component.getImageView());
 		}
 	}
+	
+	public void move(CanvasComponent component, int new_X, int new_Y) throws OcupationExeption {
+		if(component instanceof FunctionalCanvasComponent) {
+			move((FunctionalCanvasComponent) component, new_X, new_Y);
+		}else if(component instanceof Dot) {
+			move((Dot) component, new_X, new_Y);
+		}else if(component instanceof SingleCanvasComponent) {
+			move((SingleCanvasComponent) component, new_X, new_Y);
+		}else {
+			System.out.println("Unknown Component");
+		}
+	}
+	
+	public void move(FunctionalCanvasComponent component, int new_X, int new_Y) throws OcupationExeption {
+		//Removing blocks from used 
+		System.out.println(component.getYPoint()+"  "+component.getHeightPoint());
+		for (int x = component.getXPoint(); x <= (component.getXPoint() + component.getHeightPoint()); x++) {
+			for (int y = component.getYPoint(); y <= (component.getXPoint() + component.getHeightPoint()); y++) {
+				if (used[x][y].HorizontalComponent != null) {
+					used[x][y].HorizontalComponent = null;
+				}
+				if (used[x][y].VerticalComponent != null) {
+					used[x][y].VerticalComponent = null;
+				}
+			}
+		}
+		//Add Move
+		component.addX(new_X);
+		component.addY(new_Y);
+		System.out.println(component.getYPoint()+"  "+component.getXPoint());
+		//Adding new blocks
+		for (int x = component.getXPoint(); x <= (component.getXPoint() + component.getHeightPoint()); x++) {
+			for (int y = component.getYPoint(); y <= (component.getXPoint() + component.getHeightPoint()); y++) {
+				if (used[x][y].HorizontalComponent != null) {
+					throw new OcupationExeption();
+				} else {
+					used[x][y].HorizontalComponent = ComponentBox.occupied;
+				}
+				if (used[x][y].VerticalComponent != null) {
+					throw new OcupationExeption();
+				} else {
+					used[x][y].VerticalComponent = ComponentBox.occupied;
+				}
+			}
+		}
+		
+	}
 
+	public void move(Dot component, int new_X, int new_Y) {
+		//Removing Dot from used
+		if (used[component.point_X][component.point_Y].Dot != null) {
+			used[component.point_X][component.point_Y].Dot = null;
+		}
+		component.addX(new_X);
+		component.addY(new_Y);
+		//Adding Dot to used
+		if (used[component.point_X][component.point_Y].Dot == null) {
+			used[component.point_X][component.point_Y].Dot = component;
+		}		
+	}
+	public void move(SingleCanvasComponent component, int new_X, int new_Y) throws OcupationExeption {
+		//Removing component from used
+		if (component.rotation == CanvasComponent.HORIZONTAL) {
+			// Removing Horizontal/Vertical ID from used
+			for (int x = component.getXPoint(); x <= component.getXPoint() + component.getWidthPoint(); x++) {
+				used[x][component.getYPoint()].HorizontalComponent = null;
+				component.printComponents();
+			}
+		} else {
+			for (int y = component.getYPoint(); y <= component.getYPoint() + component.getWidthPoint(); y++) {
+				used[component.getXPoint()][y].VerticalComponent = null;
+			}
+		}
+		for (SingleCanvasComponent i : component.getConnectedComponents()) {
+			i.removeComponent(component);
+		}
+		
+		component.addX(new_X);
+		component.addY(new_Y);
+		
+		//Adding component to used
+		
+		ComponentBox loc_ID;
+
+		// Checking other elements blocking the Wire/connecting wires together
+		if (component.rotation == CanvasComponent.HORIZONTAL) {
+			// Checking for horizontal and adding the ID to the Horizonzal Short in
+			// ShortPair
+			for (int x = component.getXPoint() + 1; x < component.getXPoint() + component.getWidthPoint(); x++) {
+				loc_ID = used[x][component.getYPoint()];
+				if (loc_ID.HorizontalComponent == null) {
+					used[x][component.getYPoint()].HorizontalComponent = component;
+				} else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
+					throw new OcupationExeption();
+				} else {
+					// if(getCanvasComponent(loc_ID.HorizontalShort).checkEnd(x,
+					// component.getYPoint())) {
+					loc_ID.HorizontalComponent.addComponent(component);
+					component.addComponent(loc_ID.HorizontalComponent);
+					component.addComponent(loc_ID.VerticalComponent);
+					component.addComponent(loc_ID.Dot);
+					// }
+				}
+			}
+
+			loc_ID = used[component.getXPoint()][component.getYPoint()];
+			if (loc_ID.HorizontalComponent == null) {
+				used[component.getXPoint()][component.getYPoint()].HorizontalComponent = component;
+			} else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
+				throw new OcupationExeption();
+			} else {
+				loc_ID.VerticalComponent.addComponent(component);
+				component.addComponent(loc_ID.VerticalComponent);
+			}
+
+			// Sets End/Start Point
+			loc_ID = used[component.getXPoint() + component.getWidthPoint()][component.getYPoint()];
+			System.out.println((component.getXPoint() + component.getWidthPoint()) + " " + component.getYPoint());
+			// System.out.println(loc_ID);
+			if (loc_ID.HorizontalComponent == null) {
+				used[component.getXPoint() + component.getHeightPoint()][component
+						.getYPoint()].HorizontalComponent = component;
+			} else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
+				throw new OcupationExeption();
+			} else {
+				System.out.println("test");
+				loc_ID.HorizontalComponent.addComponent(component);
+				component.addComponent(loc_ID.VerticalComponent);
+				component.addComponent(loc_ID.Dot);
+			}
+		} else {
+			// Same as for Horizontal with Vertical
+			for (int y = component.getYPoint() + 1; y < component.getYPoint() + component.getHeightPoint(); y++) {
+				loc_ID = used[component.getXPoint()][y];
+				if (loc_ID.VerticalComponent == null) {
+					used[component.getXPoint()][y].VerticalComponent = component;
+				} else if (loc_ID.VerticalComponent == ComponentBox.occupied) {
+					throw new OcupationExeption();
+				} else {
+					if (loc_ID.VerticalComponent.checkEnd(component.getXPoint(), y)) {
+						loc_ID.VerticalComponent.addComponent(component);
+						component.addComponent(loc_ID.VerticalComponent);
+						component.addComponent(loc_ID.HorizontalComponent);
+						component.addComponent(loc_ID.Dot);
+					}
+				}
+			}
+
+			// Sets End/Start Point
+			loc_ID = used[component.getXPoint()][component.getYPoint()];
+			if (loc_ID.VerticalComponent == null) {
+				used[component.getXPoint()][component.getYPoint()].VerticalComponent = component;
+			} else if (loc_ID.VerticalComponent == ComponentBox.occupied) {
+				throw new OcupationExeption();
+			} else {
+				loc_ID.VerticalComponent.addComponent(component);
+				component.addComponent(loc_ID.VerticalComponent);
+				component.addComponent(loc_ID.HorizontalComponent);
+				component.addComponent(loc_ID.Dot);
+			}
+
+			loc_ID = used[component.getXPoint()][component.getYPoint() + component.getHeightPoint()];
+			if (loc_ID.VerticalComponent == null) {
+				used[component.getXPoint()][component.getYPoint()
+						+ component.getHeightPoint()].VerticalComponent = component;
+			} else if (loc_ID.VerticalComponent == ComponentBox.occupied) {
+				throw new OcupationExeption();
+			} else {
+				loc_ID.VerticalComponent.addComponent(component);
+				component.addComponent(loc_ID.VerticalComponent);
+				component.addComponent(loc_ID.HorizontalComponent);
+				component.addComponent(loc_ID.Dot);
+			}
+
+		}
+	}
+	
 	public static LogicSubScene init(int start_width, int start_height, int multiplier) {
 		// Initializing LogicSubScene with a new Group
 		return new LogicSubScene(new Group(), start_width, start_height, multiplier);
