@@ -125,7 +125,7 @@ public class NOTGate extends LogicComponent {
 		}
 		return gate;
 	}
-	
+
 	@Override
 	protected void resetStandardImage() {
 		ImageView temp_view = new ImageView(LogicComponent_Image);
@@ -133,18 +133,18 @@ public class NOTGate extends LogicComponent {
 		temp_view.setFitWidth(width);
 		temp_view.snapshot(null, this);
 		// Removing all background/Color of the pixel 0|0
-				PixelReader reader = getPixelReader();
-				PixelWriter writer = getPixelWriter();
-				Color background = reader.getColor(width / 2, height / 2);
-				for (int x = 0; x < width; x++) {
-					for (int y = 0; y < height; y++) {
-						if (background.equals(reader.getColor(x, y))) {
-							writer.setColor(x, y, Color.TRANSPARENT);
-						}
-					}
+		PixelReader reader = getPixelReader();
+		PixelWriter writer = getPixelWriter();
+		Color background = reader.getColor(width / 2, height / 2);
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				if (background.equals(reader.getColor(x, y))) {
+					writer.setColor(x, y, Color.TRANSPARENT);
 				}
-				reader = null;
-				writer = null;
+			}
+		}
+		reader = null;
+		writer = null;
 		System.gc();
 	}
 }

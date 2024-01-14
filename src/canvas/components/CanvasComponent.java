@@ -41,7 +41,7 @@ public abstract class CanvasComponent extends WritableImage {
 	// Height and width, X and Y offset
 	public int width;
 	public int height;
-	
+
 	public int point_width;
 	public int point_height;
 
@@ -51,7 +51,7 @@ public abstract class CanvasComponent extends WritableImage {
 	// Point_x and Point_y (which point they lay on)
 	public int point_X = 0;
 	public int point_Y = 0;
-	
+
 	protected int point_X_rest = 0;
 	protected int point_Y_rest = 0;
 
@@ -122,54 +122,54 @@ public abstract class CanvasComponent extends WritableImage {
 
 	// Setter/Getter for X/Y position
 	public void addX(int X_coord) {
-		int overflow = (X+X_coord+point_X_rest)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance) {
-			this.X = (X+X_coord+point_X_rest)-overflow;
+		int overflow = (X + X_coord + point_X_rest) % LogicSubScene.cross_distance;
+		if (overflow <= LogicSubScene.cross_distance) {
+			this.X = (X + X_coord + point_X_rest) - overflow;
 			this.point_X_rest = overflow;
-		}else {
-			this.X = (X+X_coord+point_X_rest)+LogicSubScene.cross_distance-overflow;
+		} else {
+			this.X = (X + X_coord + point_X_rest) + LogicSubScene.cross_distance - overflow;
 			this.point_X_rest = -overflow;
 		}
-		this.point_X = X/LogicSubScene.cross_distance;
+		this.point_X = X / LogicSubScene.cross_distance;
 		image_view.setLayoutX(X);
 	}
 
 	public void addY(int Y_coord) {
-		int overflow = (Y+Y_coord+point_Y_rest)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance) {
-			this.Y = (Y+Y_coord+point_Y_rest)-overflow;
+		int overflow = (Y + Y_coord + point_Y_rest) % LogicSubScene.cross_distance;
+		if (overflow <= LogicSubScene.cross_distance) {
+			this.Y = (Y + Y_coord + point_Y_rest) - overflow;
 			this.point_Y_rest = overflow;
-		}else {
-			this.Y = (Y+Y_coord+point_Y_rest)+LogicSubScene.cross_distance-overflow;
+		} else {
+			this.Y = (Y + Y_coord + point_Y_rest) + LogicSubScene.cross_distance - overflow;
 			this.point_Y_rest = -overflow;
 		}
-		this.point_Y = Y/LogicSubScene.cross_distance;
+		this.point_Y = Y / LogicSubScene.cross_distance;
 		image_view.setLayoutY(Y);
 	}
 
 	public void setX(int X_coord) {
-		int overflow = (X_coord)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance) {
-			this.X = (X_coord)-overflow;
+		int overflow = (X_coord) % LogicSubScene.cross_distance;
+		if (overflow <= LogicSubScene.cross_distance) {
+			this.X = (X_coord) - overflow;
 			this.point_X_rest = 0;
-		}else {
-			this.X = (X_coord)+LogicSubScene.cross_distance-overflow;
+		} else {
+			this.X = (X_coord) + LogicSubScene.cross_distance - overflow;
 			this.point_X_rest = 0;
 		}
-		this.point_X = X/LogicSubScene.cross_distance;
+		this.point_X = X / LogicSubScene.cross_distance;
 		image_view.setLayoutX(X);
 	}
 
 	public void setY(int Y_coord) {
-		int overflow = (Y_coord)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance) {
-			this.Y = (Y_coord)-overflow;
+		int overflow = (Y_coord) % LogicSubScene.cross_distance;
+		if (overflow <= LogicSubScene.cross_distance) {
+			this.Y = (Y_coord) - overflow;
 			this.point_Y_rest = 0;
-		}else {
-			this.Y = (Y_coord)+LogicSubScene.cross_distance-overflow;
+		} else {
+			this.Y = (Y_coord) + LogicSubScene.cross_distance - overflow;
 			this.point_Y_rest = 0;
 		}
-		this.point_Y = Y/LogicSubScene.cross_distance;
+		this.point_Y = Y / LogicSubScene.cross_distance;
 		image_view.setLayoutY(Y);
 	}
 

@@ -30,8 +30,7 @@ public class LogicSubSceneContainer extends SubScene {
 		super(Mainroot, width, height);
 		this.root = Mainroot;
 		// Adding LogicScene
-		logic_subscene = LogicSubScene.init(LogicSubScene.getNearesDot((int) (width * 0.75)),
-				LogicSubScene.getNearesDot((int) (height * 0.9)), 4);
+		logic_subscene = LogicSubScene.init(LogicSubScene.getNearesDot((int) (width * 0.75)), LogicSubScene.getNearesDot((int) (height * 0.9)), 4);
 
 		logic_subscene.setFill(Color.WHITE);
 
@@ -42,7 +41,7 @@ public class LogicSubSceneContainer extends SubScene {
 		ComponentGroupings grouping = new ComponentGroupings();
 		ComponentGroup group = new ComponentGroup();
 		try {
-				
+
 			group.add(ANDGate.getSolidANDGATE(LogicComponent.SIZE_MIDDLE, 2));
 			group.add(NANDGate.getSolidNANDGATE(LogicComponent.SIZE_MIDDLE, 2));
 			group.add(ORGate.getSolidORGATE(LogicComponent.SIZE_MIDDLE, 2));
@@ -50,7 +49,7 @@ public class LogicSubSceneContainer extends SubScene {
 			group.add(XORGate.getSolidXORGATE(LogicComponent.SIZE_MIDDLE, 2));
 			group.add(XNORGate.getSolidXNORGATE(LogicComponent.SIZE_MIDDLE, 2));
 			group.add(NOTGate.getSolidNOTGATE(LogicComponent.SIZE_MIDDLE));
-		}catch(IllegalArgumentException iae) {
+		} catch (IllegalArgumentException iae) {
 		}
 		ComponentGroup group_1 = new ComponentGroup();
 
@@ -58,8 +57,7 @@ public class LogicSubSceneContainer extends SubScene {
 		grouping.add(group_1);
 
 		// Adding ComponentChooser and set the layout
-		component_chooser = new ComponentChooser(logic_subscene, new Group(), width * 0.15,
-				LogicSubScene.getNearesDot((int) (height * 0.9)), grouping);
+		component_chooser = new ComponentChooser(logic_subscene, new Group(), width * 0.15, LogicSubScene.getNearesDot((int) (height * 0.9)), grouping);
 
 		System.out.println(component_chooser.getBoundsInParent());
 		component_chooser.setLayoutX(width * 0.8);
@@ -117,15 +115,11 @@ public class LogicSubSceneContainer extends SubScene {
 					root.getChildren().remove(adding_component.getImageView());
 					// Adding it to the LogicSubScene if it is dragged into the SubScene and adding
 					// all Offset in the Subscene
-					if (logic_subscene.getLayoutX() < me.getX()
-							&& (logic_subscene.getLayoutX() + logic_subscene.getWidth()) > me.getX()
-							&& logic_subscene.getLayoutY() < me.getY()
+					if (logic_subscene.getLayoutX() < me.getX() && (logic_subscene.getLayoutX() + logic_subscene.getWidth()) > me.getX() && logic_subscene.getLayoutY() < me.getY()
 							&& (logic_subscene.getLayoutY() + logic_subscene.getHeight()) > me.getY()) {
 						System.out.println(adding_component);
-						adding_component.setX((int) (me.getX() - logic_subscene.getX() + logic_subscene.getXTranslate())
-								- adding_component.width / 2);
-						adding_component
-								.setY((int) (me.getY() - logic_subscene.getY() + logic_subscene.getYTranslate()));
+						adding_component.setX((int) (me.getX() - logic_subscene.getX() + logic_subscene.getXTranslate()) - adding_component.width / 2);
+						adding_component.setY((int) (me.getY() - logic_subscene.getY() + logic_subscene.getYTranslate()));
 						try {
 							logic_subscene.add(adding_component);
 						} catch (OcupationExeption e) {
@@ -146,6 +140,7 @@ public class LogicSubSceneContainer extends SubScene {
 		// Initializing Container with new Group
 		return new LogicSubSceneContainer(width, height, new Group());
 	}
+
 	public void triggerKeyEvent(KeyEvent ke) {
 		logic_subscene.triggerKeyEvent(ke);
 	}

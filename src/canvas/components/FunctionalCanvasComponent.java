@@ -63,10 +63,10 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		int distance = point_width / (inputs.length);
 		int y = point_Y;
 		int x = point_X;
-		if(logic_scene==null) {
+		if (logic_scene == null) {
 			if (rotation == VERTICAL) {
 				x += distance * 0.5;
-				for (int i = inputs.length-1; i >= 0; i--) {
+				for (int i = inputs.length - 1; i >= 0; i--) {
 					inputs[i].setXPoint(x);
 					inputs[i].setYPoint(y);
 					x += distance;
@@ -75,12 +75,12 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				x = point_X;
 				x += distance * 0.5;
 				y = point_Y + point_height;
-				for (int i = outputs.length-1; i>=0; i--) {
+				for (int i = outputs.length - 1; i >= 0; i--) {
 					outputs[i].setXPoint(x);
 					outputs[i].setYPoint(y);
 					x += distance;
 				}
-	
+
 			} else {
 				y += distance * 0.5;
 				for (Dot d : inputs) {
@@ -88,7 +88,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 					d.setYPoint(y);
 					y += distance;
 				}
-	
+
 				distance = point_width / (outputs.length);
 				x = point_X + point_height;
 				y = point_Y;
@@ -99,62 +99,62 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 					y += distance;
 				}
 			}
-		}else {
-				if (rotation == VERTICAL) {
-					x += distance * 0.5;
-					for (int i = inputs.length-1; i >= 0; i--) {
-						logic_scene.remove(inputs[i]);
-						inputs[i].setXPoint(x);
-						inputs[i].setYPoint(y);
-						try {
-							logic_scene.add(inputs[i]);
-						} catch (OcupationExeption e) {
-						}
-						x += distance;
+		} else {
+			if (rotation == VERTICAL) {
+				x += distance * 0.5;
+				for (int i = inputs.length - 1; i >= 0; i--) {
+					logic_scene.remove(inputs[i]);
+					inputs[i].setXPoint(x);
+					inputs[i].setYPoint(y);
+					try {
+						logic_scene.add(inputs[i]);
+					} catch (OcupationExeption e) {
 					}
-					distance = point_width / (outputs.length);
-					x = point_X;
-					x += distance * 0.5;
-					y = point_Y + point_height;
-					for (int i = outputs.length-1; i>=0; i--) {
-						logic_scene.remove(outputs[i]);
-						outputs[i].setXPoint(x);
-						outputs[i].setYPoint(y);
-						try {
-							logic_scene.add(outputs[i]);
-						} catch (OcupationExeption e) {
-						}
-						x += distance;
-					}
-		
-				} else {
-					y += distance * 0.5;
-					for (Dot d : inputs) {
-						logic_scene.remove(d);
-						d.setXPoint(x);
-						d.setYPoint(y);
-						try {
-							logic_scene.add(d);
-						} catch (OcupationExeption e) {
-						}
-						y += distance;
-					}
-		
-					distance = point_width / (outputs.length);
-					x = point_X + point_height;
-					y = point_Y;
-					y += distance * 0.5;
-					for (Dot d : outputs) {
-						logic_scene.remove(d);
-						d.setXPoint(x);
-						d.setYPoint(y);
-						try {
-							logic_scene.add(d);
-						} catch (OcupationExeption e) {
-						}
-						y += distance;
-					}
+					x += distance;
 				}
+				distance = point_width / (outputs.length);
+				x = point_X;
+				x += distance * 0.5;
+				y = point_Y + point_height;
+				for (int i = outputs.length - 1; i >= 0; i--) {
+					logic_scene.remove(outputs[i]);
+					outputs[i].setXPoint(x);
+					outputs[i].setYPoint(y);
+					try {
+						logic_scene.add(outputs[i]);
+					} catch (OcupationExeption e) {
+					}
+					x += distance;
+				}
+
+			} else {
+				y += distance * 0.5;
+				for (Dot d : inputs) {
+					logic_scene.remove(d);
+					d.setXPoint(x);
+					d.setYPoint(y);
+					try {
+						logic_scene.add(d);
+					} catch (OcupationExeption e) {
+					}
+					y += distance;
+				}
+
+				distance = point_width / (outputs.length);
+				x = point_X + point_height;
+				y = point_Y;
+				y += distance * 0.5;
+				for (Dot d : outputs) {
+					logic_scene.remove(d);
+					d.setXPoint(x);
+					d.setYPoint(y);
+					try {
+						logic_scene.add(d);
+					} catch (OcupationExeption e) {
+					}
+					y += distance;
+				}
+			}
 		}
 	}
 

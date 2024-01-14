@@ -21,12 +21,10 @@ public class ComponentBox {
 	}
 
 	public SingleCanvasComponent pickRandom() {
-		if ((HorizontalComponent == null || HorizontalComponent == occupied) && VerticalComponent != null
-				&& VerticalComponent != occupied) {
+		if ((HorizontalComponent == null || HorizontalComponent == occupied) && VerticalComponent != null && VerticalComponent != occupied) {
 			return VerticalComponent;
 		}
-		if ((VerticalComponent == null || VerticalComponent == occupied) && HorizontalComponent != null
-				&& HorizontalComponent != occupied) {
+		if ((VerticalComponent == null || VerticalComponent == occupied) && HorizontalComponent != null && HorizontalComponent != occupied) {
 			return HorizontalComponent;
 		}
 		return Main.random.nextBoolean() ? HorizontalComponent : VerticalComponent;

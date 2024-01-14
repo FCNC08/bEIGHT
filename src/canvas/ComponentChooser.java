@@ -21,8 +21,7 @@ public class ComponentChooser extends SubScene {
 
 	protected FunctionalCanvasComponent adding_component;
 
-	public ComponentChooser(LogicSubScene parent_logicScene, Group root, double Width, double Height,
-			ComponentGroupings component_param) {
+	public ComponentChooser(LogicSubScene parent_logicScene, Group root, double Width, double Height, ComponentGroupings component_param) {
 		// Initializing Component Chooser with bounds
 		super(root, Width, Height);
 		this.width = Width;

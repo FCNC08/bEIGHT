@@ -74,9 +74,7 @@ public class Main extends Application {
 			@Override
 			public void println(Object o) {
 				StackTraceElement e = getCallSite();
-				String callSite = e == null ? "??"
-						: String.format("%s.%s(%s:%d)", e.getClassName(), e.getMethodName(), e.getFileName(),
-								e.getLineNumber());
+				String callSite = e == null ? "??" : String.format("%s.%s(%s:%d)", e.getClassName(), e.getMethodName(), e.getFileName(), e.getLineNumber());
 				super.println(o + "\t\tat " + callSite);
 			}
 		});
@@ -176,7 +174,7 @@ public class Main extends Application {
 
 		and.setX(1300);
 		and.setY(1000);
-		
+
 		// LogicSubSceneContainer
 
 		root.getChildren().add(logic_container);
@@ -217,14 +215,14 @@ public class Main extends Application {
 		bar.getMenus().add(file);
 
 		Scene scene = new Scene(vbox);
-		
+
 		EventHandler<KeyEvent> key_event_handler = new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent ke) {
 				logic_container.triggerKeyEvent(ke);
 			}
 		};
-		
+
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, key_event_handler);
 
 		// Adding Runnable to maximize and resize

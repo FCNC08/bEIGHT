@@ -22,17 +22,18 @@ public class Dot extends SingleCanvasComponent {
 	protected void change() {
 		paintCircle();
 		parent.simulate();
-		for(SingleCanvasComponent connected : connected_Components) {
+		for (SingleCanvasComponent connected : connected_Components) {
 			connected.setState(getState());
 		}
 	}
 
 	public void setFocus(boolean status) {
 	}
-	
+
 	public void setParent(FunctionalCanvasComponent new_parent) {
 		this.parent = new_parent;
 	}
+
 	public FunctionalCanvasComponent getParent() {
 		return parent;
 	}

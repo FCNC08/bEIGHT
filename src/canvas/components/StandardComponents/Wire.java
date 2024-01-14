@@ -36,7 +36,7 @@ public class Wire extends SingleCanvasComponent {
 
 	public void change() {
 		// Changing the state means changing the state of each connected component
-		for (SingleCanvasComponent i : connected_Components) {			
+		for (SingleCanvasComponent i : connected_Components) {
 			i.setState(this.state);
 			i.setSetState(LogicSubScene.actual_set_state);
 		}
@@ -72,8 +72,7 @@ public class Wire extends SingleCanvasComponent {
 
 					// Painting horizontal outlines at the end
 					pwriter.setColor(x + width - LogicSubScene.wire_height, 0, LogicSubScene.focus_square_secondary);
-					pwriter.setColor(x + width - LogicSubScene.wire_height, LogicSubScene.wire_height - 1,
-							LogicSubScene.focus_square_secondary);
+					pwriter.setColor(x + width - LogicSubScene.wire_height, LogicSubScene.wire_height - 1, LogicSubScene.focus_square_secondary);
 
 					// Painting vertical outlines at the end
 					pwriter.setColor(width - 1, x, LogicSubScene.focus_square_secondary);

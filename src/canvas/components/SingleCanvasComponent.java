@@ -71,77 +71,77 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	public ArrayList<SingleCanvasComponent> getConnectedComponents() {
 		return connected_Components;
 	}
-	
+
 	@Override
 	public void setX(int X_coord) {
-		int overflow = (X_coord)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance) {
-			this.X = (X_coord)-overflow;
+		int overflow = (X_coord) % LogicSubScene.cross_distance;
+		if (overflow <= LogicSubScene.cross_distance) {
+			this.X = (X_coord) - overflow;
 			this.point_X_rest = 0;
-		}else {
-			this.X = (X_coord)+LogicSubScene.cross_distance-overflow;
+		} else {
+			this.X = (X_coord) + LogicSubScene.cross_distance - overflow;
 			this.point_X_rest = 0;
 		}
-		this.point_X = X/LogicSubScene.cross_distance;
-		this.X-= LogicSubScene.wire_height/2;
+		this.point_X = X / LogicSubScene.cross_distance;
+		this.X -= LogicSubScene.wire_height / 2;
 		image_view.setLayoutX(X);
 	}
 
 	@Override
 	public void setY(int Y_coord) {
-		int overflow = (Y_coord)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance) {
-			this.Y = (Y_coord)-overflow;
+		int overflow = (Y_coord) % LogicSubScene.cross_distance;
+		if (overflow <= LogicSubScene.cross_distance) {
+			this.Y = (Y_coord) - overflow;
 			this.point_Y_rest = 0;
-		}else {
-			this.Y = (Y_coord)+LogicSubScene.cross_distance-overflow;
+		} else {
+			this.Y = (Y_coord) + LogicSubScene.cross_distance - overflow;
 			this.point_Y_rest = 0;
 		}
-		this.point_Y = Y/LogicSubScene.cross_distance;
-		this.Y -= LogicSubScene.wire_height/2;
+		this.point_Y = Y / LogicSubScene.cross_distance;
+		this.Y -= LogicSubScene.wire_height / 2;
 		image_view.setLayoutY(Y);
 	}
-	
+
 	public void addX(int X_coord) {
-		int overflow = (X+X_coord+point_X_rest)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance/2) {
-			this.X = (X+X_coord+point_X_rest)-overflow;
+		int overflow = (X + X_coord + point_X_rest) % LogicSubScene.cross_distance;
+		if (overflow <= LogicSubScene.cross_distance / 2) {
+			this.X = (X + X_coord + point_X_rest) - overflow;
 			this.point_X_rest = overflow;
-		}else {
-			this.X = (X+X_coord+point_X_rest)+LogicSubScene.cross_distance-overflow;
+		} else {
+			this.X = (X + X_coord + point_X_rest) + LogicSubScene.cross_distance - overflow;
 			this.point_X_rest = -overflow;
 		}
-		System.out.println(point_X_rest+" ");
-		this.point_X = X/LogicSubScene.cross_distance;
-		this.Y-=LogicSubScene.wire_height/2;
+		System.out.println(point_X_rest + " ");
+		this.point_X = X / LogicSubScene.cross_distance;
+		this.Y -= LogicSubScene.wire_height / 2;
 		image_view.setLayoutX(X);
 	}
 
 	@Override
 	public void addY(int Y_coord) {
-		int overflow = (Y+Y_coord+point_Y_rest)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance/2) {
-			this.Y = (Y+Y_coord+point_Y_rest)-overflow;
+		int overflow = (Y + Y_coord + point_Y_rest) % LogicSubScene.cross_distance;
+		if (overflow <= LogicSubScene.cross_distance / 2) {
+			this.Y = (Y + Y_coord + point_Y_rest) - overflow;
 			this.point_Y_rest = overflow;
-		}else {
-			this.Y = (Y+Y_coord+point_Y_rest)+LogicSubScene.cross_distance-overflow;
+		} else {
+			this.Y = (Y + Y_coord + point_Y_rest) + LogicSubScene.cross_distance - overflow;
 			this.point_Y_rest = -overflow;
 		}
-		this.point_Y = Y/LogicSubScene.cross_distance;
-		this.Y-=LogicSubScene.wire_height/2;
+		this.point_Y = Y / LogicSubScene.cross_distance;
+		this.Y -= LogicSubScene.wire_height / 2;
 		image_view.setLayoutY(Y);
 	}
-	
+
 	@Override
 	public void setXPoint(int point_x) {
-		this.X = point_x * LogicSubScene.cross_distance-LogicSubScene.wire_height/2;
+		this.X = point_x * LogicSubScene.cross_distance - LogicSubScene.wire_height / 2;
 		this.point_X = point_x;
 		image_view.setLayoutX(X);
 	}
 
 	@Override
 	public void setYPoint(int point_y) {
-		this.Y = point_y * LogicSubScene.cross_distance-LogicSubScene.wire_height/2;
+		this.Y = point_y * LogicSubScene.cross_distance - LogicSubScene.wire_height / 2;
 		this.point_Y = point_y;
 		image_view.setLayoutY(Y);
 	}
