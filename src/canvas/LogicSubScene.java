@@ -156,9 +156,9 @@ public class LogicSubScene extends SubScene {
 							CanvasComponent component = (CanvasComponent) view.getImage();
 							if (component == last_focused_component) {
 								try {
-									move(component, (int) ((me.getSceneX() - X + getXTranslate()) - moves_focused_x), (int) ((me.getSceneY() - Y + getYTranslate()) - moves_focused_y));
+									move(component, (int) ((me.getSceneX() - X + getXTranslate()) - moves_focused_x), (int) ((me.getSceneY() - Y -25 + getYTranslate()) - moves_focused_y));
 									moves_focused_x = (int) (me.getSceneX() - X + getXTranslate());
-									moves_focused_y = (int) (me.getSceneY() - Y + getYTranslate());
+									moves_focused_y = (int) (me.getSceneY() - Y -25 + getYTranslate());
 									moved = true;
 								} catch (OcupationExeption e) {
 									e.printStackTrace();
@@ -174,7 +174,7 @@ public class LogicSubScene extends SubScene {
 							// Trys to remove old WireDoublet(doesn't work) and adding new Wiredoublet with
 							// new coordinates
 							removeTry(adding_WireDoublet);
-							adding_WireDoublet = getWires(pressed_x, pressed_y, (int) (me.getSceneX() - X + getXTranslate()), (int) (me.getSceneY() - Y + getYTranslate()));
+							adding_WireDoublet = getWires(pressed_x, pressed_y, (int) (me.getSceneX() - X + getXTranslate()), (int) (me.getSceneY() - Y -25 + getYTranslate()));
 							addTry(adding_WireDoublet);
 						} catch (Exception e) {
 							System.out.println("Exeption");
@@ -183,7 +183,7 @@ public class LogicSubScene extends SubScene {
 					} else if (!moved) {
 						try {
 							// No wiredoublet exists so it creates a new and adds it to the SubScene
-							adding_WireDoublet = getWires(pressed_x, pressed_y, (int) (me.getSceneX() - X + getXTranslate()), (int) (me.getSceneY() - Y + getYTranslate()));
+							adding_WireDoublet = getWires(pressed_x, pressed_y, (int) (me.getSceneX() - X + getXTranslate()), (int) (me.getSceneY() - Y -25 + getYTranslate()));
 							addTry(adding_WireDoublet);
 							System.out.println("Added Wire doublet");
 						} catch (Exception e) {
@@ -203,7 +203,7 @@ public class LogicSubScene extends SubScene {
 				// Setting the coord to createWire/moveScene
 				if (me.isPrimaryButtonDown()) {
 					moves_focused_x = pressed_x = (int) (me.getSceneX() - X + getXTranslate());
-					moves_focused_y = pressed_y = (int) (me.getSceneY() - Y + getYTranslate());
+					moves_focused_y = pressed_y = (int) (me.getSceneY() - Y -25 + getYTranslate());
 				} else if (me.isSecondaryButtonDown()) {
 					moves_x = me.getSceneX() - X;
 					moves_y = me.getSceneY() - Y;
