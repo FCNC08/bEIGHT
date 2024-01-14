@@ -28,8 +28,8 @@ public class State {
 	public static Color unset = white_unset;
 	public static Color err = white_err;
 
-	protected boolean mode;
-	protected boolean state;
+	public boolean mode;
+	public boolean state;
 
 	public static void setMode(boolean state) {
 		if (state == WHITE_MODE) {

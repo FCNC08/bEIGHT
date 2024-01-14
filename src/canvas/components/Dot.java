@@ -22,11 +22,12 @@ public class Dot extends SingleCanvasComponent {
 	protected void change() {
 		paintCircle();
 		parent.simulate();
+		for(SingleCanvasComponent connected : connected_Components) {
+			connected.setState(getState());
+		}
 	}
 
 	public void setFocus(boolean status) {
-		// TODO Auto-generated method stub
-
 	}
 	
 	public void setParent(FunctionalCanvasComponent new_parent) {

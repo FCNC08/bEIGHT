@@ -168,7 +168,11 @@ public class Main extends Application {
 
 		LogicSubSceneContainer logic_container = LogicSubSceneContainer.init(width, height);
 
-		ANDGate and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2);
+		ANDGate and = null;
+		try {
+			and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2);
+		} catch (IllegalArgumentException e2) {
+		}
 
 		and.setX(1300);
 		and.setY(1000);

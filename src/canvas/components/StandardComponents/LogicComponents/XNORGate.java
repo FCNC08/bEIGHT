@@ -14,7 +14,7 @@ public class XNORGate extends LogicComponent {
 
 	public static Image LogicComponent_Image = new Image("XNOR.png");
 
-	public XNORGate(byte size, int width, int height, int input_count) {
+	public XNORGate(byte size, int width, int height, int input_count) throws IllegalArgumentException {
 		super(size, width, height, input_count);
 	}
 
@@ -22,7 +22,7 @@ public class XNORGate extends LogicComponent {
 		LogicComponent_Image = standard_image;
 	}
 
-	public static XNORGate getXNORGate(byte size, int inputs) {
+	public static XNORGate getXNORGate(byte size, int inputs) throws IllegalArgumentException {
 		// Creating a ANDGate with standard sizes
 		int height;
 		int width;
@@ -68,7 +68,7 @@ public class XNORGate extends LogicComponent {
 		return component;
 	}
 
-	public static XNORGate getSolidXNORGATE(byte size, int inputs) {
+	public static XNORGate getSolidXNORGATE(byte size, int inputs) throws IllegalArgumentException {
 		// Creating like getANDGate without removing the background
 		// Used in ComponentChooser
 		int height;
@@ -130,7 +130,11 @@ public class XNORGate extends LogicComponent {
 	@Override
 	public LogicComponent getClone(byte size) {
 		// Function to clone a component in this case a ANDGate
-		XNORGate gate = XNORGate.getXNORGate(size, input_count);
+		XNORGate gate = null;
+		try {
+			gate = XNORGate.getXNORGate(size, input_count);
+		} catch (IllegalArgumentException e) {
+		}
 		return gate;
 	}
 	

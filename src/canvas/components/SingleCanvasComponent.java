@@ -104,7 +104,7 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	
 	public void addX(int X_coord) {
 		int overflow = (X+X_coord+point_X_rest)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance) {
+		if(overflow<=LogicSubScene.cross_distance/2) {
 			this.X = (X+X_coord+point_X_rest)-overflow;
 			this.point_X_rest = overflow;
 		}else {
@@ -120,7 +120,7 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	@Override
 	public void addY(int Y_coord) {
 		int overflow = (Y+Y_coord+point_Y_rest)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance) {
+		if(overflow<=LogicSubScene.cross_distance/2) {
 			this.Y = (Y+Y_coord+point_Y_rest)-overflow;
 			this.point_Y_rest = overflow;
 		}else {
@@ -143,7 +143,7 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	public void setYPoint(int point_y) {
 		this.Y = point_y * LogicSubScene.cross_distance-LogicSubScene.wire_height/2;
 		this.point_Y = point_y;
-		image_view.setLayoutX(X);
+		image_view.setLayoutY(Y);
 	}
 
 	public void printComponents() {

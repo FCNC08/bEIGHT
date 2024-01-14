@@ -14,7 +14,7 @@ public class NORGate extends LogicComponent {
 
 	public static Image LogicComponent_Image = new Image("NOR.png");
 
-	public NORGate(byte size, int width, int height, int input_count) {
+	public NORGate(byte size, int width, int height, int input_count) throws IllegalArgumentException {
 		super(size, width, height, input_count);
 	}
 
@@ -22,7 +22,7 @@ public class NORGate extends LogicComponent {
 		LogicComponent_Image = standard_image;
 	}
 
-	public static NORGate getNORGATE(byte size, int inputs) {
+	public static NORGate getNORGATE(byte size, int inputs) throws IllegalArgumentException {
 		// Creating a ANDGate with standard sizes
 		int height;
 		int width;
@@ -68,7 +68,7 @@ public class NORGate extends LogicComponent {
 		return component;
 	}
 
-	public static NORGate getSolidNORGATE(byte size, int inputs) {
+	public static NORGate getSolidNORGATE(byte size, int inputs) throws IllegalArgumentException{
 		// Creating like getANDGate without removing the background
 		// Used in ComponentChooser
 		int height;
@@ -130,7 +130,11 @@ public class NORGate extends LogicComponent {
 	@Override
 	public LogicComponent getClone(byte size) {
 		// Function to clone a component in this case a ANDGate
-		NORGate gate = NORGate.getNORGATE(size, input_count);
+		NORGate gate = null;
+		try {
+			gate = NORGate.getNORGATE(size, input_count);
+		} catch (IllegalArgumentException e) {
+		}
 		return gate;
 	}
 	

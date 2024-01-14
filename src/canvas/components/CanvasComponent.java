@@ -41,6 +41,9 @@ public abstract class CanvasComponent extends WritableImage {
 	// Height and width, X and Y offset
 	public int width;
 	public int height;
+	
+	public int point_width;
+	public int point_height;
 
 	public int X = 0;
 	public int Y = 0;
@@ -57,6 +60,8 @@ public abstract class CanvasComponent extends WritableImage {
 		super(NewWidth, NewHeight);
 		width = NewWidth;
 		height = NewHeight;
+		point_width = width / LogicSubScene.cross_distance;
+		point_height = height / LogicSubScene.cross_distance;
 
 		pwriter = getPixelWriter();
 		// Adding standard values
@@ -198,11 +203,11 @@ public abstract class CanvasComponent extends WritableImage {
 	}
 
 	public int getWidthPoint() {
-		return (width + LogicSubScene.cross_distance / 2) / LogicSubScene.cross_distance;
+		return point_width;
 	}
 
 	public int getHeightPoint() {
-		return (width + LogicSubScene.cross_distance / 2) / LogicSubScene.cross_distance;
+		return point_height;
 	}
 
 	// Setter/Getter for rotation

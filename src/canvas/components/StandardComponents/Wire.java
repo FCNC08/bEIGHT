@@ -15,7 +15,6 @@ public class Wire extends SingleCanvasComponent {
 	public Wire(int Startwidth) {
 		// Creating Wire with height and painting it using PaintWire()
 		super(Startwidth, LogicSubScene.wire_height);
-		// setHeight(LogicSubScene.wire_height / 2);
 		width = Startwidth;
 		focus = false;
 		connected_Components = new ArrayList<>();
@@ -37,18 +36,9 @@ public class Wire extends SingleCanvasComponent {
 
 	public void change() {
 		// Changing the state means changing the state of each connected component
-		for (SingleCanvasComponent i : connected_Components) {
-			SingleCanvasComponent c = i;
-			if (c.getSetState() == LogicSubScene.actual_set_state) {
-				if (this.state != c.getState()) {
-					c.setState(ERR);
-					this.setState(ERR);
-				}
-			} else {
-				c.setState(this.state);
-				c.setSetState(LogicSubScene.actual_set_state);
-			}
-			System.out.println(c);
+		for (SingleCanvasComponent i : connected_Components) {			
+			i.setState(this.state);
+			i.setSetState(LogicSubScene.actual_set_state);
 		}
 
 		PaintWire();

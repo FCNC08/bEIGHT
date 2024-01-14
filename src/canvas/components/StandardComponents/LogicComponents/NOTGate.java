@@ -14,7 +14,7 @@ public class NOTGate extends LogicComponent {
 
 	public static Image LogicComponent_Image = new Image("NOT.png");
 
-	public NOTGate(byte size, int width, int height) {
+	public NOTGate(byte size, int width, int height) throws IllegalArgumentException {
 		super(size, width, height, 1);
 	}
 
@@ -22,7 +22,7 @@ public class NOTGate extends LogicComponent {
 		LogicComponent_Image = standard_image;
 	}
 
-	public static NOTGate getNOTGATE(byte size) {
+	public static NOTGate getNOTGATE(byte size) throws IllegalArgumentException {
 		// Creating a ANDGate with standard sizes
 		int height;
 		int width;
@@ -68,7 +68,7 @@ public class NOTGate extends LogicComponent {
 		return component;
 	}
 
-	public static NOTGate getSolidNOTGATE(byte size) {
+	public static NOTGate getSolidNOTGATE(byte size) throws IllegalArgumentException {
 		// Creating like getANDGate without removing the background
 		// Used in ComponentChooser
 		int height;
@@ -118,7 +118,11 @@ public class NOTGate extends LogicComponent {
 	@Override
 	public LogicComponent getClone(byte size) {
 		// Function to clone a component in this case a ANDGate
-		NOTGate gate = NOTGate.getNOTGATE(size);
+		NOTGate gate = null;
+		try {
+			gate = NOTGate.getNOTGATE(size);
+		} catch (IllegalArgumentException e) {
+		}
 		return gate;
 	}
 	
