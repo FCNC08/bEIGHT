@@ -28,6 +28,13 @@ public class Dot extends SingleCanvasComponent {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public void setParent(FunctionalCanvasComponent new_parent) {
+		this.parent = new_parent;
+	}
+	public FunctionalCanvasComponent getParent() {
+		return parent;
+	}
 
 	protected void createImageView() {
 		image_view = new ImageView();

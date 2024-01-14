@@ -2,6 +2,8 @@ package canvas.components.StandardComponents;
 
 import java.util.ArrayList;
 
+import org.apache.commons.logging.Log;
+
 import canvas.LogicSubScene;
 import canvas.components.CanvasComponent;
 import canvas.components.SingleCanvasComponent;
@@ -115,4 +117,5 @@ public class Wire extends SingleCanvasComponent {
 	public void setHeight(int height) {
 		this.height = height;
 	}
+
 }

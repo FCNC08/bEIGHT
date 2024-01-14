@@ -125,7 +125,6 @@ public abstract class CanvasComponent extends WritableImage {
 			this.X = (X+X_coord+point_X_rest)+LogicSubScene.cross_distance-overflow;
 			this.point_X_rest = -overflow;
 		}
-		System.out.println(point_X_rest+" ");
 		this.point_X = X/LogicSubScene.cross_distance;
 		image_view.setLayoutX(X);
 	}

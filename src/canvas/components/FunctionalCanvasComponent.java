@@ -39,27 +39,26 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		outputs = new Dot[output_count];
 		for (int i = 0; i < input_count; i++) {
 			inputs[i] = new Dot(this);
+			inputs[i].setParent(this);
 		}
 		for (int i = 0; i < output_count; i++) {
 			outputs[i] = new Dot(this);
+			outputs[i].setParent(this);
 		}
 	}
 
-	public static FunctionalCanvasComponent initImage(String url, int inputs, int outputs, int[] inputs_x,
-			int[] inputs_y, int[] outputs_x, int[] outputs_y) {
+	public static FunctionalCanvasComponent initImage(String url, int inputs, int outputs, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
 		// Override in higher classes
 		return null;
 	}
 
-	public static FunctionalCanvasComponent initImage(ImageView image, int input_count, int output_count,
-			int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
+	public static FunctionalCanvasComponent initImage(ImageView image, int input_count, int output_count, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
 		// Override in higher classes
 		return null;
 	}
 
 	public void setStandardDotLocations() {
 		// creates dot position depending of the width and the dot count
-		// System.out.println(width);
 		int distance = width / (inputs.length);
 		int y = Y;
 		int x = X;
@@ -131,16 +130,15 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	// Setter/Getter for X/Y position
 	@Override
 	public void addX(int X_coord) {
-		int overflow = (X+X_coord+point_X_rest)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance) {
-			this.X = (X+X_coord+point_X_rest)-overflow;
+		int overflow = (X + X_coord + point_X_rest) % LogicSubScene.cross_distance;
+		if (overflow <= LogicSubScene.cross_distance) {
+			this.X = (X + X_coord + point_X_rest) - overflow;
 			this.point_X_rest = overflow;
-		}else {
-			this.X = (X+X_coord+point_X_rest)+LogicSubScene.cross_distance-overflow;
+		} else {
+			this.X = (X + X_coord + point_X_rest) + LogicSubScene.cross_distance - overflow;
 			this.point_X_rest = -overflow;
 		}
-		System.out.println(point_X_rest+" ");
-		this.point_X = X/LogicSubScene.cross_distance;
+		this.point_X = X / LogicSubScene.cross_distance;
 		image_view.setLayoutX(X);
 		for (Dot d : inputs) {
 			logic_scene.move(d, X_coord, 0);
@@ -152,50 +150,55 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 
 	@Override
 	public void addY(int Y_coord) {
-		int overflow = (Y+Y_coord+point_Y_rest)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance) {
-			this.Y = (Y+Y_coord+point_Y_rest)-overflow;
+		int overflow = (Y + Y_coord + point_Y_rest) % LogicSubScene.cross_distance;
+		if (overflow <= LogicSubScene.cross_distance) {
+			this.Y = (Y + Y_coord + point_Y_rest) - overflow;
 			this.point_Y_rest = overflow;
-		}else {
-			this.Y = (Y+Y_coord+point_Y_rest)+LogicSubScene.cross_distance-overflow;
+		} else {
+			this.Y = (Y + Y_coord + point_Y_rest) + LogicSubScene.cross_distance - overflow;
 			this.point_Y_rest = -overflow;
 		}
-		this.point_Y = Y/LogicSubScene.cross_distance;
+		this.point_Y = Y / LogicSubScene.cross_distance;
 		image_view.setLayoutY(Y);
-		for (Dot d : inputs) {
-			logic_scene.move(d, 0, Y_coord);
+		if (logic_scene != null) {
+			for (Dot d : inputs) {
+				logic_scene.move(d, 0, Y_coord);
+			}
+			for (Dot d : outputs) {
+				logic_scene.move(d, 0, Y_coord);
+			}
+		} else {
+			setStandardDotLocations();
 		}
-		for (Dot d : outputs) {
-			logic_scene.move(d, 0, Y_coord);
-		}
+
 	}
 
 	@Override
 	public void setX(int X_coord) {
-		int overflow = (X_coord)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance) {
-			this.X = (X_coord)-overflow;
+		int overflow = (X_coord) % LogicSubScene.cross_distance;
+		if (overflow <= LogicSubScene.cross_distance) {
+			this.X = (X_coord) - overflow;
 			this.point_X_rest = 0;
-		}else {
-			this.X = (X_coord)+LogicSubScene.cross_distance-overflow;
+		} else {
+			this.X = (X_coord) + LogicSubScene.cross_distance - overflow;
 			this.point_X_rest = 0;
 		}
-		this.point_X = X/LogicSubScene.cross_distance;
+		this.point_X = X / LogicSubScene.cross_distance;
 		image_view.setLayoutX(X);
 		setStandardDotLocations();
 	}
 
 	@Override
 	public void setY(int Y_coord) {
-		int overflow = (Y_coord)%LogicSubScene.cross_distance;
-		if(overflow<=LogicSubScene.cross_distance) {
-			this.Y = (Y_coord)-overflow;
+		int overflow = (Y_coord) % LogicSubScene.cross_distance;
+		if (overflow <= LogicSubScene.cross_distance) {
+			this.Y = (Y_coord) - overflow;
 			this.point_Y_rest = 0;
-		}else {
-			this.Y = (Y_coord)+LogicSubScene.cross_distance-overflow;
+		} else {
+			this.Y = (Y_coord) + LogicSubScene.cross_distance - overflow;
 			this.point_Y_rest = 0;
 		}
-		this.point_Y = Y/LogicSubScene.cross_distance;
+		this.point_Y = Y / LogicSubScene.cross_distance;
 		image_view.setLayoutY(Y);
 		setStandardDotLocations();
 	}
@@ -261,8 +264,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				// Painting vertical lines
 				for (int y = 0; y < LogicSubScene.wire_height; y++) {
 					pwriter.setColor((int) getWidth() - 1, y, LogicSubScene.focus_square_secondary);
-					pwriter.setColor((int) getWidth() - LogicSubScene.wire_height + 1, y,
-							LogicSubScene.focus_square_secondary);
+					pwriter.setColor((int) getWidth() - LogicSubScene.wire_height + 1, y, LogicSubScene.focus_square_secondary);
 				}
 
 				// Painting the inner square of the focus square in bottom left corner
@@ -275,8 +277,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				// Painting horizontal lines
 				for (int x = 0; x < LogicSubScene.wire_height; x++) {
 					pwriter.setColor(x, (int) getHeight() - 1, LogicSubScene.focus_square_secondary);
-					pwriter.setColor(x, (int) getHeight() - LogicSubScene.wire_height + 1,
-							LogicSubScene.focus_square_secondary);
+					pwriter.setColor(x, (int) getHeight() - LogicSubScene.wire_height + 1, LogicSubScene.focus_square_secondary);
 
 				}
 				// Painting vertical lines
@@ -295,14 +296,12 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				// Painting horizontal lines
 				for (int x = (int) getWidth() - 1; x > getWidth() - LogicSubScene.wire_height; x--) {
 					pwriter.setColor(x, (int) getHeight() - 1, LogicSubScene.focus_square_secondary);
-					pwriter.setColor(x, (int) getHeight() - LogicSubScene.wire_height + 1,
-							LogicSubScene.focus_square_secondary);
+					pwriter.setColor(x, (int) getHeight() - LogicSubScene.wire_height + 1, LogicSubScene.focus_square_secondary);
 				}
 				// Painting vertical lines
 				for (int y = (int) getHeight() - 1; y > getHeight() - LogicSubScene.wire_height; y--) {
 					pwriter.setColor((int) getHeight() - 1, y, LogicSubScene.focus_square_secondary);
-					pwriter.setColor((int) getWidth() - LogicSubScene.wire_height + 1, y,
-							LogicSubScene.focus_square_secondary);
+					pwriter.setColor((int) getWidth() - LogicSubScene.wire_height + 1, y, LogicSubScene.focus_square_secondary);
 				}
 			} else {
 				resetStandardImage();
