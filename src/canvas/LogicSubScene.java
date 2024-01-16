@@ -19,7 +19,6 @@ import canvas.components.StandardComponents.Wire;
 import canvas.components.StandardComponents.WireDoublet;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
-import javafx.geometry.HorizontalDirection;
 import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
@@ -156,7 +155,7 @@ public class LogicSubScene extends SubScene {
 							CanvasComponent component = (CanvasComponent) view.getImage();
 							if (component == last_focused_component) {
 								try {
-									move(component, (int) ((me.getSceneX() - X + getXTranslate()) - moves_focused_x), (int) ((me.getSceneY() - Y - 25 + getYTranslate()) - moves_focused_y));
+									move(component, (int) ((me.getSceneX() - X + getXTranslate())), (int) ((me.getSceneY() - Y - 25 + getYTranslate())));
 									moves_focused_x = (int) (me.getSceneX() - X + getXTranslate());
 									moves_focused_y = (int) (me.getSceneY() - Y - 25 + getYTranslate());
 									moved = true;
@@ -898,39 +897,85 @@ public class LogicSubScene extends SubScene {
 	}
 
 	public void move(FunctionalCanvasComponent component, int new_X, int new_Y) throws OcupationExeption {
-		// Removing blocks from used
-		for (int x = component.getXPoint() + 1; x < (component.getXPoint() + component.getHeightPoint()); x++) {
-			for (int y = component.getYPoint() + 1; y < (component.getXPoint() + component.getHeightPoint()); y++) {
-				if (used[x][y].HorizontalComponent == ComponentBox.occupied) {
-					used[x][y].HorizontalComponent = null;
+		if (component.point_X_rest + new_X > cross_distance / 2 || component.point_Y_rest + new_Y > cross_distance / 2) {
+			// Removing blockings from used
+			if (component.rotation == CanvasComponent.HORIZONTAL) {
+				for (int x = component.getXPoint()+1; x < (component.getXPoint() + component.getWidthPoint()); x++) {
+					for (int y = component.getYPoint()+1; y < (component.getYPoint() + component.getHeightPoint()); y++) {
+						if(used[x][y].HorizontalComponent == ComponentBox.occupied) {
+							used[x][y].HorizontalComponent = null;
+						}
+						if(used[x][y].VerticalComponent == ComponentBox.occupied) {
+							used[x][y].VerticalComponent = null;
+						}
+					}
 				}
-				if (used[x][y].VerticalComponent == ComponentBox.occupied) {
-					used[x][y].VerticalComponent = null;
+			} else {
+				for (int x = component.getXPoint()+1; x < (component.getXPoint() + component.getHeightPoint()); x++) {
+					for (int y = component.getYPoint()+1; y < (component.getYPoint() + component.getWidthPoint()); y++) {
+						if(used[x][y].HorizontalComponent == ComponentBox.occupied) {
+							used[x][y].HorizontalComponent = null;
+						}
+						if(used[x][y].VerticalComponent == ComponentBox.occupied) {
+							used[x][y].VerticalComponent = null;
+						}
+					}
+				}
+				
+			}
+			for(Dot d: component.inputs) {
+				remove(d);
+			}
+			for(Dot d: component.outputs) {
+				remove(d);
+			}
+			component.setX(new_X);
+			component.setY(new_Y);
+			
+			for(Dot d: component.inputs) {
+				add(d);
+			}
+			for(Dot d: component.outputs) {
+				add(d);
+			}
+			
+			if(component.rotation == CanvasComponent.HORIZONTAL) {
+				for(int x = component.getXPoint()+1; x < (component.getXPoint()+component.getWidthPoint()); x++) {
+					for(int y = component.getYPoint()+1; y < (component.getYPoint()+component.getHeightPoint()); y++) {
+						if(used[x][y].HorizontalComponent == null) {
+							used[x][y].HorizontalComponent = ComponentBox.occupied;
+						}else {
+							throw new OcupationExeption();
+						}
+						if(used[x][y].VerticalComponent == null) {
+							used[x][y].VerticalComponent = ComponentBox.occupied;
+						}else {
+							throw new OcupationExeption();
+						}
+					}
+				}
+			}else {
+				for(int x = component.getXPoint()+1; x < (component.getXPoint()+component.getHeightPoint()); x++) {
+					for(int y = component.getYPoint()+1; y<(component.getYPoint()+component.getWidthPoint()); y++) {
+						if(used[x][y].HorizontalComponent == null) {
+							used[x][y].HorizontalComponent = ComponentBox.occupied;
+						}else {
+							throw new OcupationExeption();
+						}
+						if(used[x][y].VerticalComponent == null) {
+							used[x][y].VerticalComponent = ComponentBox.occupied;
+						}else {
+							throw new OcupationExeption();
+						}
+					}
 				}
 			}
-		}
-		// Add Move
-		component.addX(new_X);
-		component.addY(new_Y);
-		// Adding new blocks
-		for (int x = component.getXPoint() + 1; x < (component.getXPoint() + component.getHeightPoint()); x++) {
-			for (int y = component.getYPoint() + 1; y < (component.getXPoint() + component.getHeightPoint()); y++) {
-				if (used[x][y].HorizontalComponent != null) {
-					throw new OcupationExeption();
-				} else {
-					used[x][y].HorizontalComponent = ComponentBox.occupied;
-				}
-				if (used[x][y].VerticalComponent != null) {
-					throw new OcupationExeption();
-				} else {
-					used[x][y].VerticalComponent = ComponentBox.occupied;
-				}
-			}
+
 		}
 
 	}
 
-	public void move(Dot component, int new_X, int new_Y) {
+	public void move(Dot component, int new_X, int new_Y) throws OcupationExeption {
 		// Removing Dot from used
 		if (used[component.point_X][component.point_Y].Dot == component) {
 			used[component.point_X][component.point_Y].Dot = null;
@@ -940,6 +985,8 @@ public class LogicSubScene extends SubScene {
 		// Adding Dot to used
 		if (used[component.point_X][component.point_Y].Dot == null) {
 			used[component.point_X][component.point_Y].Dot = component;
+		}else {
+			throw new OcupationExeption();
 		}
 	}
 
@@ -949,7 +996,6 @@ public class LogicSubScene extends SubScene {
 			// Removing Horizontal/Vertical ID from used
 			for (int x = component.getXPoint(); x <= component.getXPoint() + component.getWidthPoint(); x++) {
 				used[x][component.getYPoint()].HorizontalComponent = null;
-				component.printComponents();
 			}
 		} else {
 			for (int y = component.getYPoint(); y <= component.getYPoint() + component.getWidthPoint(); y++) {
@@ -960,8 +1006,8 @@ public class LogicSubScene extends SubScene {
 			i.removeComponent(component);
 		}
 
-		component.addX(new_X);
-		component.addY(new_Y);
+		component.setX(new_X);
+		component.setY(new_Y);
 
 		// Adding component to used
 

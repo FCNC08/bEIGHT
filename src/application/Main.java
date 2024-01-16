@@ -93,23 +93,37 @@ public class Main extends Application {
 	}
 
 	private void addStartScene() {
-		// Adding MenuBar and Adding ThemeChooser
+		// Size of screen
+		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+
+		int width = screen.width;
+		int height = screen.height;
+
+		// System.out.println("width: "+width+" height: " +height);
+
+		// Adding MenuBar
 		MenuBar bar = new MenuBar();
 		bar.getMenus().add(getThemeChoiceMenu());
-
-		// VBox to add with MenuBar
 		VBox vbox = new VBox(bar);
+		vbox.setMinHeight(height);
+		vbox.setMinWidth(width);
 
+		// Adding SubScene
 		Group root = new Group();
-
-		// Adding MainScene(Scene used to show content)
 		SubScene MainScene = new SubScene(root, 1000, 500);
 		MainScene.heightProperty().bind(vbox.heightProperty());
 		MainScene.widthProperty().bind(vbox.widthProperty());
+		MainScene.setFill(Color.GRAY);
+		
+
+		
+		
 		Group logicarea_root = new Group();
 		SubScene LogicArea = new SubScene(logicarea_root, MainScene.getWidth() / 6, MainScene.getHeight() / 3);
 		Text logicarea_heading = new Text("Open Logicarea");
 		logicarea_heading.setFont(new Font(40));
+		logicarea_heading.setLayoutX(MainScene.getWidth()/6);
+		logicarea_heading.setLayoutY(MainScene.getHeight()/4);
 		logicarea_root.getChildren().add(logicarea_heading);
 		EventHandler<MouseEvent> logicarea_click = new EventHandler<MouseEvent>() {
 			@Override
@@ -120,24 +134,23 @@ public class Main extends Application {
 		LogicArea.setLayoutX(MainScene.getWidth() / 6);
 		LogicArea.setLayoutY(MainScene.getHeight() / 3);
 		LogicArea.addEventFilter(MouseEvent.MOUSE_CLICKED, logicarea_click);
-		LogicArea.setFill(Color.GRAY);
-
-		root.getChildren().add(LogicArea);
-
+		LogicArea.setFill(Color.BLACK);
+		root.getChildren().add(logicarea_heading);
+		
 		vbox.getChildren().add(MainScene);
 
-		// Adding Runnable to release maximization
+		Scene scene = new Scene(vbox);
+
+		// Adding Runnable to maximize and resize
 		Runnables.add(new Runnable() {
-			@Override
 			public void run() {
 				MainStage.setMaximized(true);
-				MainStage.setResizable(false);
+				MainStage.setResizable(true);
 			}
 		});
-
 		// Adding Scene
-		Scene scene = new Scene(vbox);
 		Scenes.add(scene);
+
 	}
 
 	// Adding LogicScene

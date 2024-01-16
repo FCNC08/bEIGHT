@@ -9,7 +9,7 @@ public class ComponentBox {
 	// IDs for a horizontal/Vertical Wire and a Dot in one place used in used array
 	public SingleCanvasComponent HorizontalComponent;
 	public SingleCanvasComponent VerticalComponent;
-	public SingleCanvasComponent Dot;
+	public Dot Dot;
 
 	public ComponentBox() {
 	}

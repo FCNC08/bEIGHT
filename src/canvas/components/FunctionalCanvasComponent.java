@@ -63,97 +63,39 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		int distance = point_width / (inputs.length);
 		int y = point_Y;
 		int x = point_X;
-		if (logic_scene == null) {
-			if (rotation == VERTICAL) {
-				x += distance * 0.5;
-				for (int i = inputs.length - 1; i >= 0; i--) {
-					inputs[i].setXPoint(x);
-					inputs[i].setYPoint(y);
-					x += distance;
-				}
-				distance = point_width / (outputs.length);
-				x = point_X;
-				x += distance * 0.5;
-				y = point_Y + point_height;
-				for (int i = outputs.length - 1; i >= 0; i--) {
-					outputs[i].setXPoint(x);
-					outputs[i].setYPoint(y);
-					x += distance;
-				}
-
-			} else {
-				y += distance * 0.5;
-				for (Dot d : inputs) {
-					d.setXPoint(x);
-					d.setYPoint(y);
-					y += distance;
-				}
-
-				distance = point_width / (outputs.length);
-				x = point_X + point_height;
-				y = point_Y;
-				y += distance * 0.5;
-				for (Dot d : outputs) {
-					d.setXPoint(x);
-					d.setYPoint(y);
-					y += distance;
-				}
+		if (rotation == VERTICAL) {
+			x += distance * 0.5;
+			for (int i = inputs.length - 1; i >= 0; i--) {
+				inputs[i].setXPoint(x);
+				inputs[i].setYPoint(y);
+				x += distance;
 			}
+			distance = point_width / (outputs.length);
+			x = point_X;
+			x += distance * 0.5;
+			y = point_Y + point_height;
+			for (int i = outputs.length - 1; i >= 0; i--) {
+				outputs[i].setXPoint(x);
+				outputs[i].setYPoint(y);
+				x += distance;
+			}
+
 		} else {
-			if (rotation == VERTICAL) {
-				x += distance * 0.5;
-				for (int i = inputs.length - 1; i >= 0; i--) {
-					logic_scene.remove(inputs[i]);
-					inputs[i].setXPoint(x);
-					inputs[i].setYPoint(y);
-					try {
-						logic_scene.add(inputs[i]);
-					} catch (OcupationExeption e) {
-					}
-					x += distance;
-				}
-				distance = point_width / (outputs.length);
-				x = point_X;
-				x += distance * 0.5;
-				y = point_Y + point_height;
-				for (int i = outputs.length - 1; i >= 0; i--) {
-					logic_scene.remove(outputs[i]);
-					outputs[i].setXPoint(x);
-					outputs[i].setYPoint(y);
-					try {
-						logic_scene.add(outputs[i]);
-					} catch (OcupationExeption e) {
-					}
-					x += distance;
-				}
+			y += distance * 0.5;
+			for (Dot d : inputs) {
+				d.setXPoint(x);
+				d.setYPoint(y);
+				y += distance;
+			}
 
-			} else {
-				y += distance * 0.5;
-				for (Dot d : inputs) {
-					logic_scene.remove(d);
-					d.setXPoint(x);
-					d.setYPoint(y);
-					try {
-						logic_scene.add(d);
-					} catch (OcupationExeption e) {
-					}
-					y += distance;
-				}
-
-				distance = point_width / (outputs.length);
-				x = point_X + point_height;
-				y = point_Y;
-				y += distance * 0.5;
-				for (Dot d : outputs) {
-					logic_scene.remove(d);
-					d.setXPoint(x);
-					d.setYPoint(y);
-					try {
-						logic_scene.add(d);
-					} catch (OcupationExeption e) {
-					}
-					y += distance;
-				}
+			distance = point_width / (outputs.length);
+			x = point_X + point_height;
+			y = point_Y;
+			y += distance * 0.5;
+			for (Dot d : outputs) {
+				d.setXPoint(x);
+				d.setYPoint(y);
+				y += distance;
 			}
 		}
 	}
@@ -186,27 +128,17 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	@Override
 	public void addX(int X_coord) {
 		int overflow = (X + X_coord + point_X_rest) % LogicSubScene.cross_distance;
-		if (overflow <= LogicSubScene.cross_distance / 2) {
+		if (overflow <= (LogicSubScene.cross_distance / 2)) {
 			this.X = (X + X_coord + point_X_rest) - overflow;
 			this.point_X_rest = overflow;
 		} else {
 			this.X = (X + X_coord + point_X_rest) + LogicSubScene.cross_distance - overflow;
-			this.point_X_rest = -overflow;
+			this.point_X_rest = LogicSubScene.cross_distance-overflow;
 		}
 		this.point_X = X / LogicSubScene.cross_distance;
 		image_view.setLayoutX(X);
-		if (logic_scene != null) {
-			for (Dot d : inputs) {
-				logic_scene.move(d, X_coord, 0);
-			}
-			for (Dot d : outputs) {
-				logic_scene.move(d, X_coord, 0);
-			}
-		} else {
-			setStandardDotLocations();
+		setStandardDotLocations();
 		}
-
-	}
 
 	@Override
 	public void addY(int Y_coord) {
@@ -218,25 +150,16 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 			this.Y = (Y + Y_coord + point_Y_rest) + LogicSubScene.cross_distance - overflow;
 			this.point_Y_rest = -overflow;
 		}
+		System.out.println(point_Y_rest+"");
 		this.point_Y = Y / LogicSubScene.cross_distance;
 		image_view.setLayoutY(Y);
-		if (logic_scene != null) {
-			for (Dot d : inputs) {
-				logic_scene.move(d, 0, Y_coord);
-			}
-			for (Dot d : outputs) {
-				logic_scene.move(d, 0, Y_coord);
-			}
-		} else {
-			setStandardDotLocations();
-		}
-
+		setStandardDotLocations();
 	}
 
 	@Override
 	public void setX(int X_coord) {
 		int overflow = (X_coord) % LogicSubScene.cross_distance;
-		if (overflow <= LogicSubScene.cross_distance) {
+		if (overflow <= LogicSubScene.cross_distance/2) {
 			this.X = (X_coord) - overflow;
 			this.point_X_rest = 0;
 		} else {

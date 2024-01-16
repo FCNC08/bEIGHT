@@ -118,7 +118,7 @@ public class LogicSubSceneContainer extends SubScene {
 					if (logic_subscene.getLayoutX() < me.getX() && (logic_subscene.getLayoutX() + logic_subscene.getWidth()) > me.getX() && logic_subscene.getLayoutY() < me.getY()
 							&& (logic_subscene.getLayoutY() + logic_subscene.getHeight()) > me.getY()) {
 						System.out.println(adding_component);
-						adding_component.setX((int) (me.getX() - logic_subscene.getX() + logic_subscene.getXTranslate()) - adding_component.width / 2);
+						adding_component.setX((int) (me.getX() - logic_subscene.getX() + logic_subscene.getXTranslate()));
 						adding_component.setY((int) (me.getY() - logic_subscene.getY() + logic_subscene.getYTranslate()));
 						try {
 							logic_subscene.add(adding_component);

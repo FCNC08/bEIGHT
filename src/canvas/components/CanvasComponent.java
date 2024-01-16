@@ -52,8 +52,8 @@ public abstract class CanvasComponent extends WritableImage {
 	public int point_X = 0;
 	public int point_Y = 0;
 
-	protected int point_X_rest = 0;
-	protected int point_Y_rest = 0;
+	public int point_X_rest = 0;
+	public int point_Y_rest = 0;
 
 	// Constructor
 	public CanvasComponent(int NewWidth, int NewHeight) {
@@ -144,6 +144,18 @@ public abstract class CanvasComponent extends WritableImage {
 			this.point_Y_rest = -overflow;
 		}
 		this.point_Y = Y / LogicSubScene.cross_distance;
+		image_view.setLayoutY(Y);
+	}
+	
+	public void addXPoint(int X_point) {
+		this.point_X+=X_point;
+		this.X += X_point*LogicSubScene.cross_distance;
+		image_view.setLayoutX(point_X);
+	}
+	
+	public void addYPoint(int Y_point) {
+		this.point_Y+=Y_point;
+		this.Y += Y_point*LogicSubScene.cross_distance;
 		image_view.setLayoutY(Y);
 	}
 
