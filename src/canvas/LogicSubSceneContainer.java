@@ -51,7 +51,7 @@ public class LogicSubSceneContainer extends SubScene {
 			group.add(XORGate.getSolidXORGATE(LogicComponent.SIZE_MIDDLE, 2));
 			group.add(XNORGate.getSolidXNORGATE(LogicComponent.SIZE_MIDDLE, 2));
 			group.add(NOTGate.getSolidNOTGATE(LogicComponent.SIZE_MIDDLE));
-			group.add(RAM.getSolidRAM(MemoryCanvasComponent.SIZE_MIDDLE, 8));
+			//group.add(RAM.getSolidRAM(MemoryCanvasComponent.SIZE_MIDDLE, 8));
 		} catch (IllegalArgumentException iae) {
 		}
 		ComponentGroup group_1 = new ComponentGroup();

@@ -24,8 +24,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -48,10 +50,10 @@ public class Main extends Application {
 		// Adding different Scenes
 		addStartScene();
 		addLogicArea();
-
+		addEducationArea();
 		// set Scene and saves Stage
 		MainStage = primaryStage;
-		changeScene(1);
+		changeScene(0);
 		MainStage.show();
 
 	}
@@ -100,8 +102,6 @@ public class Main extends Application {
 		int width = screen.width;
 		int height = screen.height;
 
-		// System.out.println("width: "+width+" height: " +height);
-
 		// Adding MenuBar
 		MenuBar bar = new MenuBar();
 		bar.getMenus().add(getThemeChoiceMenu());
@@ -116,28 +116,50 @@ public class Main extends Application {
 		MainScene.widthProperty().bind(vbox.widthProperty());
 		MainScene.setFill(Color.GRAY);
 		
-
+		Pane logic_area = new Pane();
+		Rectangle logic_square = new Rectangle(width/5, width/5, Color.TURQUOISE);
+		Text logic_text = new Text("Logic-\nSimulation");
+		logic_text.setFont(new Font(50));
 		
+		logic_text.setX((width/5-logic_text.getBoundsInLocal().getWidth())/2);
+		logic_text.setY((width/5-logic_text.getBoundsInLocal().getHeight())/2);
 		
-		Group logicarea_root = new Group();
-		SubScene LogicArea = new SubScene(logicarea_root, MainScene.getWidth() / 6, MainScene.getHeight() / 3);
-		Text logicarea_heading = new Text("Open Logicarea");
-		logicarea_heading.setFont(new Font(40));
-		logicarea_heading.setLayoutX(MainScene.getWidth()/6);
-		logicarea_heading.setLayoutY(MainScene.getHeight()/4);
-		logicarea_root.getChildren().add(logicarea_heading);
-		EventHandler<MouseEvent> logicarea_click = new EventHandler<MouseEvent>() {
+		logic_area.getChildren().addAll(logic_square, logic_text);
+		
+		logic_area.setLayoutX(width/5);
+		logic_area.setLayoutY((height-width/5)/2);
+		
+		EventHandler<MouseEvent> logic_click = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
 				changeScene(1);
 			}
 		};
-		LogicArea.setLayoutX(MainScene.getWidth() / 6);
-		LogicArea.setLayoutY(MainScene.getHeight() / 3);
-		LogicArea.addEventFilter(MouseEvent.MOUSE_CLICKED, logicarea_click);
-		LogicArea.setFill(Color.BLACK);
-		root.getChildren().add(logicarea_heading);
+		logic_area.addEventFilter(MouseEvent.MOUSE_CLICKED, logic_click);
 		
+		Pane education_area = new Pane();
+		Rectangle education_square = new Rectangle(width/5, width/5, Color.TURQUOISE);
+		Text education_text = new Text("Education-\nUnit");
+		education_text.setFont(new Font(50));
+		
+		education_text.setX((width/5-education_text.getBoundsInLocal().getWidth())/2);
+		education_text.setY((width/5-education_text.getBoundsInLocal().getHeight())/2);
+		
+		education_area.getChildren().addAll(education_square, education_text);
+		
+		education_area.setLayoutX((width/5)*3);
+		education_area.setLayoutY((height-width/5)/2);
+		
+		EventHandler<MouseEvent> education_click = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+				changeScene(2);
+			}
+		};
+		education_area.addEventFilter(MouseEvent.MOUSE_CLICKED, education_click);
+		
+		root.getChildren().add(logic_area);
+		root.getChildren().add(education_area);
 		vbox.getChildren().add(MainScene);
 
 		Scene scene = new Scene(vbox);
@@ -170,6 +192,14 @@ public class Main extends Application {
 		VBox vbox = new VBox(bar);
 		vbox.setMinHeight(height);
 		vbox.setMinWidth(width);
+		Menu returning = new Menu("Return");
+		MenuItem returning_item = new MenuItem("Return to Start");
+		returning_item.setOnAction(me ->{
+			System.out.println("TEst");
+			changeScene(0);
+		});
+		returning.getItems().add(returning_item);
+		bar.getMenus().add(returning);
 
 		// Adding SubScene
 		Group root = new Group();
@@ -250,6 +280,54 @@ public class Main extends Application {
 		// Adding Scene
 		Scenes.add(scene);
 
+	}
+	
+	private void addEducationArea() {
+		// Size of screen
+		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+
+		int width = screen.width;
+		int height = screen.height;
+
+		// System.out.println("width: "+width+" height: " +height);
+
+		// Adding MenuBar
+		MenuBar bar = new MenuBar();
+		bar.getMenus().add(getThemeChoiceMenu());
+		VBox vbox = new VBox(bar);
+		vbox.setMinHeight(height);
+		vbox.setMinWidth(width);
+		
+		Menu returning = new Menu("Return");
+		MenuItem returning_item = new MenuItem("Return to Start");
+		returning_item.setOnAction(me ->{
+			System.out.println("TEst");
+			changeScene(0);
+		});
+		returning.getItems().add(returning_item);
+		bar.getMenus().add(returning);
+
+		// Adding SubScene
+		Group root = new Group();
+		SubScene MainScene = new SubScene(root, 1000, 500);
+		MainScene.heightProperty().bind(vbox.heightProperty());
+		MainScene.widthProperty().bind(vbox.widthProperty());
+		MainScene.setFill(Color.GRAY);
+		
+		
+		vbox.getChildren().add(MainScene);
+
+		Scene scene = new Scene(vbox);
+
+		// Adding Runnable to maximize and resize
+		Runnables.add(new Runnable() {
+			public void run() {
+				MainStage.setMaximized(true);
+				MainStage.setResizable(true);
+			}
+		});
+		// Adding Scene
+		Scenes.add(scene);
 	}
 
 	// Changing Scene method
