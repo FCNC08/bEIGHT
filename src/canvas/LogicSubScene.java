@@ -43,6 +43,7 @@ public class LogicSubScene extends SubScene {
 	public static int dot_radius = 7;
 	public static int maxed_dot_radius = 20;
 	public static int cross_distance = wire_height * 2;
+	public static int memory_outline_thickness = (int) (wire_height*1.5);
 
 	protected static Color black_grey = new Color(0.3, 0.3, 0.3, 1.0);
 	protected static Color white_grey = new Color(0.85, 0.85, 0.85, 1.0);

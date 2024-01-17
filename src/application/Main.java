@@ -10,6 +10,7 @@ import java.util.Random;
 import canvas.LogicSubSceneContainer;
 import canvas.components.LogicComponent;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
+import canvas.components.StandardComponents.MemoryComponents.RAM;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;

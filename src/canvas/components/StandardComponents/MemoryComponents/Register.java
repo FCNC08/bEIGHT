@@ -5,14 +5,14 @@ import canvas.components.MemoryCanvasComponent;
 
 public class Register extends MemoryCanvasComponent {
 
-	public Register(byte size, int width, int height, int input_count, int output_count) {
-		super(size, width, height, input_count, output_count);
+	public Register(int width, int height, int input_count, int output_count) {
+		super(width, height, input_count, output_count,1);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void simulate() {
-
+		
 	}
 
 	@Override
@@ -23,7 +23,8 @@ public class Register extends MemoryCanvasComponent {
 
 	@Override
 	protected void resetStandardImage() {
-
+		// TODO Auto-generated method stub
+		
 	}
 
 }

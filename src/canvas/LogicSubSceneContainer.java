@@ -2,6 +2,7 @@ package canvas;
 
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
+import canvas.components.MemoryCanvasComponent;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import canvas.components.StandardComponents.LogicComponents.NANDGate;
 import canvas.components.StandardComponents.LogicComponents.NORGate;
@@ -9,6 +10,7 @@ import canvas.components.StandardComponents.LogicComponents.NOTGate;
 import canvas.components.StandardComponents.LogicComponents.ORGate;
 import canvas.components.StandardComponents.LogicComponents.XNORGate;
 import canvas.components.StandardComponents.LogicComponents.XORGate;
+import canvas.components.StandardComponents.MemoryComponents.RAM;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
@@ -49,6 +51,7 @@ public class LogicSubSceneContainer extends SubScene {
 			group.add(XORGate.getSolidXORGATE(LogicComponent.SIZE_MIDDLE, 2));
 			group.add(XNORGate.getSolidXNORGATE(LogicComponent.SIZE_MIDDLE, 2));
 			group.add(NOTGate.getSolidNOTGATE(LogicComponent.SIZE_MIDDLE));
+			group.add(RAM.getSolidRAM(MemoryCanvasComponent.SIZE_MIDDLE, 8));
 		} catch (IllegalArgumentException iae) {
 		}
 		ComponentGroup group_1 = new ComponentGroup();

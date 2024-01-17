@@ -11,12 +11,6 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	public static final byte SIZE_MIDDLE = 1;
 	public static final byte SIZE_SMALL = 0;
 
-	protected static int StandardWidth_big = LogicSubScene.cross_distance * 8, StandardHeight_big = LogicSubScene.cross_distance * 8;
-
-	protected static int StandardWidth_middle = LogicSubScene.cross_distance * 4, StandardHeight_middle = LogicSubScene.cross_distance * 4;
-
-	protected static int StandardWidth_small = LogicSubScene.cross_distance * 2, StandardHeight_small = LogicSubScene.cross_distance * 2;
-
 	protected HashMap<State[], State[]> truth_table;
 
 	protected int input_count;
