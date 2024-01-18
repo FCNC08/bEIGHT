@@ -391,12 +391,10 @@ public class LogicSubScene extends SubScene {
 							}
 						}
 						if (loc_ID.Dot != null) {
-							if (loc_ID.Dot.checkEnd(x, component.getYPoint())) {
-								component.addComponent(loc_ID.Dot);
-								loc_ID.Dot.addComponent(component);
-							}
+							component.addComponent(loc_ID.Dot);
+							loc_ID.Dot.addComponent(component);
+							
 						}
-
 						System.out.println(component);
 					} else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
 						System.out.println("Error1");
