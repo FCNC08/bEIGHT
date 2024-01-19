@@ -28,7 +28,7 @@ public class LogicSubSceneContainer extends SubScene {
 	private FunctionalCanvasComponent adding_component;
 	private Group root;
 
-	public LogicSubSceneContainer(int width, int height, Group Mainroot) {
+	public LogicSubSceneContainer(int width, int height, Group Mainroot, ComponentGroupings groupings) {
 		super(Mainroot, width, height);
 		this.root = Mainroot;
 		// Adding LogicScene
@@ -39,28 +39,8 @@ public class LogicSubSceneContainer extends SubScene {
 		logic_subscene.addX((int) (width * 0.05));
 		logic_subscene.addY((int) (height * 0.01));
 
-		// Creates example ComponentChooser TODO Adding Filesystem
-		ComponentGroupings grouping = new ComponentGroupings();
-		ComponentGroup group = new ComponentGroup();
-		try {
-
-			group.add(ANDGate.getSolidANDGATE(LogicComponent.SIZE_MIDDLE, 2));
-			group.add(NANDGate.getSolidNANDGATE(LogicComponent.SIZE_MIDDLE, 2));
-			group.add(ORGate.getSolidORGATE(LogicComponent.SIZE_MIDDLE, 2));
-			group.add(NORGate.getSolidNORGATE(LogicComponent.SIZE_MIDDLE, 2));
-			group.add(XORGate.getSolidXORGATE(LogicComponent.SIZE_MIDDLE, 2));
-			group.add(XNORGate.getSolidXNORGATE(LogicComponent.SIZE_MIDDLE, 2));
-			group.add(NOTGate.getSolidNOTGATE(LogicComponent.SIZE_MIDDLE));
-			//group.add(RAM.getSolidRAM(MemoryCanvasComponent.SIZE_MIDDLE, 8));
-		} catch (IllegalArgumentException iae) {
-		}
-		ComponentGroup group_1 = new ComponentGroup();
-
-		grouping.add(group);
-		grouping.add(group_1);
-
 		// Adding ComponentChooser and set the layout
-		component_chooser = new ComponentChooser(logic_subscene, new Group(), width * 0.15, LogicSubScene.getNearesDot((int) (height * 0.9)), grouping);
+		component_chooser = new ComponentChooser(logic_subscene, new Group(), width * 0.15, LogicSubScene.getNearesDot((int) (height * 0.9)), groupings);
 
 		System.out.println(component_chooser.getBoundsInParent());
 		component_chooser.setLayoutX(width * 0.8);
@@ -139,9 +119,34 @@ public class LogicSubSceneContainer extends SubScene {
 		addEventFilter(MouseEvent.MOUSE_DRAGGED, moveNewLogicComponent);
 	}
 
-	public static LogicSubSceneContainer init(int width, int height) {
+	public static LogicSubSceneContainer init(int width, int height, String file) {
+		ComponentGroupings grouping = null;
 		// Initializing Container with new Group
-		return new LogicSubSceneContainer(width, height, new Group());
+		return new LogicSubSceneContainer(width, height, new Group(), grouping);
+	}
+	
+	public static LogicSubSceneContainer init(int width, int height) {
+		// Creates example ComponentChooser TODO Adding Filesystem
+		ComponentGroupings grouping = new ComponentGroupings();
+		ComponentGroup group = new ComponentGroup();
+		try {
+
+			group.add(ANDGate.getSolidANDGATE(LogicComponent.SIZE_MIDDLE, 2));
+			group.add(NANDGate.getSolidNANDGATE(LogicComponent.SIZE_MIDDLE, 2));
+			group.add(ORGate.getSolidORGATE(LogicComponent.SIZE_MIDDLE, 2));
+			group.add(NORGate.getSolidNORGATE(LogicComponent.SIZE_MIDDLE, 2));
+			group.add(XORGate.getSolidXORGATE(LogicComponent.SIZE_MIDDLE, 2));
+			group.add(XNORGate.getSolidXNORGATE(LogicComponent.SIZE_MIDDLE, 2));
+			group.add(NOTGate.getSolidNOTGATE(LogicComponent.SIZE_MIDDLE));
+			//group.add(RAM.getSolidRAM(MemoryCanvasComponent.SIZE_MIDDLE, 8));
+		} catch (IllegalArgumentException iae) {
+		}
+		ComponentGroup group_1 = new ComponentGroup();
+
+		grouping.add(group);
+		grouping.add(group_1);
+		// Initializing Container with new Group
+		return new LogicSubSceneContainer(width, height, new Group(), grouping);
 	}
 
 	public void triggerKeyEvent(KeyEvent ke) {
