@@ -9,14 +9,9 @@
         <artifactId>javafx-controls</artifactId>
         <version>13</version>
     </dependency>
-    <!--<dependency>
-		<groupId>org.openjfk</groupId>
-		<artifactId>javafx-graphics</artifactId>
-		<version>11</version>
-	</dependency>-->
     <dependency>
 		<groupId>org.apache.pdfbox</groupId>
-		<artifactId>pdfbox-io</artifactId>
+		<artifactId>pdfbox-tools</artifactId>
 		<version>3.0.1</version>
 	</dependency>
 	<dependency>
@@ -78,6 +73,25 @@
 				</archive>
 			</configuration>
 			<version>3.3.0</version>
+		</plugin>
+		<plugin>
+		    <artifactId>maven-shade-plugin</artifactId>
+		    <version>3.2.1</version>
+		    <executions>
+		        <execution>
+		            <phase>package</phase>
+		            <goals>
+		                <goal>shade</goal>
+		            </goals>
+		            <configuration>
+		                <transformers>
+		                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+		                        <mainClass>application.Main</mainClass>
+		                    </transformer>
+		                </transformers>
+		            </configuration>
+		        </execution>
+		    </executions>
 		</plugin>
     </plugins>
   </build>
