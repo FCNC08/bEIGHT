@@ -1,0 +1,8 @@
+{
+    "type":"hiqo",
+    "headline":"Question 2",
+    "image":"image.jpg",
+    "question":"Kannst du auch die 2. Frage sehen?",
+    "optioncount":2,
+    "options":["ja","nein"]
+}
