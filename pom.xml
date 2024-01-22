@@ -89,14 +89,14 @@
 		    <version>3.2.1</version>
 		    <executions>
 		        <execution>
-		            <phase>package</phase>
 		            <goals>
 		                <goal>shade</goal>
 		            </goals>
 		            <configuration>
+		            <shadedArtifactAttached>true</shadedArtifactAttached>
 		                <transformers>
 		                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-		                        <mainClass>application.Main</mainClass>
+		                        <mainClass>application.SuperMain</mainClass>
 		                    </transformer>
 		                </transformers>
 		            </configuration>
