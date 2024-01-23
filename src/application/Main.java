@@ -4,15 +4,23 @@ import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.Toolkit;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 
 import canvas.LogicSubSceneContainer;
 import canvas.components.LogicComponent;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
+import education.EducationSubScene;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import util.OcupationExeption;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -300,7 +308,7 @@ public class Main extends Application {
 		Menu returning = new Menu("Return");
 		MenuItem returning_item = new MenuItem("Return to Start");
 		returning_item.setOnAction(me ->{
-			System.out.println("TEst");
+			System.out.println("Test");
 			changeScene(0);
 		});
 		returning.getItems().add(returning_item);
@@ -312,7 +320,13 @@ public class Main extends Application {
 		MainScene.heightProperty().bind(vbox.heightProperty());
 		MainScene.widthProperty().bind(vbox.widthProperty());
 		MainScene.setFill(Color.GRAY);
-		
+		EducationSubScene subscene = null;
+		try {
+			subscene = new EducationSubScene(width, height, new File("testfiles/lection.lct"));
+		} catch (IllegalArgumentException | ZipException e) {
+			e.printStackTrace();
+		}
+		root.getChildren().add(subscene);
 		
 		vbox.getChildren().add(MainScene);
 
