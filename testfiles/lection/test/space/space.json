@@ -1,0 +1,4 @@
+{
+    "defaultcomponents":["AND","NOR","NOT"],
+    "externalcomponents":["none"]
+}

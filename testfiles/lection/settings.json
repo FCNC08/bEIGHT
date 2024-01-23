@@ -1,0 +1,24 @@
+{
+    "name":"SR-Latch",
+    "difficulty":"easy",
+    "order":[{
+        "type":"lesson",
+        "filename":"lesson1.lsn"
+    },{
+        "type":"lesson",
+        "filename":"lesson2.lsn"
+    },{
+        "type":"lesson",
+        "filename":"lesson3.lsn"
+    },{
+        "type":"test",
+        "filename":"test.tst"
+    },{
+        "type":"question",
+        "filename":"question1.qst"
+    },{
+        "type":"question",
+        "filename":"question2.qst"
+    }
+]
+}

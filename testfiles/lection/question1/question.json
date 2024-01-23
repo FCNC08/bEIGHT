@@ -1,0 +1,8 @@
+{
+    "type":"hqio",
+    "headline":"question1",
+    "question":"Siehst du das?",
+    "image":"image.jpg",
+    "optioncount":2,
+    "options":["Antwort 1", "Antwort 2"]
+}
