@@ -1,7 +1,7 @@
 {
     "type":"hiqo",
     "headline":"Question 2",
-    "image":"image.jpg",
+    "image":"image.jpeg",
     "question":"Kannst du auch die 2. Frage sehen?",
     "optioncount":2,
     "options":["ja","nein"]
