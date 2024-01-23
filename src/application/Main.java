@@ -43,7 +43,7 @@ public class Main extends Application {
 	// MainStage from start methode
 
 	Stage MainStage;
-
+ 
 	@Override
 	public void start(Stage primaryStage) {
 		System.out.println("Hallo Welt dies ist ein Test vom Laptop");

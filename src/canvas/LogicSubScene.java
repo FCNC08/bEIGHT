@@ -4,10 +4,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
+/*import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;*/
 
 import application.Main;
 import canvas.components.CanvasComponent;
@@ -1209,7 +1209,7 @@ public class LogicSubScene extends SubScene {
 
 	public void SaveAsPDF(String filepath) {
 		// Creating PDF out of SubScene
-		File temp_image_file = new File("temp.png");
+		/*File temp_image_file = new File("temp.png");
 		try {
 			double start_Z = getZTranslate();
 
@@ -1243,6 +1243,6 @@ public class LogicSubScene extends SubScene {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		temp_image_file.delete();
+		temp_image_file.delete();*/
 	}
 }
