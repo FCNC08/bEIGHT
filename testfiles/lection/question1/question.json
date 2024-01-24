@@ -4,5 +4,7 @@
     "question":"Siehst du das?",
     "image":"image.jpeg",
     "optioncount":2,
+    "correctanswer":1,
+    "jumpto":0,
     "options":["Antwort 1", "Antwort 2"]
 }

@@ -136,7 +136,7 @@ public class EducationSubScene extends SubScene{
 	public void setNext() {
 		position++;
 		if(position>=order.size()) {
-			position = order.size()-1;
+			position = 0;
 		}
 		root.getChildren().clear();
 		root.getChildren().add(order.get(position));
@@ -144,10 +144,20 @@ public class EducationSubScene extends SubScene{
 	public void setPrev() {
 		position--;
 		if(position<0) {
-			position = 0;
+			position = order.size()-1;
 		}
 		root.getChildren().clear();
 		root.getChildren().add(order.get(position));
+	}
+	public void setPane(int number) {
+		position = number;
+		if(position<0) {
+			position = 0;
+		}else if(position>=order.size()) {
+			position = order.size()-1;
+		}
+		root.getChildren().clear();
+		root.getChildren().add(order.get(number));
 	}
 
 }

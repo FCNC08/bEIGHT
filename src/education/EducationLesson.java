@@ -33,13 +33,8 @@ public class EducationLesson extends Pane{
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			byte[] buffer = new byte[4096];
 			int bytesRead;
-			try {
-				while((bytesRead=inputStream.read(buffer))!= -1) {
-					outputStream.write(buffer, 0, bytesRead);
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			while((bytesRead=inputStream.read(buffer))!= -1) {
+				outputStream.write(buffer, 0, bytesRead);
 			}
 			String jsonString = outputStream.toString(StandardCharsets.UTF_8);
 			jsonobjekt = new JSONObject(jsonString);

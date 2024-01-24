@@ -4,5 +4,7 @@
     "image":"image.jpeg",
     "question":"Kannst du auch die 2. Frage sehen?",
     "optioncount":2,
+    "correctanswer":1,
+    "jumpto":0,
     "options":["ja","nein"]
 }
