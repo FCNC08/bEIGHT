@@ -11,6 +11,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import application.Main;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -79,23 +80,44 @@ public class EducationSubScene extends SubScene{
 					ZipFile temporary_file = new ZipFile(tempedu+modul.getString("filename"));
 					order.add(new EducationLesson(width, height,temporary_file, this));
 					System.out.println(order.get(order.size()-1));
+					temporary_file = null;
 					break;
 				}
 				case("question"):{
 					ZipFile temporary_file = new ZipFile(tempedu+modul.getString("filename"));
 					order.add(new Question(width, height, temporary_file, this));
 					System.out.println(order.get(order.size()-1));
+					temporary_file = null;
 					break;
 				}
 				case("test"):{
 					ZipFile temporary_file = new ZipFile(tempedu+modul.getString("filename"));
 					order.add(new LogicSubSceneTest(width, height, temporary_file, this));
 					System.out.println(order.get(order.size()-1));
+					temporary_file = null;
 					break;
 				}
 				}
 			}
 		}
+		Pane ending = new Pane();
+		Text finish = new Text("You got it.");
+		finish.setFont(new Font(100));
+		Button end = new Button("go to StartScene");
+		end.setFont(new Font(60));
+		end.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				Main.main.changeScene(0);
+			}
+		});
+		finish.setX((width-finish.getBoundsInParent().getWidth())/2);
+		finish.setY((height-finish.getBoundsInParent().getHeight()-end.getBoundsInParent().getHeight())/2);
+		ending.getChildren().add(finish);
+		end.setLayoutY((height-finish.getBoundsInParent().getHeight()-end.getBoundsInParent().getHeight())/2+end.getBoundsInParent().getHeight());
+		end.setLayoutX((width-end.getBoundsInParent().getWidth())/2);
+		ending.getChildren().add(end);
+		order.add(ending);
 		File tempfile = new File(tempedu);
 		if(tempfile.isDirectory()&&tempfile.exists()) {
 			File[] files = tempfile.listFiles();

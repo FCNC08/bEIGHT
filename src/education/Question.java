@@ -131,17 +131,6 @@ public class Question extends Pane{
 		button_back.setLayoutY(height-button_back.getHeight()-150);
 		button_back.setLayoutX(25);
 		getChildren().add(button_back);
-		
-		Button button_next = new Button("Next");
-		button_next.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				scene.setNext();
-			}
-		});
-		button_next.setLayoutY(height-button_next.getHeight()-150);
-		button_next.setLayoutX(width-button_next.getWidth()-50);
-		getChildren().add(button_next);
 	}
 	
 	public void submitAnswer(int answer) {

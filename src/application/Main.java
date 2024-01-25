@@ -5,6 +5,7 @@ import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,11 +43,12 @@ import javafx.scene.text.Text;
 public class Main extends Application {
 
 	public static Random random = new Random();
+	public static Main main;
 
 	// ArrayList with the different Scenes and Runnables to change Scenes with run
 	// for example Maximization
-	ArrayList<Scene> Scenes = new ArrayList<>();
-	ArrayList<Runnable> Runnables = new ArrayList<>();
+	Scene[] Scenes = new Scene[3];
+	Runnable[] Runnables = new Runnable[3];
 
 	// MainStage from start methode
 
@@ -54,11 +56,10 @@ public class Main extends Application {
  
 	@Override
 	public void start(Stage primaryStage) {
+		main = this;
 		System.out.println("Hallo Welt dies ist ein Test vom Laptop");
 		// Adding different Scenes
 		addStartScene();
-		addLogicArea();
-		addEducationArea();
 		// set Scene and saves Stage
 		MainStage = primaryStage;
 		changeScene(0);
@@ -68,7 +69,7 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		// Adding lines to output
-		System.setOut(new java.io.PrintStream(System.out) {
+		System.setOut(new PrintStream(System.out) {
 
 			private StackTraceElement getCallSite() {
 				for (StackTraceElement e : Thread.currentThread().getStackTrace())
@@ -140,6 +141,9 @@ public class Main extends Application {
 		EventHandler<MouseEvent> logic_click = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
+				if(Scenes[1] == null) {
+					addLogicArea();
+				}
 				changeScene(1);
 			}
 		};
@@ -161,6 +165,9 @@ public class Main extends Application {
 		EventHandler<MouseEvent> education_click = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
+				if(Scenes[2]==null) {
+					addEducationArea();
+				}
 				changeScene(2);
 			}
 		};
@@ -173,14 +180,14 @@ public class Main extends Application {
 		Scene scene = new Scene(vbox);
 
 		// Adding Runnable to maximize and resize
-		Runnables.add(new Runnable() {
+		Runnables[0] = new Runnable() {
 			public void run() {
 				MainStage.setMaximized(true);
 				MainStage.setResizable(true);
 			}
-		});
+		};
 		// Adding Scene
-		Scenes.add(scene);
+		Scenes[0] = scene;
 
 	}
 
@@ -278,15 +285,15 @@ public class Main extends Application {
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, key_event_handler);
 
 		// Adding Runnable to maximize and resize
-		Runnables.add(new Runnable() {
+		Runnables[1] = new Runnable() {
 			public void run() {
 				MainStage.setMaximized(true);
 				MainStage.setResizable(true);
 			}
-		});
+		};
 
 		// Adding Scene
-		Scenes.add(scene);
+		Scenes[1] = scene;
 
 	}
 	
@@ -334,22 +341,22 @@ public class Main extends Application {
 		Scene scene = new Scene(vbox);
 
 		// Adding Runnable to maximize and resize
-		Runnables.add(new Runnable() {
+		Runnables[2] = new Runnable() {
 			public void run() {
 				MainStage.setMaximized(true);
 				MainStage.setResizable(true);
 			}
-		});
+		};
 		// Adding Scene
-		Scenes.add(scene);
+		Scenes[2] = scene;
 	}
 
 	// Changing Scene method
-	private void changeScene(int SceneNumber) {
+	public void changeScene(int SceneNumber) {
 		// Setting Scene to Stage
-		MainStage.setScene(Scenes.get(SceneNumber));
+		MainStage.setScene(Scenes[SceneNumber]);
 
 		// Runs Runnable
-		Runnables.get(SceneNumber).run();
+		Runnables[SceneNumber].run();
 	}
 }

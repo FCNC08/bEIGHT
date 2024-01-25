@@ -1106,7 +1106,7 @@ public class LogicSubScene extends SubScene {
 			}
 			wire_horizontal.setY(round_start_y);
 
-			wire_horizontal.setState(CanvasComponent.UNSET);
+			wire_horizontal.setState(CanvasComponent.OFF);
 
 			doublet.setHorizontalWire(wire_horizontal);
 			wire_horizontal.setRotation(CanvasComponent.HORIZONTAL);
@@ -1121,7 +1121,7 @@ public class LogicSubScene extends SubScene {
 			}
 			wire_vertical.setX(round_end_x);
 
-			wire_vertical.setState(CanvasComponent.UNSET);
+			wire_vertical.setState(CanvasComponent.OFF);
 			wire_vertical.setRotation(CanvasComponent.VERTICAL);
 
 			doublet.setVerticalWire(wire_vertical);
