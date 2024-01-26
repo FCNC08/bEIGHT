@@ -1,6 +1,6 @@
 {
     "type":"hti",
-    "headline":"Lesson3",
-    "text":"Das ist Lesson 3 und wenn du das siehst, klappt alles",
-    "image":"image.jpeg"
+    "headline":"Zwei NOR-Gates mit sich selbst verbinden.",
+    "text":"Ziehe gleich zwei NOR-Gates in den Simulationsbereich und verbinde sie wie im Bild miteinander",
+    "image":"image.png"
 }

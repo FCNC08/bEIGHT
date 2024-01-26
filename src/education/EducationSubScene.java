@@ -108,6 +108,7 @@ public class EducationSubScene extends SubScene{
 		end.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+				setNext();
 				Main.main.changeScene(0);
 			}
 		});

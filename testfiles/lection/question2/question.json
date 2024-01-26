@@ -1,10 +1,10 @@
 {
     "type":"hiqo",
-    "headline":"Question 2",
-    "image":"image.jpeg",
-    "question":"Kannst du auch die 2. Frage sehen?",
-    "optioncount":2,
-    "correctanswer":1,
-    "jumpto":0,
-    "options":["ja","nein"]
+    "headline":"SR-Latch",
+    "image":"image.png",
+    "question":"Was hast du beim Verändern der Eingänge bei den Ausgängen bemerkt?",
+    "optioncount":3,
+    "correctanswer":0,
+    "jumpto":5,
+    "options":["A) Wenn man einen Eingang einschaltet, schaltet sich der eine Ausgang ein. Verändert man diesen Eingang nun, ändert sich nichts,\nVerändert man nun den anderen Eingang, setzt man den Ausgang zurück, und der andere Ausgang ändert sich.", "B) Bei jedem Ändern eines Eingangs verändern sich die Ausgänge.", "C) Sobalt man einen Eingang ändert, ändert sich nichts mehr, egal wie man drückt"]
 }

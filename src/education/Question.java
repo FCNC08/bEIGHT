@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -54,7 +55,7 @@ public class Question extends Pane{
 			switch(t) {
 			case('h'):{
 				Text headline = new Text(jsonobject.getString("headline"));
-				headline.setFont(new Font(50));
+				headline.setFont(new Font(40));
 				headline.setX((width-headline.getBoundsInParent().getWidth())/2);
 				headline.setY(y);
 				y+=headline.getBoundsInParent().getHeight();
@@ -69,8 +70,14 @@ public class Question extends Pane{
 					e.printStackTrace();
 				}
 				ImageView view = new ImageView(image);
-				view.setFitHeight(height*0.5);
-				view.setX((width-image.getWidth())/2);
+				if(image.getHeight()>height*0.5) {
+					view.setFitHeight(height*0.5);
+					view.setFitWidth(image.getWidth()*(height*0.5/image.getHeight()));
+				}else {
+					view.setFitHeight(image.getHeight());
+					view.setFitWidth(image.getWidth());
+				}
+				view.setX((width-view.getFitWidth())/2);
 				view.setY(y);
 				y+=view.getFitHeight()+50;
 				getChildren().add(view);
@@ -78,7 +85,7 @@ public class Question extends Pane{
 			}
 			case('q'):{
 				Text text = new Text(jsonobject.getString("question"));
-				text.setFont(new Font(30));
+				text.setFont(new Font(25));
 				text.setX((width-text.getBoundsInParent().getWidth())/2);
 				text.setY(y);
 				y+=text.getBoundsInParent().getHeight()+50;
@@ -86,7 +93,7 @@ public class Question extends Pane{
 				break;
 			}
 			case('o'):{
-				HBox box = new HBox();
+				VBox box = new VBox();
 				box.setMaxWidth(width);
 				correctanswer = jsonobject.getInt("correctanswer");
 				jumpto = jsonobject.getInt("jumpto");
@@ -100,7 +107,7 @@ public class Question extends Pane{
 						}
 						String option = (String) c;
 						Text text = new Text(option);
-						text.setFont(new Font(30));
+						text.setFont(new Font(25));
 						final int nummer = number;
 						text.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 							@Override
@@ -112,7 +119,6 @@ public class Question extends Pane{
 						box.getChildren().add(text);
 					}
 				}
-				box.setLayoutX((width-box.getWidth())/2);
 				box.setLayoutY(y);
 				y+=box.getHeight()+50;
 				getChildren().add(box);

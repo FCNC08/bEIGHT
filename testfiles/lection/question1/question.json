@@ -1,10 +1,10 @@
 {
     "type":"hqio",
-    "headline":"question1",
-    "question":"Siehst du das?",
-    "image":"image.jpeg",
-    "optioncount":2,
-    "correctanswer":1,
-    "jumpto":0,
-    "options":["Antwort 1", "Antwort 2"]
+    "headline":"rekursives OR-Gate",
+    "question":"Was ist bei deiner Simulation passiert, wenn du den Status des Kabel änderst?",
+    "image":"image.png",
+    "optioncount":4,
+    "correctanswer":3,
+    "jumpto":2,
+    "options":["A) Sobald einer der Eingänge aus ist, bleibt der Ausgang immer aus, er speichert quasi den Zustand","B) Der Ausgang nimmt immer den Status des freien Eingangs an", "C) Der Ausgang nimmt immer den gegenteiligen Status des freien Eingangs an ","D) Sobald einer der Eingänge an ist, bleibt der Ausgang immer an, er speichert quasi den Zustand"]
 }

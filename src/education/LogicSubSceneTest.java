@@ -34,6 +34,8 @@ public class LogicSubSceneTest extends Pane{
 	public LogicSubSceneTest(double width, double height, ZipFile file, EducationSubScene scene) throws ZipException {
 		super();
 		JSONObject jsonobject = null;
+		final ComponentGroupings groupings;
+		LogicSubSceneContainer container;
 		try {
 			if(file.isEncrypted()) {
 				throw new IllegalArgumentException();
@@ -54,7 +56,7 @@ public class LogicSubSceneTest extends Pane{
 		}
 		String headlineString = jsonobject.getString("headline");
 		Text headline = new Text(headlineString);
-		headline.setFont(new Font(50));
+		headline.setFont(new Font(25));
 		file.extractAll(EducationSubScene.tempmod);
 		ZipFile temporary_file = new ZipFile(EducationSubScene.tempmod+jsonobject.getString("space"));
 		JSONObject space = null;
@@ -120,10 +122,11 @@ public class LogicSubSceneTest extends Pane{
 			}
 		}
 		grouping.add(defaults);
+		groupings = grouping;
 		/*JSONArray externalcomponents = jsonobject.getJSONArray("externalcomponents");
 		ComponentGroup external = new ComponentGroup();
 		*/
-		LogicSubSceneContainer container = new LogicSubSceneContainer((int)width, (int)(height-headline.getBoundsInParent().getHeight()-75), new Group(), grouping, 2);
+		container = new LogicSubSceneContainer((int)width, (int)(height-headline.getBoundsInParent().getHeight()-75), new Group(), grouping, 2);
 		File tempfile = new File(EducationSubScene.tempmod);
 		if(tempfile.isDirectory()&&tempfile.exists()) {
 			File[] files = tempfile.listFiles();
@@ -142,6 +145,9 @@ public class LogicSubSceneTest extends Pane{
 		button_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+				getChildren().remove(container);
+				LogicSubSceneContainer container = new LogicSubSceneContainer((int)width, (int)(height-headline.getBoundsInParent().getHeight()-75), new Group(), groupings, 2);
+				getChildren().add(container);
 				scene.setPrev();
 			}
 		});
@@ -153,6 +159,9 @@ public class LogicSubSceneTest extends Pane{
 		button_next.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
+				getChildren().remove(container);
+				LogicSubSceneContainer container = new LogicSubSceneContainer((int)width, (int)(height-headline.getBoundsInParent().getHeight()-75), new Group(), groupings, 2);
+				getChildren().add(container);
 				scene.setNext();
 			}
 		});

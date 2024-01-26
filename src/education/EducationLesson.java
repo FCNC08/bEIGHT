@@ -64,8 +64,13 @@ public class EducationLesson extends Pane{
 					e.printStackTrace();
 				}
 				ImageView view = new ImageView(image);
-				view.setFitHeight(height*0.7);
-				view.setX((width-image.getWidth())/2);
+				if(image.getHeight()>height*0.5) {
+					view.setFitHeight(height*0.5);
+					view.setFitWidth(image.getWidth()*(height*0.5/image.getHeight()));
+				}else {
+					view.setFitHeight(image.getHeight());
+				}
+				view.setX((width-view.getFitWidth())/2);
 				view.setY(y);
 				y+=view.getFitHeight()+50;
 				getChildren().add(view);
@@ -73,7 +78,7 @@ public class EducationLesson extends Pane{
 			}
 			case('t'):{
 				Text text = new Text(jsonobjekt.getString("text"));
-				text.setFont(new Font(30));
+				text.setFont(new Font(25));
 				text.setX((width-text.getBoundsInParent().getWidth())/2);
 				text.setY(y);
 				y+=text.getBoundsInParent().getHeight()+50;
