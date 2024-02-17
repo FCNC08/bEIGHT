@@ -128,5 +128,10 @@ public class RAM extends MemoryCanvasComponent {
 		writer = null;
 		System.gc();
 	}
+	
+	@Override
+	protected void createInfo() {
+		
+	}
 
 }

@@ -36,6 +36,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 import util.OcupationExeption;
 import util.ComponentBox;
+import util.Info;
 
 public class LogicSubScene extends SubScene {
 
@@ -49,11 +50,11 @@ public class LogicSubScene extends SubScene {
 	protected static Color white_grey = new Color(0.85, 0.85, 0.85, 1.0);
 	protected static Color black = new Color(0.0, 0.0, 0.0, 1.0);
 
-	protected Color cross_color = black;
-
 	public static Color focus_square_main = white_grey;
 	public static Color focus_square_secondary = black_grey;
 
+	protected Color cross_color = black;
+	
 	public static boolean actual_set_state = true;
 
 	protected int width;
@@ -77,6 +78,7 @@ public class LogicSubScene extends SubScene {
 	private double moves_y;
 
 	private CanvasComponent last_focused_component = null;
+	private Info addedInfo = null;
 
 	protected Camera camera;
 	protected Translate camera_position;
@@ -236,6 +238,7 @@ public class LogicSubScene extends SubScene {
 			public void handle(MouseEvent me) {
 				// Used to highlight a component but not working
 				System.out.println("click");
+				addedInfo = null;
 				if (me.getButton() == MouseButton.PRIMARY) {
 					if (last_focused_component != null) {
 						last_focused_component.setFocus(false);
@@ -258,7 +261,7 @@ public class LogicSubScene extends SubScene {
 					if (me.isStillSincePress()) {
 						System.out.println("Still");
 
-						if (me.getTarget() instanceof ImageView) {
+						/*if (me.getTarget() instanceof ImageView) {
 							Image img = ((ImageView) me.getTarget()).getImage();
 							if (img instanceof CanvasComponent) {
 								CanvasComponent component = (CanvasComponent) img;
@@ -269,7 +272,18 @@ public class LogicSubScene extends SubScene {
 								}
 								System.out.println("ROTATE");
 							}
+						}*/
+						if(me.getTarget() instanceof ImageView) {
+							Image img = ((ImageView)me.getTarget()).getImage();
+							if(img instanceof FunctionalCanvasComponent) {
+								FunctionalCanvasComponent component = (FunctionalCanvasComponent) img;
+								addedInfo = component.getInfo();
+								System.out.println(addedInfo);
+								root.getChildren().add(addedInfo);
+								
+							}
 						}
+						
 					}
 				}
 

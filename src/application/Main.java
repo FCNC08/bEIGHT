@@ -4,13 +4,7 @@ import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.Toolkit;
-import java.io.File;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Random;
 
 import canvas.LogicSubSceneContainer;
@@ -30,7 +24,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -60,6 +53,7 @@ public class Main extends Application {
 		System.out.println("Hallo Welt dies ist ein Test vom Laptop");
 		// Adding different Scenes
 		addStartScene();
+		
 		// set Scene and saves Stage
 		MainStage = primaryStage;
 		changeScene(0);
@@ -82,13 +76,19 @@ public class Main extends Application {
 			public void println(String s) {
 				println((Object) s);
 			}
-
+			
+			@Override
+			public void println(boolean b) {
+				println((Object)b);
+			}
+			
 			@Override
 			public void println(Object o) {
 				StackTraceElement e = getCallSite();
 				String callSite = e == null ? "??" : String.format("%s.%s(%s:%d)", e.getClassName(), e.getMethodName(), e.getFileName(), e.getLineNumber());
 				super.println(o + "\t\tat " + callSite);
 			}
+			
 		});
 		launch(args);
 	}
@@ -241,7 +241,6 @@ public class Main extends Application {
 		try {
 			logic_container.logic_subscene.add(and);
 		} catch (OcupationExeption e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 

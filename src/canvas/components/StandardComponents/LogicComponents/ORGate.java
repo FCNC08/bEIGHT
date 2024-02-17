@@ -9,6 +9,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import util.ErrorStateExeption;
+import util.Info;
 
 public class ORGate extends LogicComponent {
 
@@ -16,7 +17,6 @@ public class ORGate extends LogicComponent {
 
 	public ORGate(byte size, int width, int height, int input_count) throws IllegalArgumentException {
 		super(size, width, height, input_count);
-		// TODO Auto-generated constructor stub
 	}
 
 	public static void setStandardImage(Image standard_image) {
@@ -111,7 +111,6 @@ public class ORGate extends LogicComponent {
 			boolean output_state = false;
 			System.out.println("lenght of bool:" + bool_states.length);
 			for (boolean b : bool_states) {
-				System.out.println(b);
 				output_state = output_state || b;
 			}
 			for (Dot d : outputs) {
@@ -154,5 +153,10 @@ public class ORGate extends LogicComponent {
 		reader = null;
 		writer = null;
 		System.gc();
+	}
+	
+	@Override
+	protected void createInfo() {
+		info = new Info();		
 	}
 }

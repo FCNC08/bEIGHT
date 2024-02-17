@@ -9,6 +9,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import util.ErrorStateExeption;
+import util.Info;
 
 public class XORGate extends LogicComponent {
 
@@ -112,7 +113,6 @@ public class XORGate extends LogicComponent {
 			boolean output_state = false;
 			System.out.println("lenght of bool:" + bool_states.length);
 			for (boolean b : bool_states) {
-				System.out.println(b);
 				output_state = output_state ^ b;
 			}
 			for (Dot d : outputs) {
@@ -157,5 +157,10 @@ public class XORGate extends LogicComponent {
 		reader = null;
 		writer = null;
 		System.gc();
+	}
+	
+	@Override
+	protected void createInfo() {
+		info = new Info();		
 	}
 }

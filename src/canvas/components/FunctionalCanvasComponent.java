@@ -5,11 +5,14 @@ import java.util.HashMap;
 import canvas.LogicSubScene;
 import javafx.scene.image.ImageView;
 import util.OcupationExeption;
+import util.Info;
 
 public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	public static final byte SIZE_BIG = 2;
 	public static final byte SIZE_MIDDLE = 1;
 	public static final byte SIZE_SMALL = 0;
+	
+	protected Info info;
 
 	protected HashMap<State[], State[]> truth_table;
 
@@ -40,6 +43,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 			outputs[i] = new Dot(this);
 			outputs[i].setParent(this);
 		}
+		createInfo();
 	}
 
 	public static FunctionalCanvasComponent initImage(String url, int inputs, int outputs, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
@@ -131,6 +135,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		}
 		this.point_X = X / LogicSubScene.cross_distance;
 		image_view.setLayoutX(X);
+		info.setLayoutX(X);
 		setStandardDotLocations();
 		}
 
@@ -147,6 +152,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		System.out.println(point_Y_rest+"");
 		this.point_Y = Y / LogicSubScene.cross_distance;
 		image_view.setLayoutY(Y);
+		info.setLayoutY(Y-info.getHeight());
 		setStandardDotLocations();
 	}
 
@@ -162,6 +168,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		}
 		this.point_X = X / LogicSubScene.cross_distance;
 		image_view.setLayoutX(X);
+		info.setLayoutX(X);
 		setStandardDotLocations();
 	}
 
@@ -177,6 +184,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		}
 		this.point_Y = Y / LogicSubScene.cross_distance;
 		image_view.setLayoutY(Y);
+		info.setLayoutY(Y-info.getHeight());
 		setStandardDotLocations();
 	}
 
@@ -186,6 +194,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		this.X = point_x * LogicSubScene.cross_distance;
 		this.point_X = point_x;
 		image_view.setLayoutX(X);
+		info.setLayoutX(X);
 		setStandardDotLocations();
 	}
 
@@ -193,7 +202,8 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	public void setYPoint(int point_y) {
 		this.Y = point_y * LogicSubScene.cross_distance;
 		this.point_Y = point_y;
-		image_view.setLayoutX(X);
+		image_view.setLayoutY(Y);
+		info.setLayoutY(Y-info.getHeight());
 		setStandardDotLocations();
 	}
 
@@ -304,5 +314,11 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		}
 	}
 
+	public Info getInfo() {
+		return info;
+	}
+	
+	protected abstract void createInfo();
+	
 	protected abstract void resetStandardImage();
 }
