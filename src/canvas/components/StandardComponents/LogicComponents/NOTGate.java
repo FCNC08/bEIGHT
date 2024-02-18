@@ -151,6 +151,7 @@ public class NOTGate extends LogicComponent {
 	
 	@Override
 	protected void createInfo() {
-		info = new Info();		
+		info = new Info();
+		info.setHeadline("NOT-Gate");
 	}
 }

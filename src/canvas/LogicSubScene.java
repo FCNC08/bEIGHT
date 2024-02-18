@@ -1,15 +1,10 @@
 package canvas;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
 /*import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;*/
 
-import application.Main;
 import canvas.components.CanvasComponent;
 import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
@@ -17,7 +12,6 @@ import canvas.components.SingleCanvasComponent;
 import canvas.components.State;
 import canvas.components.StandardComponents.Wire;
 import canvas.components.StandardComponents.WireDoublet;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -238,7 +232,10 @@ public class LogicSubScene extends SubScene {
 			public void handle(MouseEvent me) {
 				// Used to highlight a component but not working
 				System.out.println("click");
-				addedInfo = null;
+				if(addedInfo != null) {
+					root.getChildren().remove(addedInfo);
+					addedInfo = null;
+				}
 				if (me.getButton() == MouseButton.PRIMARY) {
 					if (last_focused_component != null) {
 						last_focused_component.setFocus(false);
@@ -278,7 +275,6 @@ public class LogicSubScene extends SubScene {
 							if(img instanceof FunctionalCanvasComponent) {
 								FunctionalCanvasComponent component = (FunctionalCanvasComponent) img;
 								addedInfo = component.getInfo();
-								System.out.println(addedInfo);
 								root.getChildren().add(addedInfo);
 								
 							}

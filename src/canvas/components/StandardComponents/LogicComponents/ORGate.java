@@ -157,6 +157,7 @@ public class ORGate extends LogicComponent {
 	
 	@Override
 	protected void createInfo() {
-		info = new Info();		
+		info = new Info();
+		info.setHeadline("OR-Gate");
 	}
 }

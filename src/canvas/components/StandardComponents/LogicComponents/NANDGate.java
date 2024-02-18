@@ -165,6 +165,6 @@ public class NANDGate extends LogicComponent {
 	@Override
 	protected void createInfo() {
 		info = new Info();
-		info.setHeadline("NAND-Gate");
+		info.setHeadline("NAND");
 	}
 }

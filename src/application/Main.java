@@ -83,6 +83,23 @@ public class Main extends Application {
 			}
 			
 			@Override
+			public void println(double b) {
+				println((Object)b);
+			}
+			@Override
+			public void println(int b) {
+				println((Object)b);
+			}
+			@Override
+			public void println(long b) {
+				println((Object)b);
+			}
+			@Override
+			public void println(char b) {
+				println((Object)b);
+			}
+			
+			@Override
 			public void println(Object o) {
 				StackTraceElement e = getCallSite();
 				String callSite = e == null ? "??" : String.format("%s.%s(%s:%d)", e.getClassName(), e.getMethodName(), e.getFileName(), e.getLineNumber());

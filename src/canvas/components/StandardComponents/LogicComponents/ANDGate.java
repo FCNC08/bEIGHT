@@ -162,5 +162,6 @@ public class ANDGate extends LogicComponent {
 	@Override
 	protected void createInfo() {
 		info = new Info();
+		info.setHeadline("AND-Gate");
 	}
 }

@@ -161,6 +161,7 @@ public class XORGate extends LogicComponent {
 	
 	@Override
 	protected void createInfo() {
-		info = new Info();		
+		info = new Info();
+		info.setHeadline("XOR-Gate");
 	}
 }

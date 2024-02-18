@@ -8,6 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
+import util.Info;
 
 public class RAM extends MemoryCanvasComponent {
 
@@ -131,7 +132,8 @@ public class RAM extends MemoryCanvasComponent {
 	
 	@Override
 	protected void createInfo() {
-		
+		info = new Info();
+		info.setHeadline("RAM");
 	}
 
 }

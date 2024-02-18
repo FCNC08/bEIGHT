@@ -2,6 +2,7 @@ package canvas.components.StandardComponents.MemoryComponents;
 
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.MemoryCanvasComponent;
+import util.Info;
 
 public class Register extends MemoryCanvasComponent {
 
@@ -29,7 +30,8 @@ public class Register extends MemoryCanvasComponent {
 	
 	@Override
 	protected void createInfo() {
-		
+		info = new Info();
+		info.setHeadline("Register");
 	}
 
 }

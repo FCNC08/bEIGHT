@@ -152,7 +152,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		System.out.println(point_Y_rest+"");
 		this.point_Y = Y / LogicSubScene.cross_distance;
 		image_view.setLayoutY(Y);
-		info.setLayoutY(Y-info.getHeight());
+		info.setLayoutY(Y);
 		setStandardDotLocations();
 	}
 
@@ -184,7 +184,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		}
 		this.point_Y = Y / LogicSubScene.cross_distance;
 		image_view.setLayoutY(Y);
-		info.setLayoutY(Y-info.getHeight());
+		info.setLayoutY(Y);
 		setStandardDotLocations();
 	}
 
@@ -203,7 +203,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		this.Y = point_y * LogicSubScene.cross_distance;
 		this.point_Y = point_y;
 		image_view.setLayoutY(Y);
-		info.setLayoutY(Y-info.getHeight());
+		info.setLayoutY(Y);
 		setStandardDotLocations();
 	}
 
