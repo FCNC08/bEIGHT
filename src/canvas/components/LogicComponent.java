@@ -1,32 +1,23 @@
 package canvas.components;
 
+import canvas.LogicSubScene;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
-public abstract class LogicComponent extends FunctionalCanvasComponent{
-
+public abstract class LogicComponent extends FunctionalCanvasComponent {
 	
-	public LogicComponent(byte size, int width, int height, int input_count, int output_count) {
-		super(size,width, height, input_count, output_count);
+	protected static int StandardWidth_big = LogicSubScene.cross_distance * 8, StandardHeight_big = LogicSubScene.cross_distance * 8;
+
+	protected static int StandardWidth_middle = LogicSubScene.cross_distance * 4, StandardHeight_middle = LogicSubScene.cross_distance * 4;
+
+	protected static int StandardWidth_small = LogicSubScene.cross_distance * 2, StandardHeight_small = LogicSubScene.cross_distance * 2;
+
+	public LogicComponent(byte size, int width, int height, int input_count) throws IllegalArgumentException {
+		super(width, height, input_count, 1);
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public static void setStandardImage(Image standard_image) {
-		//Override in higher classes
+		// Override in higher classes
 	}
-	
-	@Override
-	protected void createImageView() {
-		//Creating ImageView with changing the direction of the ImageView
-		image_view= new ImageView();
-		image_view.setImage(this);
-		image_view.setRotate(getRotationDegree());
-		image_view.setLayoutX(X);
-		image_view.setLayoutY(Y);
-		
-		if(rotation == CanvasComponent.VERTICAL) {
-			image_view.setLayoutY(image_view.getLayoutY()+0.5*width-0.5*getHeight());
-			image_view.setLayoutX(image_view.getLayoutX()-0.5*width+0.5*getHeight());
-		}
-	}
+
 }

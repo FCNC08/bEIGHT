@@ -1,3 +1,6 @@
 /bin/
 .classpath
 /.settings/
+/target/
+/src/module-info.java
+.externalToolBuilders/
