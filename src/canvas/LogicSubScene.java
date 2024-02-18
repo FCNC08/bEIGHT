@@ -470,7 +470,7 @@ public class LogicSubScene extends SubScene{
 			short ID = generateRandomSingleComponentID();		
 			ShortPair loc_ID;
 			
-			System.out.println(ID);
+			System.out.println("DOT-ID: "+ID);
 			
 			//Checking Point where Dot is added and connecting it to other SingleCanvasComponents
 			loc_ID = used[component.point_X][component.point_Y];
