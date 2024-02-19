@@ -5,6 +5,9 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /*import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
