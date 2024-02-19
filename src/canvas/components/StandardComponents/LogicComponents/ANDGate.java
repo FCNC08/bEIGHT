@@ -7,8 +7,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import util.ErrorStateExeption;
+import util.Info;
 
 public class ANDGate extends LogicComponent {
 
@@ -111,7 +113,6 @@ public class ANDGate extends LogicComponent {
 			}
 			boolean output_state = true;
 			for (boolean b : bool_states) {
-				System.out.println(b);
 				output_state = output_state && b;
 			}
 			for (Dot d : outputs) {
@@ -156,5 +157,11 @@ public class ANDGate extends LogicComponent {
 		reader = null;
 		writer = null;
 		System.gc();
+	}
+
+	@Override
+	protected void createInfo() {
+		info = new Info();
+		info.setHeadline("AND-Gate");
 	}
 }

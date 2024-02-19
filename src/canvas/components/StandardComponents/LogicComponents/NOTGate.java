@@ -9,6 +9,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import util.ErrorStateExeption;
+import util.Info;
 
 public class NOTGate extends LogicComponent {
 
@@ -146,5 +147,11 @@ public class NOTGate extends LogicComponent {
 		reader = null;
 		writer = null;
 		System.gc();
+	}
+	
+	@Override
+	protected void createInfo() {
+		info = new Info();
+		info.setHeadline("NOT-Gate");
 	}
 }

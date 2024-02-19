@@ -1,0 +1,5 @@
+{
+    "type":"ht",
+    "headline":"Rekursivität von OR-Gates",
+    "text":"Wir haben gelernt, das wenn man ein OR-Gate rekursiv, also einen Ausgang mit einem Eingang,\nverbindet, und ein Eingang einmalig auf 'ein' ist, speichert das OR-Gate den Status wie ein Schloss"
+}

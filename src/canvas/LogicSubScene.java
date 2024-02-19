@@ -9,7 +9,6 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;*/
 
-import application.Main;
 import canvas.components.CanvasComponent;
 import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
@@ -17,7 +16,6 @@ import canvas.components.SingleCanvasComponent;
 import canvas.components.State;
 import canvas.components.StandardComponents.Wire;
 import canvas.components.StandardComponents.WireDoublet;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -36,6 +34,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 import util.OcupationExeption;
 import util.ComponentBox;
+import util.Info;
 
 public class LogicSubScene extends SubScene {
 
@@ -49,11 +48,11 @@ public class LogicSubScene extends SubScene {
 	protected static Color white_grey = new Color(0.85, 0.85, 0.85, 1.0);
 	protected static Color black = new Color(0.0, 0.0, 0.0, 1.0);
 
-	protected Color cross_color = black;
-
 	public static Color focus_square_main = white_grey;
 	public static Color focus_square_secondary = black_grey;
 
+	protected Color cross_color = black;
+	
 	public static boolean actual_set_state = true;
 
 	protected int width;
@@ -77,6 +76,7 @@ public class LogicSubScene extends SubScene {
 	private double moves_y;
 
 	private CanvasComponent last_focused_component = null;
+	private Info addedInfo = null;
 
 	protected Camera camera;
 	protected Translate camera_position;
@@ -236,6 +236,10 @@ public class LogicSubScene extends SubScene {
 			public void handle(MouseEvent me) {
 				// Used to highlight a component but not working
 				System.out.println("click");
+				if(addedInfo != null) {
+					root.getChildren().remove(addedInfo);
+					addedInfo = null;
+				}
 				if (me.getButton() == MouseButton.PRIMARY) {
 					if (last_focused_component != null) {
 						last_focused_component.setFocus(false);
@@ -258,7 +262,7 @@ public class LogicSubScene extends SubScene {
 					if (me.isStillSincePress()) {
 						System.out.println("Still");
 
-						if (me.getTarget() instanceof ImageView) {
+						/*if (me.getTarget() instanceof ImageView) {
 							Image img = ((ImageView) me.getTarget()).getImage();
 							if (img instanceof CanvasComponent) {
 								CanvasComponent component = (CanvasComponent) img;
@@ -269,7 +273,17 @@ public class LogicSubScene extends SubScene {
 								}
 								System.out.println("ROTATE");
 							}
+						}*/
+						if(me.getTarget() instanceof ImageView) {
+							Image img = ((ImageView)me.getTarget()).getImage();
+							if(img instanceof FunctionalCanvasComponent) {
+								FunctionalCanvasComponent component = (FunctionalCanvasComponent) img;
+								addedInfo = component.getInfo();
+								root.getChildren().add(addedInfo);
+								
+							}
 						}
+						
 					}
 				}
 
@@ -318,7 +332,7 @@ public class LogicSubScene extends SubScene {
 		// Adding each Dot(Communication between wires and Components)
 		for (Dot d : component.inputs) {
 			add(d);
-			d.setState(State.getState(true, Main.random.nextBoolean()));
+			d.setState(State.OFF);
 
 		}
 		for (Dot d : component.outputs) {
@@ -1106,7 +1120,7 @@ public class LogicSubScene extends SubScene {
 			}
 			wire_horizontal.setY(round_start_y);
 
-			wire_horizontal.setState(CanvasComponent.UNSET);
+			wire_horizontal.setState(CanvasComponent.OFF);
 
 			doublet.setHorizontalWire(wire_horizontal);
 			wire_horizontal.setRotation(CanvasComponent.HORIZONTAL);
@@ -1121,7 +1135,7 @@ public class LogicSubScene extends SubScene {
 			}
 			wire_vertical.setX(round_end_x);
 
-			wire_vertical.setState(CanvasComponent.UNSET);
+			wire_vertical.setState(CanvasComponent.OFF);
 			wire_vertical.setRotation(CanvasComponent.VERTICAL);
 
 			doublet.setVerticalWire(wire_vertical);

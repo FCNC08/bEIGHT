@@ -4,16 +4,18 @@ import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.Toolkit;
-import java.util.ArrayList;
+import java.io.PrintStream;
 import java.util.Random;
 
 import canvas.LogicSubSceneContainer;
 import canvas.components.LogicComponent;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
-import canvas.components.StandardComponents.MemoryComponents.RAM;
+import education.EducationSubScene;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import util.OcupationExeption;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -34,23 +36,24 @@ import javafx.scene.text.Text;
 public class Main extends Application {
 
 	public static Random random = new Random();
+	public static Main main;
 
 	// ArrayList with the different Scenes and Runnables to change Scenes with run
 	// for example Maximization
-	ArrayList<Scene> Scenes = new ArrayList<>();
-	ArrayList<Runnable> Runnables = new ArrayList<>();
+	Scene[] Scenes = new Scene[3];
+	Runnable[] Runnables = new Runnable[3];
 
 	// MainStage from start methode
 
 	Stage MainStage;
-
+ 
 	@Override
 	public void start(Stage primaryStage) {
+		main = this;
 		System.out.println("Hallo Welt dies ist ein Test vom Laptop");
 		// Adding different Scenes
 		addStartScene();
-		addLogicArea();
-		addEducationArea();
+		
 		// set Scene and saves Stage
 		MainStage = primaryStage;
 		changeScene(0);
@@ -60,7 +63,7 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		// Adding lines to output
-		System.setOut(new java.io.PrintStream(System.out) {
+		System.setOut(new PrintStream(System.out) {
 
 			private StackTraceElement getCallSite() {
 				for (StackTraceElement e : Thread.currentThread().getStackTrace())
@@ -73,13 +76,36 @@ public class Main extends Application {
 			public void println(String s) {
 				println((Object) s);
 			}
-
+			
+			@Override
+			public void println(boolean b) {
+				println((Object)b);
+			}
+			
+			@Override
+			public void println(double b) {
+				println((Object)b);
+			}
+			@Override
+			public void println(int b) {
+				println((Object)b);
+			}
+			@Override
+			public void println(long b) {
+				println((Object)b);
+			}
+			@Override
+			public void println(char b) {
+				println((Object)b);
+			}
+			
 			@Override
 			public void println(Object o) {
 				StackTraceElement e = getCallSite();
 				String callSite = e == null ? "??" : String.format("%s.%s(%s:%d)", e.getClassName(), e.getMethodName(), e.getFileName(), e.getLineNumber());
 				super.println(o + "\t\tat " + callSite);
 			}
+			
 		});
 		launch(args);
 	}
@@ -132,6 +158,9 @@ public class Main extends Application {
 		EventHandler<MouseEvent> logic_click = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
+				if(Scenes[1] == null) {
+					addLogicArea();
+				}
 				changeScene(1);
 			}
 		};
@@ -153,6 +182,9 @@ public class Main extends Application {
 		EventHandler<MouseEvent> education_click = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
+				if(Scenes[2]==null) {
+					addEducationArea();
+				}
 				changeScene(2);
 			}
 		};
@@ -165,14 +197,14 @@ public class Main extends Application {
 		Scene scene = new Scene(vbox);
 
 		// Adding Runnable to maximize and resize
-		Runnables.add(new Runnable() {
+		Runnables[0] = new Runnable() {
 			public void run() {
 				MainStage.setMaximized(true);
 				MainStage.setResizable(true);
 			}
-		});
+		};
 		// Adding Scene
-		Scenes.add(scene);
+		Scenes[0] = scene;
 
 	}
 
@@ -226,7 +258,6 @@ public class Main extends Application {
 		try {
 			logic_container.logic_subscene.add(and);
 		} catch (OcupationExeption e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -270,15 +301,15 @@ public class Main extends Application {
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, key_event_handler);
 
 		// Adding Runnable to maximize and resize
-		Runnables.add(new Runnable() {
+		Runnables[1] = new Runnable() {
 			public void run() {
 				MainStage.setMaximized(true);
 				MainStage.setResizable(true);
 			}
-		});
+		};
 
 		// Adding Scene
-		Scenes.add(scene);
+		Scenes[1] = scene;
 
 	}
 	
@@ -301,7 +332,7 @@ public class Main extends Application {
 		Menu returning = new Menu("Return");
 		MenuItem returning_item = new MenuItem("Return to Start");
 		returning_item.setOnAction(me ->{
-			System.out.println("TEst");
+			System.out.println("Test");
 			changeScene(0);
 		});
 		returning.getItems().add(returning_item);
@@ -313,29 +344,35 @@ public class Main extends Application {
 		MainScene.heightProperty().bind(vbox.heightProperty());
 		MainScene.widthProperty().bind(vbox.widthProperty());
 		MainScene.setFill(Color.GRAY);
-		
+		EducationSubScene subscene = null;
+		try {
+			subscene = new EducationSubScene(width, height, new ZipFile("testfiles/lection.lct"));
+		} catch (IllegalArgumentException | ZipException e) {
+			e.printStackTrace();
+		}
+		root.getChildren().add(subscene);
 		
 		vbox.getChildren().add(MainScene);
 
 		Scene scene = new Scene(vbox);
 
 		// Adding Runnable to maximize and resize
-		Runnables.add(new Runnable() {
+		Runnables[2] = new Runnable() {
 			public void run() {
 				MainStage.setMaximized(true);
 				MainStage.setResizable(true);
 			}
-		});
+		};
 		// Adding Scene
-		Scenes.add(scene);
+		Scenes[2] = scene;
 	}
 
 	// Changing Scene method
-	private void changeScene(int SceneNumber) {
+	public void changeScene(int SceneNumber) {
 		// Setting Scene to Stage
-		MainStage.setScene(Scenes.get(SceneNumber));
+		MainStage.setScene(Scenes[SceneNumber]);
 
 		// Runs Runnable
-		Runnables.get(SceneNumber).run();
+		Runnables[SceneNumber].run();
 	}
 }

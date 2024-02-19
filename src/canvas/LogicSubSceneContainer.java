@@ -28,11 +28,11 @@ public class LogicSubSceneContainer extends SubScene {
 	private FunctionalCanvasComponent adding_component;
 	private Group root;
 
-	public LogicSubSceneContainer(int width, int height, Group Mainroot, ComponentGroupings groupings) {
+	public LogicSubSceneContainer(int width, int height, Group Mainroot, ComponentGroupings groupings, int multiplier) {
 		super(Mainroot, width, height);
 		this.root = Mainroot;
 		// Adding LogicScene
-		logic_subscene = LogicSubScene.init(LogicSubScene.getNearesDot((int) (width * 0.75)), LogicSubScene.getNearesDot((int) (height * 0.9)), 4);
+		logic_subscene = LogicSubScene.init(LogicSubScene.getNearesDot((int) (width * 0.75)), LogicSubScene.getNearesDot((int) (height * 0.9)), multiplier);
 
 		logic_subscene.setFill(Color.WHITE);
 
@@ -122,7 +122,7 @@ public class LogicSubSceneContainer extends SubScene {
 	public static LogicSubSceneContainer init(int width, int height, String file) {
 		ComponentGroupings grouping = null;
 		// Initializing Container with new Group
-		return new LogicSubSceneContainer(width, height, new Group(), grouping);
+		return new LogicSubSceneContainer(width, height, new Group(), grouping, 4);
 	}
 	
 	public static LogicSubSceneContainer init(int width, int height) {
@@ -146,10 +146,19 @@ public class LogicSubSceneContainer extends SubScene {
 		grouping.add(group);
 		grouping.add(group_1);
 		// Initializing Container with new Group
-		return new LogicSubSceneContainer(width, height, new Group(), grouping);
+		return new LogicSubSceneContainer(width, height, new Group(), grouping, 4);
 	}
 
 	public void triggerKeyEvent(KeyEvent ke) {
 		logic_subscene.triggerKeyEvent(ke);
+	}
+	
+	public void addX(int X) {
+		logic_subscene.addX(X);
+		setLayoutX(getLayoutX()+X);
+	}
+	public void addY(int Y) {
+		logic_subscene.addX(Y);
+		setLayoutY(getLayoutY()+Y);
 	}
 }

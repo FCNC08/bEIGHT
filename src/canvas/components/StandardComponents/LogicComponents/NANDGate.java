@@ -9,6 +9,7 @@ import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import util.ErrorStateExeption;
+import util.Info;
 
 public class NANDGate extends LogicComponent {
 
@@ -112,7 +113,6 @@ public class NANDGate extends LogicComponent {
 			boolean output_state = true;
 			System.out.println("lenght of bool:" + bool_states.length);
 			for (boolean b : bool_states) {
-				System.out.println(b);
 				output_state = output_state && b;
 			}
 			output_state = !output_state;
@@ -160,5 +160,11 @@ public class NANDGate extends LogicComponent {
 		reader = null;
 		writer = null;
 		System.gc();
+	}
+	
+	@Override
+	protected void createInfo() {
+		info = new Info();
+		info.setHeadline("NAND");
 	}
 }
