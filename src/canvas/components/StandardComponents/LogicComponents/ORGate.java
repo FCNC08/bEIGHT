@@ -15,7 +15,7 @@ public class ORGate extends LogicComponent {
 
 	public static Image LogicComponent_Image = new Image("OR.png");
 
-	public ORGate(byte size, int width, int height, int input_count) throws IllegalArgumentException {
+	public ORGate(String size, int width, int height, int input_count) throws IllegalArgumentException {
 		super(size, width, height, input_count);
 	}
 
@@ -23,7 +23,7 @@ public class ORGate extends LogicComponent {
 		LogicComponent_Image = standard_image;
 	}
 
-	public static ORGate getORGATE(byte size, int inputs, int outputs) throws IllegalArgumentException {
+	public static ORGate getORGATE(String size, int inputs, int outputs) throws IllegalArgumentException {
 		// Creating a ORGate with default sizes
 		int height;
 		int width;
@@ -67,7 +67,7 @@ public class ORGate extends LogicComponent {
 		return component;
 	}
 
-	public static ORGate getSolidORGATE(byte size, int inputs) throws IllegalArgumentException {
+	public static ORGate getSolidORGATE(String size, int inputs) throws IllegalArgumentException {
 		// Creating a ORGate like getORGate without removing the Background used in
 		// ComponentChooser
 		int height;
@@ -124,7 +124,7 @@ public class ORGate extends LogicComponent {
 	}
 
 	@Override
-	public LogicComponent getClone(byte size) {
+	public LogicComponent getClone(String size) {
 		ORGate gate = null;
 		try {
 			gate = ORGate.getORGATE(size, input_count, output_count);

@@ -23,7 +23,7 @@ public class RAM extends MemoryCanvasComponent {
 
 	}
 
-	public static RAM get8bitRAM(byte size, int inputs) throws IllegalArgumentException {
+	public static RAM get8bitRAM(String size, int inputs) throws IllegalArgumentException {
 		// Creating a ANDGate with standard sizes
 		int height;
 		int width;
@@ -69,7 +69,7 @@ public class RAM extends MemoryCanvasComponent {
 		return component;
 	}
 
-	public static RAM getSolidRAM(byte size, int inputs) throws IllegalArgumentException {
+	public static RAM getSolidRAM(String size, int inputs) throws IllegalArgumentException {
 		// Creating like getANDGate without removing the background
 		// Used in ComponentChooser
 		int height;
@@ -103,7 +103,7 @@ public class RAM extends MemoryCanvasComponent {
 	}
 
 	@Override
-	public FunctionalCanvasComponent getClone(byte size) {
+	public FunctionalCanvasComponent getClone(String size) {
 		RAM ram = RAM.get8bitRAM(size, memory_height);
 		return ram;
 	}

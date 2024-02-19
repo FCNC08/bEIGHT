@@ -1,5 +1,11 @@
 package canvas;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 /*import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -12,6 +18,15 @@ import canvas.components.SingleCanvasComponent;
 import canvas.components.State;
 import canvas.components.StandardComponents.Wire;
 import canvas.components.StandardComponents.WireDoublet;
+import canvas.components.StandardComponents.LogicComponents.ANDGate;
+import canvas.components.StandardComponents.LogicComponents.NANDGate;
+import canvas.components.StandardComponents.LogicComponents.NORGate;
+import canvas.components.StandardComponents.LogicComponents.NOTGate;
+import canvas.components.StandardComponents.LogicComponents.ORGate;
+import canvas.components.StandardComponents.LogicComponents.XNORGate;
+import canvas.components.StandardComponents.LogicComponents.XORGate;
+import canvas.components.StandardComponents.MemoryComponents.RAM;
+import canvas.components.StandardComponents.MemoryComponents.Register;
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -50,6 +65,7 @@ public class LogicSubScene extends SubScene {
 	protected Color cross_color = black;
 	
 	public static boolean actual_set_state = true;
+	
 
 	protected int width;
 	protected int height;
@@ -80,6 +96,8 @@ public class LogicSubScene extends SubScene {
 	private FunctionalCanvasComponent adding_CanvasComponent;
 	private WireDoublet adding_WireDoublet;
 	protected ComponentBox[][] used;
+	private ArrayList<Wire> wires;
+	private ArrayList<FunctionalCanvasComponent> components;
 
 	private Group root;
 
@@ -132,6 +150,8 @@ public class LogicSubScene extends SubScene {
 		setCamera(camera);
 
 		addZTranslate(multiplier);
+		wires = new ArrayList<>();
+		components = new ArrayList<>();
 
 		root = Mainroot;
 		EventHandler<MouseEvent> dragging_Event_Handler = new EventHandler<MouseEvent>() {
@@ -334,6 +354,7 @@ public class LogicSubScene extends SubScene {
 		for (Dot d : component.outputs) {
 			add(d);
 		}
+		components.add(component);
 		// Adding component to the ID-System
 		component.setLogicSubScene(this);
 		System.out.println("Add Finally");
@@ -797,6 +818,7 @@ public class LogicSubScene extends SubScene {
 				}
 
 			}
+			wires.add(component);
 			// Adding component to SubSCene
 			component.setLogicSubScene(this);
 			root.getChildren().add(component.getImageView());
@@ -812,8 +834,8 @@ public class LogicSubScene extends SubScene {
 			remove((FunctionalCanvasComponent) component);
 		} else if (component instanceof Dot) {
 			remove((Dot) component);
-		} else if (component instanceof SingleCanvasComponent) {
-			remove((SingleCanvasComponent) component);
+		} else if (component instanceof Wire) {
+			remove((Wire) component);
 		} else {
 			root.getChildren().remove(component.getImageView());
 		}
@@ -851,6 +873,7 @@ public class LogicSubScene extends SubScene {
 			}
 			
 		}
+		components.remove(component);
 		root.getChildren().remove(component.getImageView());
 	}
 
@@ -885,7 +908,7 @@ public class LogicSubScene extends SubScene {
 		}
 	}
 
-	public void remove(SingleCanvasComponent component) {
+	public void remove(Wire component) {
 		if (component != null) {
 			if (component.rotation == CanvasComponent.HORIZONTAL) {
 				// Removing Horizontal/Vertical ID from used
@@ -905,6 +928,7 @@ public class LogicSubScene extends SubScene {
 				i.removeComponent(component);
 				component.removeComponent(i);
 			}
+			wires.remove(component);
 			root.getChildren().remove(component.getImageView());
 		}
 	}
@@ -1217,7 +1241,7 @@ public class LogicSubScene extends SubScene {
 		}
 	}
 
-	public void SaveAsPDF(String filepath) {
+	public void SaveAsPDF(File filepath) {
 		// Creating PDF out of SubScene
 		/*File temp_image_file = new File("temp.png");
 		try {
@@ -1254,5 +1278,56 @@ public class LogicSubScene extends SubScene {
 			e.printStackTrace();
 		}
 		temp_image_file.delete();*/
+	}
+	public JSONObject getJSON() {
+		JSONObject object = new JSONObject();
+		System.out.println(height);
+		System.out.println(width);
+		object.put("height", height/cross_distance);
+		object.put("width", width/cross_distance);
+		JSONArray wireoutput = new JSONArray();
+		for(Wire wire : wires) {
+			JSONObject wireobject = new JSONObject();
+			wireobject.put("orientation", wire.getRotation()? "HORIZONTAL":"VERTICAL");
+			wireobject.put("posx", wire.point_X);
+			wireobject.put("posy", wire.point_Y);
+			wireobject.put("lenght", wire.point_width);
+			wireoutput.put(wireobject);
+		}
+		object.put("wires", wireoutput);
+		
+		JSONArray componentoutput = new JSONArray();
+		for(FunctionalCanvasComponent component: components) {
+			JSONObject componentobject = new JSONObject();
+			String name = null;
+			if(component instanceof ANDGate) {
+				name = "AND";
+			}else if(component instanceof NANDGate) {
+				name = "NAND";
+			}else if(component instanceof NORGate) {
+				name = "NOR";
+			}else if(component instanceof NOTGate) {
+				name = "NOT";
+			}else if(component instanceof ORGate) {
+				name = "OR";
+			}else if(component instanceof RAM) {
+				name = "RAM";
+			}else if(component instanceof Register) {
+				name = "Register";
+			}else if(component instanceof XNORGate) {
+				name = "XNOR";
+			}else if(component instanceof XORGate) {
+				name = "XOR";
+			}
+			componentobject.put("type", name);
+			componentobject.put("posx", component.point_X);
+			componentobject.put("posy", component.point_Y);
+			componentobject.put("size", component.size);
+			componentobject.put("inputs", component.input_count);
+			componentobject.put("outputs", component.output_count);
+			componentoutput.put(componentobject);
+		}
+		object.put("components", componentoutput);
+		return object;
 	}
 }

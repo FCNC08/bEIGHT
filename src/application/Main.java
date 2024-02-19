@@ -13,7 +13,9 @@ import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import education.EducationSubScene;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser.ExtensionFilter;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import util.OcupationExeption;
@@ -231,7 +233,7 @@ public class Main extends Application {
 			changeScene(0);
 		});
 		returning.getItems().add(returning_item);
-		bar.getMenus().add(returning);
+		bar.getMenus().add(returning);		
 
 		// Adding SubScene
 		Group root = new Group();
@@ -241,7 +243,33 @@ public class Main extends Application {
 		MainScene.setFill(Color.GRAY);
 
 		LogicSubSceneContainer logic_container = LogicSubSceneContainer.init(width, height);
-
+		
+		Menu file = new Menu("File");
+		MenuItem savingpdf = new MenuItem("Save as PDF");
+		savingpdf.setOnAction(e -> {
+			e.consume();
+			FileChooser fc = new FileChooser();
+			fc.setTitle("Save as");
+			ExtensionFilter extFilter = new ExtensionFilter(".pdf files (*.pdf)", "*.pdf");
+	        fc.getExtensionFilters().add(extFilter);
+			var selected_file = fc.showSaveDialog(new Stage());
+			if (selected_file != null) {
+				logic_container.logic_subscene.SaveAsPDF(selected_file);
+			}
+		});
+		
+		MenuItem save = new MenuItem("Save");
+		save.setOnAction(me->{
+			logic_container.save();
+		});
+		MenuItem saveas = new MenuItem("Save as");
+		saveas.setOnAction(me->{
+			logic_container.saveas();
+		});
+		file.getItems().add(savingpdf);
+		file.getItems().add(save);
+		file.getItems().add(saveas);
+		bar.getMenus().add(file);
 		ANDGate and = null;
 		try {
 			and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2);
@@ -269,25 +297,6 @@ public class Main extends Application {
 		});
 		translate.getItems().add(standard);
 		bar.getMenus().add(translate);
-
-		Menu file = new Menu("File");
-		MenuItem savingpdf = new MenuItem("Save as PDF");
-		savingpdf.setOnAction(e -> {
-			e.consume();
-			FileDialog fd = new FileDialog(new Frame(), "Save as PDF");
-			fd.setMode(FileDialog.SAVE);
-			fd.setFilenameFilter((dir, name) -> name.toLowerCase().endsWith(".pdf"));
-			fd.setVisible(true);
-
-			String directory = fd.getDirectory();
-			String filename = fd.getFile();
-			if (directory != null && filename != null) {
-				String filepath = directory + filename;
-				logic_container.logic_subscene.SaveAsPDF(filepath);
-			}
-		});
-		file.getItems().add(savingpdf);
-		bar.getMenus().add(file);
 
 		Scene scene = new Scene(vbox);
 

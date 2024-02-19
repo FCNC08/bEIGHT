@@ -15,7 +15,7 @@ public class NANDGate extends LogicComponent {
 
 	public static Image LogicComponent_Image = new Image("NAND.png");
 
-	public NANDGate(byte size, int width, int height, int input_count) throws IllegalArgumentException {
+	public NANDGate(String size, int width, int height, int input_count) throws IllegalArgumentException {
 		super(size, width, height, input_count);
 	}
 
@@ -23,7 +23,7 @@ public class NANDGate extends LogicComponent {
 		LogicComponent_Image = standard_image;
 	}
 
-	public static NANDGate getNANDGATE(byte size, int inputs) throws IllegalArgumentException {
+	public static NANDGate getNANDGATE(String size, int inputs) throws IllegalArgumentException {
 		// Creating a ANDGate with standard sizes
 		int height;
 		int width;
@@ -69,7 +69,7 @@ public class NANDGate extends LogicComponent {
 		return component;
 	}
 
-	public static NANDGate getSolidNANDGATE(byte size, int inputs) throws IllegalArgumentException {
+	public static NANDGate getSolidNANDGATE(String size, int inputs) throws IllegalArgumentException {
 		// Creating like getANDGate without removing the background
 		// Used in ComponentChooser
 		int height;
@@ -128,7 +128,7 @@ public class NANDGate extends LogicComponent {
 	}
 
 	@Override
-	public LogicComponent getClone(byte size) {
+	public LogicComponent getClone(String size) {
 		// Function to clone a component in this case a ANDGate
 		NANDGate gate = null;
 		try {

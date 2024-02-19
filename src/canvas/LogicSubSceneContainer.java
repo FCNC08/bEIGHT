@@ -1,5 +1,13 @@
 package canvas;
 
+import java.awt.FileDialog;
+import java.awt.Frame;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import javax.swing.JFileChooser;
+
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
 import canvas.components.MemoryCanvasComponent;
@@ -19,10 +27,15 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
 import util.OcupationExeption;
 
 public class LogicSubSceneContainer extends SubScene {
 
+	protected File location;
+	
 	public LogicSubScene logic_subscene;
 	public SubScene component_chooser;
 	private FunctionalCanvasComponent adding_component;
@@ -160,5 +173,38 @@ public class LogicSubSceneContainer extends SubScene {
 	public void addY(int Y) {
 		logic_subscene.addX(Y);
 		setLayoutY(getLayoutY()+Y);
+	}
+	
+	public void saveas() {
+		FileChooser fc = new FileChooser();
+		fc.setTitle("Save as");
+		ExtensionFilter extFilter = new ExtensionFilter(".beight files (*.beight)", "*.beight");
+        fc.getExtensionFilters().add(extFilter);
+		var selected_file = fc.showSaveDialog(new Stage());
+		if(selected_file != null) {
+	        if(location == null) {
+				location = selected_file;
+				save();
+			}else {
+				try(FileWriter writer = new FileWriter(selected_file)){
+					writer.write(logic_subscene.getJSON().toString(4));
+				}catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+        }
+		
+	}
+	public void save() {
+		if(location == null) {
+			saveas();
+		}else {
+			try(FileWriter writer = new FileWriter(location)){
+				writer.write(logic_subscene.getJSON().toString(4));
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 }

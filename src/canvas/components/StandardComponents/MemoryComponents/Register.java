@@ -17,7 +17,7 @@ public class Register extends MemoryCanvasComponent {
 	}
 
 	@Override
-	public FunctionalCanvasComponent getClone(byte size) {
+	public FunctionalCanvasComponent getClone(String size) {
 		// TODO Auto-generated method stub
 		return null;
 	}

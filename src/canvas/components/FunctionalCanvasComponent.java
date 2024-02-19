@@ -8,16 +8,18 @@ import util.OcupationExeption;
 import util.Info;
 
 public abstract class FunctionalCanvasComponent extends CanvasComponent {
-	public static final byte SIZE_BIG = 2;
-	public static final byte SIZE_MIDDLE = 1;
-	public static final byte SIZE_SMALL = 0;
+	public static final String SIZE_BIG = "BIG";
+	public static final String SIZE_MIDDLE = "MIDDLE";
+	public static final String SIZE_SMALL = "SMALL";
+	
+	public String size;
 	
 	protected Info info;
 
 	protected HashMap<State[], State[]> truth_table;
 
-	protected int input_count;
-	protected int output_count;
+	public int input_count;
+	public int output_count;
 
 	public Dot[] inputs;
 	public Dot[] outputs;
@@ -100,7 +102,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 
 	public abstract void simulate();
 
-	public abstract FunctionalCanvasComponent getClone(byte size);
+	public abstract FunctionalCanvasComponent getClone(String size);
 
 	protected State[] getInputStates() {
 		// Getting all InputStates of each dot
