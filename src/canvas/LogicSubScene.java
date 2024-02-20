@@ -8,6 +8,8 @@ import org.json.JSONObject;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /*import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -73,7 +75,7 @@ public class LogicSubScene extends SubScene {
 	protected int width;
 	protected int height;
 
-	protected int multiplier;
+	protected double multiplier;
 
 	protected int Start_Width;
 	protected int Start_Height;
@@ -108,7 +110,7 @@ public class LogicSubScene extends SubScene {
 
 	}
 
-	public LogicSubScene(Group Mainroot, int StartWidth, int StartHeight, int multiplier) {
+	public LogicSubScene(Group Mainroot, int StartWidth, int StartHeight, double multiplier) {
 		// initializing LogicSubScene with Height
 		super(Mainroot, StartWidth, StartHeight);
 
@@ -118,8 +120,8 @@ public class LogicSubScene extends SubScene {
 		this.Start_Height = StartHeight;
 		this.multiplier = multiplier;
 
-		int Newwidth = StartWidth * multiplier;
-		int Newheight = StartHeight * multiplier;
+		int Newwidth = (int) (StartWidth * multiplier);
+		int Newheight = (int) (StartHeight * multiplier);
 
 		if (Newwidth % cross_distance != 0 || Newheight % cross_distance != 0) {
 			throw new IllegalArgumentException("The size have to fit with the distance between the crosses");
@@ -1061,6 +1063,81 @@ public class LogicSubScene extends SubScene {
 	public static LogicSubScene init(int start_width, int start_height, int multiplier) {
 		// Initializing LogicSubScene with a new Group
 		return new LogicSubScene(new Group(), start_width, start_height, multiplier);
+	}
+	
+	public static LogicSubScene init(File file, int width, int height) {
+		String json_string = null;
+		try {
+			json_string = Files.readString(Paths.get(file.getPath()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JSONObject json_object = new JSONObject(json_string);
+		int real_width = json_object.getInt("width")*cross_distance;
+		int real_height = json_object.getInt("height")*cross_distance;
+		System.out.println(real_width+" "+json_object.getInt("height")*cross_distance);
+		LogicSubScene logic_sub_scene = new LogicSubScene(new Group(), width, height, Math.max(real_width/width,real_height/height));
+		JSONArray wires = json_object.getJSONArray("wires");
+		for(Object component : wires) {
+			if(component instanceof JSONObject) {
+				JSONObject jsonwire = (JSONObject) component;
+				Wire wire = new Wire(jsonwire.getInt("lenght")*cross_distance);
+				wire.setRotation(jsonwire.getString("orientation")=="HORIZONTAL"?CanvasComponent.HORIZONTAL:CanvasComponent.VERTICAL);
+				wire.setXPoint(jsonwire.getInt("posx"));
+				wire.setYPoint(jsonwire.getInt("posy"));
+				try {
+					logic_sub_scene.add(wire);
+				} catch (OcupationExeption e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		JSONArray components = json_object.getJSONArray("components");
+		for(Object object : components) {
+			if(object instanceof JSONObject) {
+				JSONObject jsoncomponent = (JSONObject) object;
+				FunctionalCanvasComponent component = null;
+				switch(jsoncomponent.getString("type")) {
+				case("AND"):{
+					component = ANDGate.getANDGATE(jsoncomponent.getString("size"), jsoncomponent.getInt("inputs"));
+					break;
+				}
+				case("NAND"):{
+					component = NANDGate.getNANDGATE(jsoncomponent.getString("size"), jsoncomponent.getInt("inputs"));
+					break;
+				}
+				case("NOR"):{
+					component = NORGate.getNORGATE(jsoncomponent.getString("size"), jsoncomponent.getInt("inputs"));
+					break;
+				}
+				case("NOT"):{
+					component = NOTGate.getNOTGATE(jsoncomponent.getString("size"));
+					break;
+				}
+				case("OR"):{
+					component = ORGate.getORGATE(jsoncomponent.getString("size"), jsoncomponent.getInt("inputs"));
+					break;
+				}
+				case("XNOR"):{
+					component = XNORGate.getXNORGate(jsoncomponent.getString("size"), jsoncomponent.getInt("inputs"));
+					break;
+				}
+				case("XOR"):{
+					component = XORGate.getXORGate(jsoncomponent.getString("size"), jsoncomponent.getInt("inputs"));
+					break;
+				}
+				}
+				component.setXPoint(jsoncomponent.getInt("posx"));
+				component.setYPoint(jsoncomponent.getInt("posy"));
+				try {
+					logic_sub_scene.add(component);
+				} catch (OcupationExeption e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return logic_sub_scene;
 	}
 
 	protected WritableImage generateBackgroundImage() {

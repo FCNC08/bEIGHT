@@ -222,7 +222,6 @@ public class Main extends Application {
 
 		// Adding MenuBar
 		MenuBar bar = new MenuBar();
-		bar.getMenus().add(getThemeChoiceMenu());
 		VBox vbox = new VBox(bar);
 		vbox.setMinHeight(height);
 		vbox.setMinWidth(width);
@@ -244,10 +243,23 @@ public class Main extends Application {
 
 		LogicSubSceneContainer logic_container = LogicSubSceneContainer.init(width, height);
 		
+		Menu theme = new Menu("Themes");
+		MenuItem dark = new MenuItem("Dark");
+		dark.setOnAction(me->{
+			logic_container.setColor(LogicSubSceneContainer.BLACK);
+		});
+		MenuItem bright = new MenuItem("White");
+		bright.setOnAction(me->{
+			logic_container.setColor(LogicSubSceneContainer.WHITE);
+		});
+		theme.getItems().add(dark);
+		theme.getItems().add(new SeparatorMenuItem());
+		theme.getItems().add(bright);
+		bar.getMenus().add(theme);
+		
 		Menu file = new Menu("File");
 		MenuItem savingpdf = new MenuItem("Save as PDF");
 		savingpdf.setOnAction(e -> {
-			e.consume();
 			FileChooser fc = new FileChooser();
 			fc.setTitle("Save as");
 			ExtensionFilter extFilter = new ExtensionFilter(".pdf files (*.pdf)", "*.pdf");
@@ -255,6 +267,18 @@ public class Main extends Application {
 			var selected_file = fc.showSaveDialog(new Stage());
 			if (selected_file != null) {
 				logic_container.logic_subscene.SaveAsPDF(selected_file);
+			}
+		});
+		
+		MenuItem open = new MenuItem("Open");
+		open.setOnAction(me->{
+			FileChooser fc = new FileChooser();
+			fc.setTitle("Open");
+			ExtensionFilter extFilter = new ExtensionFilter(".beight files (*.beight)", "*.beight");
+			fc.getExtensionFilters().add(extFilter);
+			var selected_file = fc.showOpenDialog(new Stage());
+			if(selected_file != null) {
+				logic_container.open(selected_file);
 			}
 		});
 		
@@ -267,6 +291,7 @@ public class Main extends Application {
 			logic_container.saveas();
 		});
 		file.getItems().add(savingpdf);
+		file.getItems().add(open);
 		file.getItems().add(save);
 		file.getItems().add(saveas);
 		bar.getMenus().add(file);

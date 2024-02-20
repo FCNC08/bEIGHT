@@ -23,7 +23,7 @@ public class ORGate extends LogicComponent {
 		LogicComponent_Image = standard_image;
 	}
 
-	public static ORGate getORGATE(String size, int inputs, int outputs) throws IllegalArgumentException {
+	public static ORGate getORGATE(String size, int inputs) throws IllegalArgumentException {
 		// Creating a ORGate with default sizes
 		int height;
 		int width;
@@ -127,7 +127,7 @@ public class ORGate extends LogicComponent {
 	public LogicComponent getClone(String size) {
 		ORGate gate = null;
 		try {
-			gate = ORGate.getORGATE(size, input_count, output_count);
+			gate = ORGate.getORGATE(size, input_count);
 		} catch (IllegalArgumentException e) {
 		}
 		return gate;
