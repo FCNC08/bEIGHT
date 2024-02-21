@@ -316,7 +316,7 @@ public class LogicSubScene extends SubScene {
 		addEventFilter(MouseEvent.MOUSE_DRAGGED, dragging_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_CLICKED, click_Event_Handler);
 
-		EventHandler<ScrollEvent> zoom_Event_Handler = new EventHandler<ScrollEvent>() {
+		/*EventHandler<ScrollEvent> zoom_Event_Handler = new EventHandler<ScrollEvent>() {
 			@Override
 			public void handle(ScrollEvent se) {
 				// Adds Z-Translate to Camera(Zooms out/in) using the mousewheel
@@ -324,7 +324,7 @@ public class LogicSubScene extends SubScene {
 			}
 		};
 
-		addEventFilter(ScrollEvent.SCROLL, zoom_Event_Handler);
+		addEventFilter(ScrollEvent.SCROLL, zoom_Event_Handler);*/
 
 	}
 

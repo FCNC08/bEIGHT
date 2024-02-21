@@ -13,7 +13,7 @@ import util.Info;
 
 public class ORGate extends LogicComponent {
 
-	public static Image LogicComponent_Image = new Image("OR.png");
+	public static Image LogicComponent_Image = new Image("/OR.png");
 
 	public ORGate(String size, int width, int height, int input_count) throws IllegalArgumentException {
 		super(size, width, height, input_count);
