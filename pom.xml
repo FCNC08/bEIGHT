@@ -104,6 +104,8 @@
 		                        <mainClass>application.SuperMain</mainClass>
 		                    </transformer>
 		                </transformers>
+		                <source>17</source>
+		                <target>17</target>
 		            </configuration>
 		        </execution>
 		    </executions>
