@@ -1082,7 +1082,7 @@ public class LogicSubScene extends SubScene {
 		for(Object component : wires) {
 			if(component instanceof JSONObject) {
 				JSONObject jsonwire = (JSONObject) component;
-				Wire wire = new Wire(jsonwire.getInt("lenght")*cross_distance);
+				Wire wire = new Wire(jsonwire.getInt("lenght")*cross_distance+ wire_height*3/4);
 				wire.setRotation(jsonwire.getString("orientation")=="HORIZONTAL"?CanvasComponent.HORIZONTAL:CanvasComponent.VERTICAL);
 				wire.setXPoint(jsonwire.getInt("posx"));
 				wire.setYPoint(jsonwire.getInt("posy"));
