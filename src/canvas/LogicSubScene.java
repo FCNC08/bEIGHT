@@ -283,7 +283,7 @@ public class LogicSubScene extends SubScene {
 					if (me.isStillSincePress()) {
 						System.out.println("Still");
 
-						/*if (me.getTarget() instanceof ImageView) {
+						if (me.getTarget() instanceof ImageView) {
 							Image img = ((ImageView) me.getTarget()).getImage();
 							if (img instanceof CanvasComponent) {
 								CanvasComponent component = (CanvasComponent) img;
@@ -294,7 +294,7 @@ public class LogicSubScene extends SubScene {
 								}
 								System.out.println("ROTATE");
 							}
-						}*/
+						}
 						if(me.getTarget() instanceof ImageView) {
 							Image img = ((ImageView)me.getTarget()).getImage();
 							if(img instanceof FunctionalCanvasComponent) {
