@@ -283,7 +283,7 @@ public class LogicSubScene extends SubScene {
 					if (me.isStillSincePress()) {
 						System.out.println("Still");
 
-						/*if (me.getTarget() instanceof ImageView) {
+						if (me.getTarget() instanceof ImageView) {
 							Image img = ((ImageView) me.getTarget()).getImage();
 							if (img instanceof CanvasComponent) {
 								CanvasComponent component = (CanvasComponent) img;
@@ -294,7 +294,7 @@ public class LogicSubScene extends SubScene {
 								}
 								System.out.println("ROTATE");
 							}
-						}*/
+						}
 						if(me.getTarget() instanceof ImageView) {
 							Image img = ((ImageView)me.getTarget()).getImage();
 							if(img instanceof FunctionalCanvasComponent) {
@@ -1082,7 +1082,7 @@ public class LogicSubScene extends SubScene {
 		for(Object component : wires) {
 			if(component instanceof JSONObject) {
 				JSONObject jsonwire = (JSONObject) component;
-				Wire wire = new Wire(jsonwire.getInt("lenght")*cross_distance);
+				Wire wire = new Wire(jsonwire.getInt("lenght")*cross_distance+ wire_height*3/4);
 				wire.setRotation(jsonwire.getString("orientation")=="HORIZONTAL"?CanvasComponent.HORIZONTAL:CanvasComponent.VERTICAL);
 				wire.setXPoint(jsonwire.getInt("posx"));
 				wire.setYPoint(jsonwire.getInt("posy"));
