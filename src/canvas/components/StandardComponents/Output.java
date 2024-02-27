@@ -4,46 +4,48 @@ import canvas.LogicSubScene;
 import canvas.components.CanvasComponent;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.State;
-import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import util.Info;
 
-public class Input extends FunctionalCanvasComponent{
+public class Output extends FunctionalCanvasComponent{
 	protected static int StandardWidth_big = LogicSubScene.cross_distance * 4;
 
 	protected static int StandardWidth_middle = LogicSubScene.cross_distance * 2;
 
 	protected static int StandardWidth_small = LogicSubScene.cross_distance;
 	private State state = OFF;
-	public Input(int width) throws IllegalArgumentException {
-		super(width, width, 0, 1);
+	public Output(int width) throws IllegalArgumentException {
+		super(width, width, 1, 0);
 		paintImage();
 	}
 
 	@Override
 	public void simulate() {
-		outputs[0].setState(state);
+		state = inputs[0].getState();
 		paintImage();
 	}
 
 	@Override
 	public FunctionalCanvasComponent getClone(String size) {
-		return getInput(size);
+		return getOutput(size);
 	}
 
 	protected void paintImage() {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < width; j++) {
-               pwriter.setColor(i, j, Color.BLACK);
+                if ((i - width*0.5) * (i - width*0.5) + (j - width*0.5) * (j - width*0.5) <= width*0.5 * width*0.5) {
+                    pwriter.setColor(i, j, Color.BLACK);
+                }else {
+                	pwriter.setColor(i, j, Color.TRANSPARENT);
+                }
             }
         }
         int radius = (int) (width*0.3);
-        for (int i = width/2 - radius; i < width/2 + radius; i++) {
-            for (int j = width/2 - radius; j < width/2 + radius; j++) {
+        for (int i = width/2 - radius; i <= width/2 + radius; i++) {
+            for (int j = width/2 - radius; j <= width/2 + radius; j++) {
                 // Check if the pixel is within the circle using the circle equation
-                if ((i - width/2) * (i - width/2) + (j - width/2) * (j - width/2) < radius * radius) {
+                if ((i - width/2) * (i - width/2) + (j - width/2) * (j - width/2) <= radius * radius) {
                     pwriter.setColor(i, j, state.getColor());
                 }
             }
@@ -54,22 +56,20 @@ public class Input extends FunctionalCanvasComponent{
 	@Override
 	protected void createInfo() {
 		info = new Info();
-		info.setHeadline("Input");
+		info.setHeadline("Output");
 	}
 
 	@Override
 	protected void resetStandardImage() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
 	public void setStandardDotLocations() {
-		outputs[0].setXPoint(point_X+point_width);
-		outputs[0].setYPoint(point_Y+point_height/2);
+		inputs[0].setXPoint(point_X);
+		inputs[0].setYPoint(point_Y+point_height/2);
 	}
 	
-	public static Input getInput(String size) {
+	public static Output getOutput(String size) {
 		int width;
 		switch(size) {
 		case SIZE_BIG:
@@ -85,7 +85,7 @@ public class Input extends FunctionalCanvasComponent{
 			width = 1;
 			break; 
 		}
-		return new Input(width);
+		return new Output(width);
 	}
 	
 	@Override
@@ -101,21 +101,6 @@ public class Input extends FunctionalCanvasComponent{
 			image_view.setLayoutY(image_view.getLayoutY() + 0.5 * width - 0.5 * getHeight());
 			image_view.setLayoutX(image_view.getLayoutX() - 0.5 * width + 0.5 * getHeight());
 		}
-		EventHandler<MouseEvent> change_mouse_event = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent me) {
-				if(me.isStillSincePress()) {
-					if(state == ON) {
-						state = OFF;
-						simulate();
-					}else if(state == OFF) {
-						state = ON;
-						simulate();
-					}
-				}
-			}
-		};
-		image_view.addEventFilter(MouseEvent.MOUSE_CLICKED, change_mouse_event);
 	}
 
 }

@@ -8,7 +8,9 @@ import java.io.PrintStream;
 import java.util.Random;
 
 import canvas.LogicSubSceneContainer;
+import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
+import canvas.components.StandardComponents.Input;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import education.EducationSubScene;
 import javafx.application.Application;
@@ -295,6 +297,7 @@ public class Main extends Application {
 		file.getItems().add(save);
 		file.getItems().add(saveas);
 		bar.getMenus().add(file);
+		Input input = Input.getInput(FunctionalCanvasComponent.SIZE_MIDDLE);
 		ANDGate and = null;
 		try {
 			and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2);
@@ -303,13 +306,15 @@ public class Main extends Application {
 
 		and.setX(1300);
 		and.setY(1000);
-
+		input.setX(1500);
+		input.setY(1000);
 		// LogicSubSceneContainer
 
 		root.getChildren().add(logic_container);
 		vbox.getChildren().add(MainScene);
 		try {
 			logic_container.logic_subscene.add(and);
+			logic_container.logic_subscene.add(input);
 		} catch (OcupationExeption e1) {
 			e1.printStackTrace();
 		}

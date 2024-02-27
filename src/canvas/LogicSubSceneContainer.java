@@ -11,6 +11,8 @@ import javax.swing.JFileChooser;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
 import canvas.components.MemoryCanvasComponent;
+import canvas.components.StandardComponents.Input;
+import canvas.components.StandardComponents.Output;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import canvas.components.StandardComponents.LogicComponents.NANDGate;
 import canvas.components.StandardComponents.LogicComponents.NORGate;
@@ -98,7 +100,8 @@ public class LogicSubSceneContainer extends SubScene {
 		} catch (IllegalArgumentException iae) {
 		}
 		ComponentGroup group_1 = new ComponentGroup();
-
+		group_1.add(Input.getInput(FunctionalCanvasComponent.SIZE_BIG));
+		group_1.add(Output.getOutput(FunctionalCanvasComponent.SIZE_BIG));
 		grouping.add(group);
 		grouping.add(group_1);
 		// Initializing Container with new Group
