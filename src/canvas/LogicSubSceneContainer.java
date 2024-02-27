@@ -1,10 +1,9 @@
 package canvas;
 
-import java.awt.FileDialog;
-import java.awt.Frame;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
 
@@ -24,11 +23,14 @@ import canvas.components.StandardComponents.MemoryComponents.RAM;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -51,8 +53,11 @@ public class LogicSubSceneContainer extends SubScene {
 	EventHandler<MouseEvent> moveNewLogicComponent;
 	EventHandler<MouseEvent> addNewLogicComponent;
 	
+	public ArrayList<LogicSubScene> logic_subscenes = new ArrayList<>();
+	
 	public LogicSubScene logic_subscene;
 	public SubScene component_chooser;
+	public SubScene bEIGHT_chooser;
 	private FunctionalCanvasComponent adding_component;
 	private Group root;
 
@@ -62,14 +67,26 @@ public class LogicSubSceneContainer extends SubScene {
 		this.width = width;
 		this.height = height;
 		this.grouping = groupings;
+		Group chooser_root = new Group();
+		bEIGHT_chooser= new SubScene(chooser_root, width*0.1, height);
+		Label addnew = new Label("+ Add new bEIGHT");
+		addnew.setFont(new Font(height*0.02));
+		Rectangle border = new Rectangle(width*0.0025, height);
+		border.setFill(Color.BLACK);
+		border.setLayoutX(width*0.0975);
+		chooser_root.getChildren().add(border);
+		chooser_root.getChildren().add(addnew);
+		root.getChildren().add(bEIGHT_chooser);
 		// Adding LogicScene
-		System.out.println(LogicSubScene.getNearesDot((int) (width * 0.75))+" "+LogicSubScene.getNearesDot((int) (height * 0.9)));
-		logic_subscene = LogicSubScene.init(LogicSubScene.getNearesDot((int) (width * 0.75)), LogicSubScene.getNearesDot((int) (height * 0.9)), multiplier);
+		System.out.println(LogicSubScene.getNearesDot((int) (width * 0.70))+" "+LogicSubScene.getNearesDot((int) (height * 0.9)));
+		logic_subscene = LogicSubScene.init(LogicSubScene.getNearesDot((int) (width * 0.70)), LogicSubScene.getNearesDot((int) (height * 0.9)), multiplier);
 
 		logic_subscene.setFill(LogicSubScene.black_grey);
 
-		logic_subscene.addX((int) (width * 0.05));
+		logic_subscene.addX((int) (width * 0.1));
 		logic_subscene.addY((int) (height * 0.01));
+		
+		logic_subscenes.add(logic_subscene);
 
 		addChooser();
 		

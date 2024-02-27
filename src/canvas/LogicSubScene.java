@@ -5,8 +5,6 @@ import java.util.ArrayList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -21,6 +19,8 @@ import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.SingleCanvasComponent;
 import canvas.components.State;
+import canvas.components.StandardComponents.Input;
+import canvas.components.StandardComponents.Output;
 import canvas.components.StandardComponents.Wire;
 import canvas.components.StandardComponents.WireDoublet;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
@@ -45,7 +45,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 import util.OcupationExeption;
@@ -71,7 +70,8 @@ public class LogicSubScene extends SubScene {
 	
 	public static boolean actual_set_state = true;
 	
-
+	public String name;
+	
 	protected int width;
 	protected int height;
 
@@ -101,8 +101,10 @@ public class LogicSubScene extends SubScene {
 	private FunctionalCanvasComponent adding_CanvasComponent;
 	private WireDoublet adding_WireDoublet;
 	protected ComponentBox[][] used;
-	private ArrayList<Wire> wires;
-	private ArrayList<FunctionalCanvasComponent> components;
+	private ArrayList<Wire> wires = new ArrayList<>();
+	private ArrayList<FunctionalCanvasComponent> components = new ArrayList<>();
+	private ArrayList<Input> inputs = new ArrayList<>();
+	private ArrayList<Output> outputs = new ArrayList<>();
 
 	private Group root;
 
@@ -119,6 +121,8 @@ public class LogicSubScene extends SubScene {
 		this.Start_Width = StartWidth;
 		this.Start_Height = StartHeight;
 		this.multiplier = multiplier;
+		
+		this.name = "new bEIGHT";
 
 		int Newwidth = (int) (StartWidth * multiplier);
 		int Newheight = (int) (StartHeight * multiplier);
@@ -155,14 +159,13 @@ public class LogicSubScene extends SubScene {
 		setCamera(camera);
 
 		addZTranslate(multiplier);
-		wires = new ArrayList<>();
-		components = new ArrayList<>();
 
 		root = Mainroot;
 		EventHandler<MouseEvent> dragging_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
 				// Checking which mousebutton is down
+				System.out.println("Move");
 				if (me.isSecondaryButtonDown()) {
 					addXTranslate(moves_x - (me.getSceneX() - X));
 					addYTranslate(moves_y - (me.getSceneY() - Y));
@@ -287,24 +290,18 @@ public class LogicSubScene extends SubScene {
 							Image img = ((ImageView) me.getTarget()).getImage();
 							if (img instanceof CanvasComponent) {
 								CanvasComponent component = (CanvasComponent) img;
-								component.setRotation(!component.getRotation());
+								//component.setRotation(!component.getRotation());
 								if (component instanceof Wire) {
 									Wire wire = (Wire) component;
 									wire.setState(State.getState(wire.getState().mode, !wire.getState().state));
+								}else if(img instanceof FunctionalCanvasComponent) {
+									FunctionalCanvasComponent functionalcomponent = (FunctionalCanvasComponent) img;
+									addedInfo = functionalcomponent.getInfo();
+									root.getChildren().add(addedInfo);
+									
 								}
-								System.out.println("ROTATE");
 							}
-						}
-						if(me.getTarget() instanceof ImageView) {
-							Image img = ((ImageView)me.getTarget()).getImage();
-							if(img instanceof FunctionalCanvasComponent) {
-								FunctionalCanvasComponent component = (FunctionalCanvasComponent) img;
-								addedInfo = component.getInfo();
-								root.getChildren().add(addedInfo);
-								
-							}
-						}
-						
+						}						
 					}
 				}
 
@@ -327,9 +324,14 @@ public class LogicSubScene extends SubScene {
 		addEventFilter(ScrollEvent.SCROLL, zoom_Event_Handler);*/
 
 	}
-
+	
 	public void add(FunctionalCanvasComponent component) throws OcupationExeption {
 		System.out.println("ELEMENT: " + component.getX() + " " + component.getY());
+		if(component instanceof Input) {
+			inputs.add((Input) component);
+		}else if(component instanceof Output) {
+			outputs.add((Output) component);
+		}
 		root.getChildren().add(component.getImageView());
 		component.setStandardDotLocations();
 
@@ -835,7 +837,13 @@ public class LogicSubScene extends SubScene {
 	}
 
 	public void remove(CanvasComponent component) {
-		if (component instanceof FunctionalCanvasComponent) {
+		if(component instanceof Input) {
+			inputs.remove(component);
+			remove((FunctionalCanvasComponent)component);
+		}else if(component instanceof Output) {
+			outputs.remove(component);
+			remove((FunctionalCanvasComponent)component);
+		}else if (component instanceof FunctionalCanvasComponent) {
 			remove((FunctionalCanvasComponent) component);
 		} else if (component instanceof Dot) {
 			remove((Dot) component);
@@ -846,6 +854,7 @@ public class LogicSubScene extends SubScene {
 		}
 	}
 
+	
 	public void remove(FunctionalCanvasComponent component) {
 		// Removing similar to adding in opposition
 		for (Dot d : component.inputs) {
@@ -1140,6 +1149,13 @@ public class LogicSubScene extends SubScene {
 		return logic_sub_scene;
 	}
 
+	public String getName() {
+		return name;
+	}
+	public void setName(String new_name) {
+		name = new_name;
+	}
+	
 	protected WritableImage generateBackgroundImage() {
 		// Generates BackgroundImage with crosses every cross_distance
 		WritableImage image = new WritableImage(width, height);
@@ -1241,6 +1257,13 @@ public class LogicSubScene extends SubScene {
 			doublet.setVerticalWire(wire_vertical);
 		}
 		return doublet;
+	}
+	
+	public ArrayList<Input> getInputs(){
+		return inputs;
+	}
+	public ArrayList<Output> getOutputs(){
+		return outputs;
 	}
 
 	// Moving whole SubScene in X/Y direction

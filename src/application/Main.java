@@ -297,7 +297,7 @@ public class Main extends Application {
 		file.getItems().add(save);
 		file.getItems().add(saveas);
 		bar.getMenus().add(file);
-		Input input = Input.getInput(FunctionalCanvasComponent.SIZE_MIDDLE);
+		/*Input input = Input.getInput(FunctionalCanvasComponent.SIZE_MIDDLE);
 		ANDGate and = null;
 		try {
 			and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2);
@@ -307,17 +307,17 @@ public class Main extends Application {
 		and.setX(1300);
 		and.setY(1000);
 		input.setX(1500);
-		input.setY(1000);
+		input.setY(1000);*/
 		// LogicSubSceneContainer
 
 		root.getChildren().add(logic_container);
 		vbox.getChildren().add(MainScene);
-		try {
+		/*try {
 			logic_container.logic_subscene.add(and);
 			logic_container.logic_subscene.add(input);
 		} catch (OcupationExeption e1) {
 			e1.printStackTrace();
-		}
+		}*/
 
 		Menu translate = new Menu("Translations");
 		MenuItem standard = new MenuItem("Standard-Zoom");
