@@ -22,6 +22,11 @@ public class Input extends FunctionalCanvasComponent{
 		paintImage();
 	}
 
+	public void setState(State state) {
+		this.state = state;
+		simulate();
+	}
+	
 	@Override
 	public void simulate() {
 		outputs[0].setState(state);
@@ -59,8 +64,7 @@ public class Input extends FunctionalCanvasComponent{
 
 	@Override
 	protected void resetStandardImage() {
-		// TODO Auto-generated method stub
-		
+		paintImage();
 	}
 	
 	@Override

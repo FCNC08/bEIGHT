@@ -111,7 +111,6 @@ public class NANDGate extends LogicComponent {
 				bool_states[i] = input[i].getStateBoolean();
 			}
 			boolean output_state = true;
-			System.out.println("lenght of bool:" + bool_states.length);
 			for (boolean b : bool_states) {
 				output_state = output_state && b;
 			}

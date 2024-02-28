@@ -15,14 +15,26 @@ public class Output extends FunctionalCanvasComponent{
 
 	protected static int StandardWidth_small = LogicSubScene.cross_distance;
 	private State state = OFF;
+	LogicSubScene parent;
 	public Output(int width) throws IllegalArgumentException {
 		super(width, width, 1, 0);
 		paintImage();
 	}
-
+	
+	public State getState() {
+		return state;
+	}
+	
+	public void setParent(LogicSubScene scene) {
+		this.parent = scene;
+	}
+	
 	@Override
 	public void simulate() {
 		state = inputs[0].getState();
+		if(parent != null) {
+			parent.changeOutput();
+		}
 		paintImage();
 	}
 
@@ -61,6 +73,7 @@ public class Output extends FunctionalCanvasComponent{
 
 	@Override
 	protected void resetStandardImage() {
+		paintImage();
 	}
 	
 	@Override

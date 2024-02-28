@@ -57,7 +57,6 @@ public class ComponentChooser extends SubScene {
 			Seperator.setFill(Color.GREY);
 			Seperator.setLayoutY(height);
 			MainRoot.getChildren().add(Seperator);
-			System.out.println(height);
 			height = height + 20;
 			count = 0;
 		}

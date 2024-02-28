@@ -29,9 +29,6 @@ public abstract class CanvasComponent extends WritableImage {
 	// SetState for missing double simulation
 	protected boolean set_state = false;
 
-	// LogicSubScene where it is added
-	protected LogicSubScene logic_scene;
-
 	// ImageView to add to LogicSubScene
 	protected ImageView image_view;
 
@@ -93,11 +90,6 @@ public abstract class CanvasComponent extends WritableImage {
 		temp_view.snapshot(null, this);
 		temp_view = null;
 		System.gc();
-	}
-
-	// Adding Connection to LogicSubScene
-	public void setLogicSubScene(LogicSubScene parentScene) {
-		this.logic_scene = parentScene;
 	}
 
 	// Cleaning all Pixels

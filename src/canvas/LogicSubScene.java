@@ -17,6 +17,7 @@ import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;*/
 import canvas.components.CanvasComponent;
 import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
+import canvas.components.LayerCanvasComponent;
 import canvas.components.SingleCanvasComponent;
 import canvas.components.State;
 import canvas.components.StandardComponents.Input;
@@ -105,6 +106,7 @@ public class LogicSubScene extends SubScene {
 	private ArrayList<FunctionalCanvasComponent> components = new ArrayList<>();
 	private ArrayList<Input> inputs = new ArrayList<>();
 	private ArrayList<Output> outputs = new ArrayList<>();
+	private ArrayList<LayerCanvasComponent> layer_components = new ArrayList<>();
 
 	private Group root;
 
@@ -165,7 +167,6 @@ public class LogicSubScene extends SubScene {
 			@Override
 			public void handle(MouseEvent me) {
 				// Checking which mousebutton is down
-				System.out.println("Move");
 				if (me.isSecondaryButtonDown()) {
 					addXTranslate(moves_x - (me.getSceneX() - X));
 					addYTranslate(moves_y - (me.getSceneY() - Y));
@@ -326,21 +327,19 @@ public class LogicSubScene extends SubScene {
 	}
 	
 	public void add(FunctionalCanvasComponent component) throws OcupationExeption {
-		System.out.println("ELEMENT: " + component.getX() + " " + component.getY());
 		if(component instanceof Input) {
 			inputs.add((Input) component);
 		}else if(component instanceof Output) {
 			outputs.add((Output) component);
+			((Output) component).setParent(this);
 		}
 		root.getChildren().add(component.getImageView());
 		component.setStandardDotLocations();
 
 		// doesnt contain the outline to make it possible to connect to the dots
-		System.out.println(component.getXPoint() + "  " + component.getHeightPoint() + " " + component.getYPoint());
 		for (int x = component.getXPoint() + 1; x < (component.getXPoint() + component.getHeightPoint()); x++) {
 			for (int y = component.getYPoint() + 1; y < (component.getYPoint() + component.getHeightPoint()); y++) {
 				if (used[x][y].HorizontalComponent != null) {
-					System.out.println(used[x][y].HorizontalComponent);
 					throw new OcupationExeption();
 				} else {
 					used[x][y].HorizontalComponent = ComponentBox.occupied;
@@ -363,8 +362,6 @@ public class LogicSubScene extends SubScene {
 		}
 		components.add(component);
 		// Adding component to the ID-System
-		component.setLogicSubScene(this);
-		System.out.println("Add Finally");
 	}
 
 	public void addTry(WireDoublet doublet) throws OcupationExeption {
@@ -401,7 +398,6 @@ public class LogicSubScene extends SubScene {
 				component.addComponent(used[component.point_X][component.point_Y].HorizontalComponent);
 				used[component.point_X][component.point_Y].HorizontalComponent.addComponent(component);
 			}
-			component.setLogicSubScene(this);
 			root.getChildren().add(component.getImageView());
 			// component.printComponents();
 			// System.out.println("Line: 519");
@@ -433,7 +429,6 @@ public class LogicSubScene extends SubScene {
 							loc_ID.Dot.addComponent(component);
 							
 						}
-						System.out.println(component);
 					} else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
 						System.out.println("Error1");
 						throw new OcupationExeption();
@@ -827,11 +822,7 @@ public class LogicSubScene extends SubScene {
 			}
 			wires.add(component);
 			// Adding component to SubSCene
-			component.setLogicSubScene(this);
 			root.getChildren().add(component.getImageView());
-			System.out.println(component.getX() + " " + component.getY());
-			System.out.println(root.getChildren().contains(component.getImageView()) + " ");
-			System.out.println(component.getImageView());
 			component.printComponents();
 		}
 	}
@@ -843,6 +834,8 @@ public class LogicSubScene extends SubScene {
 		}else if(component instanceof Output) {
 			outputs.remove(component);
 			remove((FunctionalCanvasComponent)component);
+		}else if(component instanceof LayerCanvasComponent) {
+			((LayerCanvasComponent) component).logic_subscene.removeLayerCanvasComponent((LayerCanvasComponent) component);
 		}else if (component instanceof FunctionalCanvasComponent) {
 			remove((FunctionalCanvasComponent) component);
 		} else if (component instanceof Dot) {
@@ -1343,6 +1336,12 @@ public class LogicSubScene extends SubScene {
 			remove(last_focused_component);
 		}
 	}
+	
+	public void changeOutput() {
+		for(LayerCanvasComponent component: layer_components) {
+			component.changeOutputs();
+		}
+	}
 
 	public void SaveAsPDF(File filepath) {
 		// Creating PDF out of SubScene
@@ -1382,6 +1381,7 @@ public class LogicSubScene extends SubScene {
 		}
 		temp_image_file.delete();*/
 	}
+	
 	public JSONObject getJSON() {
 		JSONObject object = new JSONObject();
 		System.out.println(height);
@@ -1432,5 +1432,15 @@ public class LogicSubScene extends SubScene {
 		}
 		object.put("components", componentoutput);
 		return object;
+	}
+	
+	public LayerCanvasComponent getLayerCanvasComponent(String size) {
+		LayerCanvasComponent component = LayerCanvasComponent.init(size, this);
+		layer_components.add(component);
+		return component;
+		
+	}
+	public void removeLayerCanvasComponent(LayerCanvasComponent component) {
+		layer_components.remove(component);
 	}
 }
