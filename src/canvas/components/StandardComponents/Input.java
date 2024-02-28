@@ -17,6 +17,7 @@ public class Input extends FunctionalCanvasComponent{
 
 	protected static int StandardWidth_small = LogicSubScene.cross_distance;
 	private State state = OFF;
+	LogicSubScene logic_subscene;
 	public Input(int width) throws IllegalArgumentException {
 		super(width, width, 0, 1);
 		paintImage();
@@ -31,6 +32,10 @@ public class Input extends FunctionalCanvasComponent{
 	public void simulate() {
 		outputs[0].setState(state);
 		paintImage();
+	}
+	
+	public void setLogicSubScene(LogicSubScene scene) {
+		this.logic_subscene = scene;
 	}
 
 	@Override
@@ -112,9 +117,11 @@ public class Input extends FunctionalCanvasComponent{
 					if(state == ON) {
 						state = OFF;
 						simulate();
+						logic_subscene.last_changing_component = null;
 					}else if(state == OFF) {
 						state = ON;
 						simulate();
+						logic_subscene.last_changing_component = null;
 					}
 				}
 			}

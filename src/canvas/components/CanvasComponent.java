@@ -3,7 +3,6 @@ package canvas.components;
 import canvas.LogicSubScene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
@@ -15,10 +14,10 @@ public abstract class CanvasComponent extends WritableImage {
 	public static boolean VERTICAL = false;
 
 	// Standard States
-	public static State OFF = new State(State.STANDARD_MODE, State.OFF_UNSET);
-	public static State ON = new State(State.STANDARD_MODE, State.ON_ERROR);
-	public static State UNSET = new State(State.ERROR_MODE, State.OFF_UNSET);
-	public static State ERR = new State(State.ERROR_MODE, State.ON_ERROR);
+	public static State OFF = State.OFF;
+	public static State ON = State.ON;
+	public static State UNSET = State.UNSET;
+	public static State ERR = State.ERROR;
 
 	// Objects rotation, id
 	public boolean rotation;

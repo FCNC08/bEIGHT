@@ -106,7 +106,7 @@ public class LogicSubScene extends SubScene {
 	private ArrayList<FunctionalCanvasComponent> components = new ArrayList<>();
 	private ArrayList<Input> inputs = new ArrayList<>();
 	private ArrayList<Output> outputs = new ArrayList<>();
-	private ArrayList<LayerCanvasComponent> layer_components = new ArrayList<>();
+	public LayerCanvasComponent last_changing_component;
 
 	private Group root;
 
@@ -181,10 +181,13 @@ public class LogicSubScene extends SubScene {
 							CanvasComponent component = (CanvasComponent) view.getImage();
 							if (component == last_focused_component) {
 								try {
-									move(component, (int) ((me.getSceneX() - X + getXTranslate())), (int) ((me.getSceneY() - Y - 25 + getYTranslate())));
-									moves_focused_x = (int) (me.getSceneX() - X + getXTranslate());
-									moves_focused_y = (int) (me.getSceneY() - Y - 25 + getYTranslate());
-									moved = true;
+									if((int) ((me.getSceneX() - X + getXTranslate()))>0||(int) ((me.getSceneY() - Y - 25 + getYTranslate()))>0) {
+										move(component, (int) ((me.getSceneX() - X + getXTranslate())), (int) ((me.getSceneY() - Y - 25 + getYTranslate())));
+										moves_focused_x = (int) (me.getSceneX() - X + getXTranslate());
+										moves_focused_y = (int) (me.getSceneY() - Y - 25 + getYTranslate());
+										moved = true;
+									}
+									
 								} catch (OcupationExeption e) {
 									e.printStackTrace();
 									moved = false;
@@ -329,6 +332,7 @@ public class LogicSubScene extends SubScene {
 	public void add(FunctionalCanvasComponent component) throws OcupationExeption {
 		if(component instanceof Input) {
 			inputs.add((Input) component);
+			((Input) component).setLogicSubScene(this);
 		}else if(component instanceof Output) {
 			outputs.add((Output) component);
 			((Output) component).setParent(this);
@@ -407,7 +411,6 @@ public class LogicSubScene extends SubScene {
 	public void add(Wire component) throws OcupationExeption {
 		if (component != null) {
 			ComponentBox loc_ID;
-			System.out.println("Added: " + component);
 
 			// Checking other elements blocking the Wire/connecting wires together
 			if (component.rotation == CanvasComponent.HORIZONTAL) {
@@ -497,7 +500,6 @@ public class LogicSubScene extends SubScene {
 						loc_ID.Dot.addComponent(component);
 					}
 
-					System.out.println(component);
 				} else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
 					System.out.println("Error1");
 					throw new OcupationExeption();
@@ -834,8 +836,6 @@ public class LogicSubScene extends SubScene {
 		}else if(component instanceof Output) {
 			outputs.remove(component);
 			remove((FunctionalCanvasComponent)component);
-		}else if(component instanceof LayerCanvasComponent) {
-			((LayerCanvasComponent) component).logic_subscene.removeLayerCanvasComponent((LayerCanvasComponent) component);
 		}else if (component instanceof FunctionalCanvasComponent) {
 			remove((FunctionalCanvasComponent) component);
 		} else if (component instanceof Dot) {
@@ -1338,8 +1338,8 @@ public class LogicSubScene extends SubScene {
 	}
 	
 	public void changeOutput() {
-		for(LayerCanvasComponent component: layer_components) {
-			component.changeOutputs();
+		if(last_changing_component != null) {
+			last_changing_component.changeOutputs();
 		}
 	}
 
@@ -1436,11 +1436,7 @@ public class LogicSubScene extends SubScene {
 	
 	public LayerCanvasComponent getLayerCanvasComponent(String size) {
 		LayerCanvasComponent component = LayerCanvasComponent.init(size, this);
-		layer_components.add(component);
 		return component;
 		
-	}
-	public void removeLayerCanvasComponent(LayerCanvasComponent component) {
-		layer_components.remove(component);
 	}
 }

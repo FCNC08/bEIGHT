@@ -48,7 +48,6 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 			height = 1;
 			break;
 		}
-		System.out.println(scene);
 		LayerCanvasComponent component = new LayerCanvasComponent(size, width, height, scene);
 		return component;
 	}
@@ -57,16 +56,17 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	public void simulate() {
 		State[] states = getInputStates();
 		ArrayList<Input> input = logic_subscene.getInputs();
-		for(int i = 0; i < input.size(); i++) {
+		for(int i = 0; i < states.length; i++) {
 			input.get(i).setState(states[i]);
 		}
+		logic_subscene.last_changing_component = this;
 		System.out.println();
 	}
 
 	public void changeOutputs() {
 		ArrayList<Output> output = logic_subscene.getOutputs();
 		State[] states = new State[output.size()];
-		for(int i = 0; i < output.size(); i++) {
+		for(int i = 0; i < states.length; i++) {
 			states[i] = output.get(i).getState();
 		}
 		setOutputStates(states);

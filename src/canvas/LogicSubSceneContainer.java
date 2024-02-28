@@ -238,8 +238,6 @@ public class LogicSubSceneContainer extends SubScene {
 						} catch (OcupationExeption e) {
 							e.printStackTrace();
 						}
-					}else if(adding_component instanceof LayerCanvasComponent){
-						((LayerCanvasComponent) adding_component).logic_subscene.removeLayerCanvasComponent((LayerCanvasComponent) adding_component);
 					}
 					adding_component = null;
 				}
