@@ -152,4 +152,13 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 			System.out.print(i + " 	");
 		}
 	}
+	
+	@Override
+	protected void changeRotation() {
+		image_view.setRotate(getRotationDegree());
+		if (rotation == CanvasComponent.VERTICAL) {
+			image_view.setLayoutY(image_view.getLayoutY() + 0.5 * width - 0.5 * getHeight());
+			image_view.setLayoutX(image_view.getLayoutX() - 0.5 * width + 0.5 * getHeight());
+		}
+	}
 }

@@ -28,6 +28,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -57,6 +58,8 @@ public class Main extends Application {
 		System.out.println("Hallo Welt dies ist ein Test vom Laptop");
 		// Adding different Scenes
 		addStartScene();
+		
+		primaryStage.getIcons().add(new Image("Icon.png"));
 		
 		// set Scene and saves Stage
 		MainStage = primaryStage;

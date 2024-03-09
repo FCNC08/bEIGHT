@@ -297,15 +297,19 @@ public class LogicSubSceneContainer extends SubScene {
 			scene.setName(label.getText());
 			eddited_field = null;
 		});
+		bEIGHT_labels.add(label);
 		chooser_root.getChildren().add(label);
 	}
 	
 	public void removeLogicSubScene(LogicSubScene scene) {
 		int number = logic_subscenes.indexOf(scene);
-		logic_subscenes.remove(number);
-		chooser_root.getChildren().remove(bEIGHT_labels.get(number));
-		bEIGHT_labels.remove(number);
-		root.getChildren().remove(scene);
+		removeLogicSubScene(number);
+	}
+	public void removeLogicSubScene(int index) {
+		logic_subscenes.remove(index);
+		chooser_root.getChildren().remove(bEIGHT_labels.get(index));
+		bEIGHT_labels.remove(index);
+		root.getChildren().remove(index);
 	}
 	
 	public void addX(int X) {
@@ -352,10 +356,18 @@ public class LogicSubSceneContainer extends SubScene {
 	public void open(File file) {
 		save();
 		root.getChildren().remove(logic_subscene);
-		logic_subscene = LogicSubScene.init(file, LogicSubScene.getNearesDot((int) (width * 0.75)), LogicSubScene.getNearesDot((int) (height * 0.9)));
+		for(int i = logic_subscenes.size()-1; i>=0; i--) {
+			removeLogicSubScene(i);
+		}
+		logic_subscene = LogicSubScene.init(file, LogicSubScene.getNearesDot((int) (width * 0.7)), LogicSubScene.getNearesDot((int) (height * 0.9)));
 		logic_subscene.setFill(color==WHITE?LogicSubScene.white_grey:LogicSubScene.black_grey);
-		logic_subscene.addX((int) (width * 0.05));
+		logic_subscene.setName("Main bEIGHT");
+
+		logic_subscene.addX((int) (width * 0.1));
 		logic_subscene.addY((int) (height * 0.01));
+		
+		addLogicSubScene(logic_subscene);
+		
 		root.getChildren().add(logic_subscene);
 		location = file;
 		addChooser();

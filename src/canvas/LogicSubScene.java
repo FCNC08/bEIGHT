@@ -263,7 +263,6 @@ public class LogicSubScene extends SubScene {
 			@Override
 			public void handle(MouseEvent me) {
 				// Used to highlight a component but not working
-				System.out.println("click");
 				if(addedInfo != null) {
 					root.getChildren().remove(addedInfo);
 					addedInfo = null;
@@ -271,7 +270,6 @@ public class LogicSubScene extends SubScene {
 				if (me.getButton() == MouseButton.PRIMARY) {
 					if (last_focused_component != null) {
 						last_focused_component.setFocus(false);
-						System.out.println("Entfokused");
 						last_focused_component = null;
 					}
 					if (me.isStillSincePress()) {
@@ -288,7 +286,6 @@ public class LogicSubScene extends SubScene {
 					}
 				} else if (me.getButton() == MouseButton.SECONDARY) {
 					if (me.isStillSincePress()) {
-						System.out.println("Still");
 
 						if (me.getTarget() instanceof ImageView) {
 							Image img = ((ImageView) me.getTarget()).getImage();
@@ -297,7 +294,9 @@ public class LogicSubScene extends SubScene {
 								//component.setRotation(!component.getRotation());
 								if (component instanceof Wire) {
 									Wire wire = (Wire) component;
-									wire.setState(State.getState(wire.getState().mode, !wire.getState().state));
+									//wire.setState(State.getState(wire.getState().mode, !wire.getState().state));
+									wire.setRotation(!wire.getRotation());
+									System.out.println("rotated");
 								}else if(img instanceof FunctionalCanvasComponent) {
 									FunctionalCanvasComponent functionalcomponent = (FunctionalCanvasComponent) img;
 									addedInfo = functionalcomponent.getInfo();
@@ -1072,7 +1071,6 @@ public class LogicSubScene extends SubScene {
 		try {
 			json_string = Files.readString(Paths.get(file.getPath()));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		JSONObject json_object = new JSONObject(json_string);
@@ -1085,7 +1083,7 @@ public class LogicSubScene extends SubScene {
 			if(component instanceof JSONObject) {
 				JSONObject jsonwire = (JSONObject) component;
 				Wire wire = new Wire(jsonwire.getInt("lenght")*cross_distance+ wire_height*3/4);
-				wire.setRotation(jsonwire.getString("orientation")=="HORIZONTAL"?CanvasComponent.HORIZONTAL:CanvasComponent.VERTICAL);
+				wire.setRotation(jsonwire.getString("orientation").matches("HORIZONTAL")?CanvasComponent.HORIZONTAL:CanvasComponent.VERTICAL);
 				wire.setXPoint(jsonwire.getInt("posx"));
 				wire.setYPoint(jsonwire.getInt("posy"));
 				try {
@@ -1128,6 +1126,12 @@ public class LogicSubScene extends SubScene {
 				case("XOR"):{
 					component = XORGate.getXORGate(jsoncomponent.getString("size"), jsoncomponent.getInt("inputs"));
 					break;
+				}
+				case("Input"):{
+					component = Input.getInput(jsoncomponent.getString("size"));
+				}
+				case("Output"):{
+					component = Output.getOutput(jsoncomponent.getString("size"));
 				}
 				}
 				component.setXPoint(jsoncomponent.getInt("posx"));
@@ -1421,6 +1425,10 @@ public class LogicSubScene extends SubScene {
 				name = "XNOR";
 			}else if(component instanceof XORGate) {
 				name = "XOR";
+			}else if(component instanceof Input) {
+				name = "Input";
+			}else if(component instanceof Output) {
+				name = "Output";
 			}
 			componentobject.put("type", name);
 			componentobject.put("posx", component.point_X);

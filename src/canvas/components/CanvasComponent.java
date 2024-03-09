@@ -216,7 +216,7 @@ public abstract class CanvasComponent extends WritableImage {
 	// Setter/Getter for rotation
 	public void setRotation(boolean New_Rotation) {
 		rotation = New_Rotation;
-		createImageView();
+		changeRotation();
 	}
 
 	protected int getRotationDegree() {
@@ -226,6 +226,7 @@ public abstract class CanvasComponent extends WritableImage {
 			return 90;
 		}
 	}
+	protected abstract void changeRotation();
 
 	public boolean getRotation() {
 		return rotation;

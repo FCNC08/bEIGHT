@@ -18,7 +18,7 @@ public class Input extends FunctionalCanvasComponent{
 	protected static int StandardWidth_small = LogicSubScene.cross_distance;
 	private State state = OFF;
 	LogicSubScene logic_subscene;
-	public Input(int width) throws IllegalArgumentException {
+	public Input(int width, String size) throws IllegalArgumentException {
 		super(width, width, 0, 1);
 		paintImage();
 	}
@@ -94,7 +94,7 @@ public class Input extends FunctionalCanvasComponent{
 			width = 1;
 			break; 
 		}
-		return new Input(width);
+		return new Input(width, size);
 	}
 	
 	@Override
