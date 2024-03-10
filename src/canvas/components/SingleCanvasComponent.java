@@ -48,9 +48,10 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	public boolean checkEnd(int x, int y) {
 		// Checks if a coord is on the End of a wire
 		if (rotation == HORIZONTAL) {
-			return (x == getXPoint() && y == getYPoint()) || (x == (getXPoint() + getHeightPoint()) && y == getYPoint());
+			return y==getYPoint()&&(x==getXPoint()||x==(getXPoint()+getWidthPoint()));
 		} else {
-			return (x == getXPoint() && y == getYPoint()) || (x == getXPoint() && y == (getYPoint() + getHeightPoint()));
+			//return (x == getXPoint() && y == getYPoint()) || (x == getXPoint() && y == (getYPoint() + getHeightPoint()));
+			return x==getXPoint()&&(y==getYPoint()||y==(getYPoint()+getWidthPoint()));
 		}
 	}
 

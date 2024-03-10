@@ -2,6 +2,7 @@ package canvas;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -443,6 +444,7 @@ public class LogicSubScene extends SubScene {
 								wire.setYPoint(component.getYPoint());
 								wire.setXPoint(loc_ID.HorizontalComponent.getXPoint());
 								wire.setRotation(CanvasComponent.HORIZONTAL);
+								wire.setState(component.getState());
 								for (SingleCanvasComponent s : component.getConnectedComponents()) {
 									wire.addComponent(s);
 									s.addComponent(wire);
@@ -907,9 +909,11 @@ public class LogicSubScene extends SubScene {
 			if (used[component.point_X][component.point_Y].Dot == component) {
 				used[component.point_X][component.point_Y].Dot = null;
 			}
-			for (SingleCanvasComponent i : component.getConnectedComponents()) {
-				i.removeComponent(component);
-				component.removeComponent(i);
+			ListIterator<SingleCanvasComponent> li = component.getConnectedComponents().listIterator();
+			while(li.hasNext()) {
+				SingleCanvasComponent comp = li.next();
+				comp.removeComponent(component);
+				component.removeComponent(comp);
 			}
 			root.getChildren().remove(component.getImageView());
 		}
@@ -931,9 +935,11 @@ public class LogicSubScene extends SubScene {
 					}
 				}
 			}
-			for (SingleCanvasComponent i : component.getConnectedComponents()) {
-				i.removeComponent(component);
-				component.removeComponent(i);
+			ListIterator<SingleCanvasComponent> li = component.getConnectedComponents().listIterator();
+			while(li.hasNext()) {
+				SingleCanvasComponent comp = li.next();
+				comp.removeComponent(component);
+				component.removeComponent(comp);
 			}
 			wires.remove(component);
 			root.getChildren().remove(component.getImageView());
