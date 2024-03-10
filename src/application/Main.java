@@ -1,17 +1,13 @@
 package application;
 
 import java.awt.Dimension;
-import java.awt.FileDialog;
-import java.awt.Frame;
 import java.awt.Toolkit;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Random;
 
 import canvas.LogicSubSceneContainer;
-import canvas.components.FunctionalCanvasComponent;
-import canvas.components.LogicComponent;
-import canvas.components.StandardComponents.Input;
-import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import education.EducationSubScene;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -20,10 +16,11 @@ import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
-import util.OcupationExeption;
+import util.IllegalInputOutputExeption;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -60,6 +57,7 @@ public class Main extends Application {
 		addStartScene();
 		
 		primaryStage.getIcons().add(new Image("Icon.png"));
+		primaryStage.setTitle("bEIGHT");
 		
 		// set Scene and saves Stage
 		MainStage = primaryStage;
@@ -285,6 +283,7 @@ public class Main extends Application {
 			if(selected_file != null) {
 				logic_container.open(selected_file);
 			}
+			fc = null;
 		});
 		
 		MenuItem save = new MenuItem("Save");
@@ -295,10 +294,35 @@ public class Main extends Application {
 		saveas.setOnAction(me->{
 			logic_container.saveas();
 		});
+		
+		MenuItem saveverilog = new MenuItem("Save as verilog");
+		saveverilog.setOnAction(me->{
+			FileChooser fc = new FileChooser();
+			fc.setTitle("Save as");
+			ExtensionFilter extFilter = new ExtensionFilter("Verilog files (*.v)", "*.v");
+			fc.getExtensionFilters().add(extFilter);
+			var selected_file = fc.showSaveDialog(new Stage());
+			if(selected_file != null) {
+				try(FileWriter writer = new FileWriter(selected_file)){
+					writer.write(logic_container.logic_subscene.getVerilog());
+				}catch(IOException e) {
+					e.printStackTrace();
+				} catch (IllegalInputOutputExeption e1) {
+					Stage stage = new Stage();
+					Group scene_root = new Group();
+					Scene scene = new Scene(scene_root);
+					Label label = new Label("Not enough Inputs/Outputs.\nPlease add new Inputs/Outputs");
+					scene_root.getChildren().add(label);
+					stage.setScene(scene);
+					stage.show();
+				}
+			}
+		});
 		file.getItems().add(savingpdf);
 		file.getItems().add(open);
 		file.getItems().add(save);
 		file.getItems().add(saveas);
+		file.getItems().add(saveverilog);
 		bar.getMenus().add(file);
 		/*Input input = Input.getInput(FunctionalCanvasComponent.SIZE_MIDDLE);
 		ANDGate and = null;

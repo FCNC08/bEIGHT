@@ -50,6 +50,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 import util.OcupationExeption;
 import util.ComponentBox;
+import util.IllegalInputOutputExeption;
 import util.Info;
 
 public class LogicSubScene extends SubScene {
@@ -1440,6 +1441,24 @@ public class LogicSubScene extends SubScene {
 		}
 		object.put("components", componentoutput);
 		return object;
+	}
+	
+	public String getVerilog() throws IllegalInputOutputExeption {
+		if(inputs.size()<1 || outputs.size()<1) {
+			throw new IllegalInputOutputExeption();
+		}
+		
+		String verilog_string = "module "+name.replace(' ', '_')+"(\n";
+		for(int i = 0; i<inputs.size(); i++) {
+			verilog_string = verilog_string + "input: input"+i+"\n";
+			inputs.get(i).verilog_string = "input"+i;
+		}
+		for(int i = 0; i<outputs.size(); i++) {
+			verilog_string = verilog_string +"output: output"+i+"\n";
+		}
+		verilog_string = verilog_string+")\n";
+		
+		return verilog_string;
 	}
 	
 	public LayerCanvasComponent getLayerCanvasComponent(String size) {

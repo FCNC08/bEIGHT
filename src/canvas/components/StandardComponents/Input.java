@@ -16,6 +16,7 @@ public class Input extends FunctionalCanvasComponent{
 	protected static int StandardWidth_middle = LogicSubScene.cross_distance * 2;
 
 	protected static int StandardWidth_small = LogicSubScene.cross_distance;
+	
 	private State state = OFF;
 	LogicSubScene logic_subscene;
 	public Input(int width, String size) throws IllegalArgumentException {
