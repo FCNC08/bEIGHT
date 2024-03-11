@@ -700,7 +700,7 @@ public class LogicSubScene extends SubScene {
 								used[component.getXPoint()][y].VerticalComponent = component;
 							}
 						}
-					}
+					}}
 
 					y = component.getYPoint();
 					loc_ID = used[component.getXPoint()][y];
@@ -839,7 +839,7 @@ public class LogicSubScene extends SubScene {
 			// Adding component to SubSCene
 			root.getChildren().add(component.getImageView());
 			component.printComponents();
-		}
+		
 	}
 
 	public void remove(CanvasComponent component) {
@@ -952,16 +952,16 @@ public class LogicSubScene extends SubScene {
 				}
 			}
 			ListIterator<SingleCanvasComponent> li = component.getConnectedComponents().listIterator();
-			try {
 				while(li.hasNext()) {
-					System.out.println(li.hasNext());
-					SingleCanvasComponent comp = li.next();
-					comp.removeComponent(component);
-					component.removeComponent(comp);
+					try {
+						System.out.println(li.hasNext());
+						SingleCanvasComponent comp = li.next();
+						comp.removeComponent(component);
+						component.removeComponent(comp);
+					}catch(ConcurrentModificationException cme) {
+						cme.printStackTrace();
+					}
 				}
-			}catch(ConcurrentModificationException cme) {
-				cme.printStackTrace();
-			}
 			wires.remove(component);
 			root.getChildren().remove(component.getImageView());
 		}
@@ -1262,9 +1262,9 @@ public class LogicSubScene extends SubScene {
 			wire_horizontal.setY(round_start_y);
 
 			wire_horizontal.setState(CanvasComponent.OFF);
+			wire_horizontal.setRotation(CanvasComponent.HORIZONTAL);
 
 			doublet.setHorizontalWire(wire_horizontal);
-			wire_horizontal.setRotation(CanvasComponent.HORIZONTAL);
 		}
 		// Checking if there is a vertical Wire and generating it if yes
 		if (round_start_y != round_end_y) {

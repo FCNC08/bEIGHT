@@ -66,8 +66,6 @@ public abstract class CanvasComponent extends WritableImage {
 		pwriter = getPixelWriter();
 		// Adding standard values
 		rotation = HORIZONTAL;
-		this.createImageView();
-		image_view = new ImageView(this);
 		createImageView();
 	}
 

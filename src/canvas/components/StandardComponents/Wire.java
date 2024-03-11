@@ -1,7 +1,5 @@
 package canvas.components.StandardComponents;
 
-import java.util.ArrayList;
-
 import canvas.LogicSubScene;
 import canvas.components.CanvasComponent;
 import canvas.components.SingleCanvasComponent;
@@ -14,7 +12,6 @@ public class Wire extends SingleCanvasComponent {
 		// Creating Wire with height and painting it using PaintWire()
 		super(Startwidth, LogicSubScene.wire_height);
 		focus = false;
-		connected_Components = new ArrayList<>();
 		PaintWire();
 	}
 
