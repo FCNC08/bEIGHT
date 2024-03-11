@@ -2,6 +2,7 @@ package canvas;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.ListIterator;
 
 import org.json.JSONArray;
@@ -455,7 +456,6 @@ public class LogicSubScene extends SubScene {
 								}
 								remove(loc_ID.HorizontalComponent);
 								remove(component);
-								System.out.println(wire + " ");
 								add(wire);
 								return;
 							} else {
@@ -470,6 +470,7 @@ public class LogicSubScene extends SubScene {
 								wire.setYPoint(component.getYPoint());
 								wire.setXPoint(component.getXPoint());
 								wire.setRotation(CanvasComponent.HORIZONTAL);
+								wire.setState(loc_ID.HorizontalComponent.getState());
 								for (SingleCanvasComponent s : component.getConnectedComponents()) {
 									wire.addComponent(s);
 									s.addComponent(wire);
@@ -513,6 +514,7 @@ public class LogicSubScene extends SubScene {
 							wire.setYPoint(component.getYPoint());
 							wire.setXPoint(loc_ID.HorizontalComponent.getXPoint());
 							wire.setRotation(CanvasComponent.HORIZONTAL);
+							wire.setState(loc_ID.HorizontalComponent.getState());
 							for (SingleCanvasComponent s : component.getConnectedComponents()) {
 								wire.addComponent(s);
 								s.addComponent(wire);
@@ -538,6 +540,7 @@ public class LogicSubScene extends SubScene {
 							wire.setYPoint(component.getYPoint());
 							wire.setXPoint(component.getXPoint());
 							wire.setRotation(CanvasComponent.HORIZONTAL);
+							wire.setState(loc_ID.HorizontalComponent.getState());
 							for (SingleCanvasComponent s : component.getConnectedComponents()) {
 								wire.addComponent(s);
 								s.addComponent(wire);
@@ -580,6 +583,7 @@ public class LogicSubScene extends SubScene {
 							wire.setYPoint(component.getYPoint());
 							wire.setXPoint(loc_ID.HorizontalComponent.getXPoint());
 							wire.setRotation(CanvasComponent.HORIZONTAL);
+							wire.setState(loc_ID.HorizontalComponent.getState());
 							for (SingleCanvasComponent s : component.getConnectedComponents()) {
 								wire.addComponent(s);
 								s.addComponent(wire);
@@ -605,6 +609,7 @@ public class LogicSubScene extends SubScene {
 							wire.setYPoint(component.getYPoint());
 							wire.setXPoint(component.getXPoint());
 							wire.setRotation(CanvasComponent.HORIZONTAL);
+							wire.setState(loc_ID.HorizontalComponent.getState());
 							for (SingleCanvasComponent s : component.getConnectedComponents()) {
 								wire.addComponent(s);
 								s.addComponent(wire);
@@ -653,6 +658,7 @@ public class LogicSubScene extends SubScene {
 								wire.setXPoint(component.getXPoint());
 								wire.setYPoint(loc_ID.VerticalComponent.getYPoint());
 								wire.setRotation(CanvasComponent.VERTICAL);
+								wire.setState(loc_ID.VerticalComponent.getState());
 								for (SingleCanvasComponent s : component.getConnectedComponents()) {
 									wire.addComponent(s);
 									s.addComponent(wire);
@@ -677,6 +683,7 @@ public class LogicSubScene extends SubScene {
 								wire.setXPoint(component.getXPoint());
 								wire.setYPoint(component.getYPoint());
 								wire.setRotation(CanvasComponent.VERTICAL);
+								wire.setState(loc_ID.VerticalComponent.getState());
 								for (SingleCanvasComponent s : component.getConnectedComponents()) {
 									wire.addComponent(s);
 									s.addComponent(wire);
@@ -717,6 +724,7 @@ public class LogicSubScene extends SubScene {
 								wire.setXPoint(component.getXPoint());
 								wire.setYPoint(loc_ID.VerticalComponent.getYPoint());
 								wire.setRotation(CanvasComponent.VERTICAL);
+								wire.setState(loc_ID.VerticalComponent.getState());
 								for (SingleCanvasComponent s : component.getConnectedComponents()) {
 									wire.addComponent(s);
 									s.addComponent(wire);
@@ -741,6 +749,7 @@ public class LogicSubScene extends SubScene {
 								wire.setXPoint(component.getXPoint());
 								wire.setYPoint(component.getYPoint());
 								wire.setRotation(CanvasComponent.VERTICAL);
+								wire.setState(loc_ID.VerticalComponent.getState());
 								for (SingleCanvasComponent s : component.getConnectedComponents()) {
 									wire.addComponent(s);
 									s.addComponent(wire);
@@ -780,6 +789,7 @@ public class LogicSubScene extends SubScene {
 								wire.setXPoint(component.getXPoint());
 								wire.setYPoint(loc_ID.VerticalComponent.getYPoint());
 								wire.setRotation(CanvasComponent.VERTICAL);
+								wire.setState(loc_ID.VerticalComponent.getState());
 								for (SingleCanvasComponent s : component.getConnectedComponents()) {
 									wire.addComponent(s);
 									s.addComponent(wire);
@@ -804,6 +814,7 @@ public class LogicSubScene extends SubScene {
 								wire.setXPoint(component.getXPoint());
 								wire.setYPoint(component.getYPoint());
 								wire.setRotation(CanvasComponent.VERTICAL);
+								wire.setState(loc_ID.VerticalComponent.getState());
 								for (SingleCanvasComponent s : component.getConnectedComponents()) {
 									wire.addComponent(s);
 									s.addComponent(wire);
@@ -910,10 +921,15 @@ public class LogicSubScene extends SubScene {
 				used[component.point_X][component.point_Y].Dot = null;
 			}
 			ListIterator<SingleCanvasComponent> li = component.getConnectedComponents().listIterator();
-			while(li.hasNext()) {
-				SingleCanvasComponent comp = li.next();
-				comp.removeComponent(component);
-				component.removeComponent(comp);
+			try {
+				while(li.hasNext()) {
+					System.out.println(li.hasNext());
+					SingleCanvasComponent comp = li.next();
+					comp.removeComponent(component);
+					component.removeComponent(comp);
+				}
+			}catch(ConcurrentModificationException cme) {
+				cme.printStackTrace();
 			}
 			root.getChildren().remove(component.getImageView());
 		}
@@ -936,10 +952,15 @@ public class LogicSubScene extends SubScene {
 				}
 			}
 			ListIterator<SingleCanvasComponent> li = component.getConnectedComponents().listIterator();
-			while(li.hasNext()) {
-				SingleCanvasComponent comp = li.next();
-				comp.removeComponent(component);
-				component.removeComponent(comp);
+			try {
+				while(li.hasNext()) {
+					System.out.println(li.hasNext());
+					SingleCanvasComponent comp = li.next();
+					comp.removeComponent(component);
+					component.removeComponent(comp);
+				}
+			}catch(ConcurrentModificationException cme) {
+				cme.printStackTrace();
 			}
 			wires.remove(component);
 			root.getChildren().remove(component.getImageView());
