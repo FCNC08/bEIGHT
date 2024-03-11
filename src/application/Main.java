@@ -62,7 +62,7 @@ public class Main extends Application {
 		// set Scene and saves Stage
 		MainStage = primaryStage;
 		changeScene(0);
-		MainStage.show(); 
+		MainStage.show();
 
 	}
 
