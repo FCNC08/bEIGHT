@@ -833,12 +833,12 @@ public class LogicSubScene extends SubScene {
 						}
 					}
 				}
-
+					wires.add(component);
+					// Adding component to SubSCene
+					root.getChildren().add(component.getImageView());
+					component.printComponents();
 			}
-			wires.add(component);
-			// Adding component to SubSCene
-			root.getChildren().add(component.getImageView());
-			component.printComponents();
+			
 		
 	}
 
@@ -953,9 +953,9 @@ public class LogicSubScene extends SubScene {
 			}
 			ListIterator<SingleCanvasComponent> li = component.getConnectedComponents().listIterator();
 				while(li.hasNext()) {
+					SingleCanvasComponent comp = li.next();
 					try {
 						System.out.println(li.hasNext());
-						SingleCanvasComponent comp = li.next();
 						comp.removeComponent(component);
 						component.removeComponent(comp);
 					}catch(ConcurrentModificationException cme) {
