@@ -1,5 +1,6 @@
 package canvas.components;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import canvas.LogicSubScene;
@@ -322,6 +323,24 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 			image_view.setLayoutY(image_view.getLayoutY() + 0.5 * width - 0.5 * getHeight());
 			image_view.setLayoutX(image_view.getLayoutX() - 0.5 * width + 0.5 * getHeight());
 		}
+	}
+	
+	public boolean isInput(Dot d) {
+		for(Dot input : inputs) {
+			if(input == d) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean isOutput(Dot d) {
+		for(Dot output : outputs) {
+			if(output == d) {
+				return true;
+			}
+		}
+		return true;
 	}
 
 	public Info getInfo() {

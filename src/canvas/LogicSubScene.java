@@ -1485,6 +1485,11 @@ public class LogicSubScene extends SubScene {
 		}
 		verilog_string = verilog_string+")\n";
 		
+		for(Input in : inputs) {
+			System.out.println("test");
+			System.out.println(in.outputs[0].getConnected().toString());
+		}
+		
 		return verilog_string;
 	}
 	

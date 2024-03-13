@@ -1,9 +1,11 @@
 package canvas.components;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.ListIterator;
 
 import canvas.LogicSubScene;
-import javafx.scene.image.Image;
+import canvas.components.StandardComponents.Wire;
 import javafx.scene.paint.Color;
 import util.ComponentBox;
 
@@ -12,6 +14,8 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	protected ArrayList<SingleCanvasComponent> connected_Components;
 
 	protected State state = new State(State.ERROR_MODE, State.OFF_UNSET);
+	
+	protected boolean control_color = false;
 
 	public SingleCanvasComponent(int NewWidth, int NewHeight) {
 		super(NewWidth, NewHeight);
@@ -148,6 +152,39 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 		image_view.setLayoutY(Y);
 	}
 
+	public ArrayList<FunctionalCanvasComponent> getConnected() {
+		if(control_color) {
+			return new ArrayList<>();
+		}else {
+			control_color = true;
+			ArrayList<ArrayList<FunctionalCanvasComponent>> connected = new ArrayList<>();
+			ArrayList<FunctionalCanvasComponent> con = new ArrayList<>();
+			ListIterator<SingleCanvasComponent> li = connected_Components.listIterator();
+			while(li.hasNext()) {
+				try {
+					SingleCanvasComponent comp = li.next();
+					if(comp instanceof Wire) {
+						connected.add(((Wire) (comp)).getConnected());
+					}else if(comp instanceof Dot) {
+						Dot d = (Dot) comp;
+						if(d.parent.isInput(d)) {
+							con.add(d.parent);
+						}
+					}
+				}catch(ConcurrentModificationException e) {
+					e.printStackTrace();
+				}
+			}
+			for(ArrayList<FunctionalCanvasComponent> connected_list : connected) {
+				con.addAll(connected_list);
+			}
+			control_color = false;
+			return con;
+		}
+		
+		
+	}
+	
 	public void printComponents() {
 		for (SingleCanvasComponent i : connected_Components) {
 			System.out.print(i + " 	");

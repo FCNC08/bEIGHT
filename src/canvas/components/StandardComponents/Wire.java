@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 
 public class Wire extends SingleCanvasComponent {
 
+	
 	public Wire(int Startwidth) {
 		// Creating Wire with height and painting it using PaintWire()
 		super(Startwidth, LogicSubScene.wire_height);
