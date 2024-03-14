@@ -185,6 +185,37 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 		
 	}
 	
+	public void setConnectedVerilog(String verilog_name, ArrayList<FunctionalCanvasComponent> functional_components) {
+		if(control_color) {
+			return;
+		}else {
+			control_color = true;
+			ListIterator<SingleCanvasComponent> li = connected_Components.listIterator();
+			while(li.hasNext()) {
+				try {
+					SingleCanvasComponent comp = li.next();
+					if(comp instanceof Wire) {
+						((Wire)comp).setConnectedVerilog(verilog_name, functional_components);
+					}else if(comp instanceof Dot) {
+						Dot d = (Dot) comp;
+						if(d.parent.isInput(d)) {
+							d.verilog_name = verilog_name;
+							functional_components.add(d.parent);
+						}
+					}
+				}catch(ConcurrentModificationException e) {
+					e.printStackTrace();
+				}
+			}
+			control_color = false;
+			return;
+		}
+		
+		
+	}
+	
+	
+	
 	public void printComponents() {
 		for (SingleCanvasComponent i : connected_Components) {
 			System.out.print(i + " 	");

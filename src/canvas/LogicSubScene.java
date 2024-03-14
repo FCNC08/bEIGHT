@@ -1485,10 +1485,13 @@ public class LogicSubScene extends SubScene {
 		}
 		verilog_string = verilog_string+")\n";
 		
-		for(Input in : inputs) {
-			System.out.println("test");
-			System.out.println(in.outputs[0].getConnected().toString());
+		ArrayList<FunctionalCanvasComponent> functional_components = new ArrayList<>();
+		
+		for(int i = 0; i<inputs.size(); i++) {
+			inputs.get(i).outputs[0].setConnectedVerilog("input"+i, functional_components);
 		}
+		
+		System.out.println(functional_components);
 		
 		return verilog_string;
 	}
