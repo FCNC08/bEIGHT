@@ -135,5 +135,11 @@ public class RAM extends MemoryCanvasComponent {
 		info = new Info();
 		info.setHeadline("RAM");
 	}
+	
+	@Override
+	protected void setVerilogString(short[] comp_count) {
+		verilog_string = "RAM"+comp_count[7];
+		comp_count[7]++;
+	}
 
 }

@@ -164,4 +164,10 @@ public class NORGate extends LogicComponent {
 		info = new Info();
 		info.setHeadline("NOR-Gate");
 	}
+	
+	@Override
+	protected void setVerilogString(short[] comp_count) {
+		verilog_string = "NOR"+comp_count[3];
+		comp_count[3]++;
+	}
 }

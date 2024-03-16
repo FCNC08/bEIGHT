@@ -159,4 +159,10 @@ public class ORGate extends LogicComponent {
 		info = new Info();
 		info.setHeadline("OR-Gate");
 	}
+	
+	@Override
+	protected void setVerilogString(short[] comp_count) {
+		verilog_string = "OR"+comp_count[5];
+		comp_count[5]++;
+	}
 }

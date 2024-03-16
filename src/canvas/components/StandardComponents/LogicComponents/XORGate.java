@@ -163,4 +163,10 @@ public class XORGate extends LogicComponent {
 		info = new Info();
 		info.setHeadline("XOR-Gate");
 	}
+	
+	@Override
+	protected void setVerilogString(short[] comp_count) {
+		verilog_string = "XOR"+comp_count[10];
+		comp_count[10]++;
+	}
 }

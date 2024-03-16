@@ -166,4 +166,10 @@ public class NANDGate extends LogicComponent {
 		info = new Info();
 		info.setHeadline("NAND");
 	}
+	
+	@Override
+	protected void setVerilogString(short[] comp_count) {
+		verilog_string = "NAND"+comp_count[2];
+		comp_count[2]++;
+	}
 }

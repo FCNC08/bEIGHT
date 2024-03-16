@@ -129,5 +129,11 @@ public class Input extends FunctionalCanvasComponent{
 		};
 		image_view.addEventFilter(MouseEvent.MOUSE_CLICKED, change_mouse_event);
 	}
+	
+	@Override
+	protected void setVerilogString(short[] comp_count) {
+		verilog_string = "Input"+comp_count[1];
+		comp_count[1]++;
+	}
 
 }

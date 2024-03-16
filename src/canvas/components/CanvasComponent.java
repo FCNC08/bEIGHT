@@ -34,9 +34,6 @@ public abstract class CanvasComponent extends WritableImage {
 	// PixelWriter to paint Pixels
 	protected PixelWriter pwriter;
 	
-	//name in verilogfile
-	public String verilog_string;
-
 	// Height and width, X and Y offset
 	public int width;
 	public int height;

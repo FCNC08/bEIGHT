@@ -115,5 +115,11 @@ public class Output extends FunctionalCanvasComponent{
 			image_view.setLayoutX(image_view.getLayoutX() - 0.5 * width + 0.5 * getHeight());
 		}
 	}
+	
+	@Override
+	protected void setVerilogString(short[] comp_count) {
+		verilog_string = "Output"+comp_count[6];
+		comp_count[6]++;
+	}
 
 }

@@ -1,17 +1,18 @@
 package canvas.components;
 
-import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 
 import canvas.LogicSubScene;
 import javafx.scene.image.ImageView;
-import util.OcupationExeption;
 import util.Info;
 
 public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	public static final String SIZE_BIG = "BIG";
 	public static final String SIZE_MIDDLE = "MIDDLE";
 	public static final String SIZE_SMALL = "SMALL";
+	
+	public String verilog_string;
 	
 	public String size;
 	
@@ -348,6 +349,16 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	}
 	
 	protected abstract void createInfo();
+	
+	protected abstract void setVerilogString(short[] comp_count);
+	
+	public  void createVerilogString(LinkedHashSet<FunctionalCanvasComponent> functional_components, short[] comp_count) {
+		setVerilogString(comp_count);
+		for(int i = 0; i<outputs.length; i++) {
+			outputs[i].verilog_name = verilog_string+"_out"+i;
+			outputs[i].setConnectedVerilog(verilog_string+"_out"+i, functional_components, comp_count);
+		}
+	}
 	
 	protected abstract void resetStandardImage();
 }

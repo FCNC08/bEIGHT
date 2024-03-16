@@ -3,6 +3,8 @@ package canvas;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.ListIterator;
 
 import org.json.JSONArray;
@@ -62,6 +64,8 @@ public class LogicSubScene extends SubScene {
 	public static int maxed_dot_radius = 20;
 	public static int cross_distance = wire_height * 2;
 	public static int memory_outline_thickness = (int) (wire_height*1.5);
+	
+	public static int functional_components_count=11;
 
 	protected static Color black_grey = new Color(0.3, 0.3, 0.3, 1.0);
 	protected static Color white_grey = new Color(0.85, 0.85, 0.85, 1.0);
@@ -1477,22 +1481,96 @@ public class LogicSubScene extends SubScene {
 		
 		String verilog_string = "module "+name.replace(' ', '_')+"(\n";
 		for(int i = 0; i<inputs.size(); i++) {
-			verilog_string = verilog_string + "input: input"+i+"\n";
+			verilog_string = verilog_string + "input input"+i+",\n";
 			inputs.get(i).verilog_string = "input"+i;
 		}
-		for(int i = 0; i<outputs.size(); i++) {
-			verilog_string = verilog_string +"output: output"+i+"\n";
-		}
-		verilog_string = verilog_string+")\n";
 		
-		ArrayList<FunctionalCanvasComponent> functional_components = new ArrayList<>();
+		LinkedHashSet<FunctionalCanvasComponent> functional_components = new LinkedHashSet<>();
+		
+		short[] component_count = new short[functional_components_count];
+		/*0:AND
+		 *1:Input
+		 *2:NAND
+		 *3:NOR
+		 *4:NOT
+		 *5:OR
+		 *6:Output
+		 *7:RAM
+		 *8:Register
+		 *9:XNOR
+		 *10:XOR 
+		 */
+		
+		LinkedHashSet<Output> outs = new LinkedHashSet<>();
 		
 		for(int i = 0; i<inputs.size(); i++) {
-			inputs.get(i).outputs[0].setConnectedVerilog("input"+i, functional_components);
+			inputs.get(i).outputs[0].setConnectedVerilog("input"+i, functional_components, component_count);
 		}
-		
-		System.out.println(functional_components);
-		
+		String component_string = "";
+		String wire_string = "";
+		for(FunctionalCanvasComponent comp: functional_components) {
+			for(Dot d : comp.inputs) {
+				System.out.print(d.verilog_name+"	");
+			}
+			System.out.print(comp.verilog_string+"	");
+			System.out.println(comp);
+			if(comp instanceof Output) {
+				outs.add((Output)comp);
+			}else if(comp instanceof ANDGate) {
+				component_string = component_string+"and("+comp.outputs[0].verilog_name;
+				for(Dot d : comp.inputs) {
+					component_string = component_string +", "+ d.verilog_name;
+				}
+				component_string = component_string+");\n";
+				wire_string = wire_string+"wire "+comp.outputs[0].verilog_name+";\n";
+			}else if(comp instanceof NANDGate) {
+				component_string = component_string+"nand("+comp.outputs[0].verilog_name;
+				for(Dot d : comp.inputs) {
+					component_string = component_string +", "+ d.verilog_name;
+				}
+				component_string = component_string+");\n";
+				wire_string = wire_string+"wire "+comp.outputs[0].verilog_name+";\n";
+			}else if(comp instanceof NORGate) {
+				component_string = component_string+"nor("+comp.outputs[0].verilog_name;
+				for(Dot d : comp.inputs) {
+					component_string = component_string +", "+ d.verilog_name;
+				}
+				component_string = component_string+");\n";
+				wire_string = wire_string+"wire "+comp.outputs[0].verilog_name+";\n";
+			}else if(comp instanceof NOTGate) {
+				component_string = component_string+"not("+comp.outputs[0].verilog_name+", "+comp.inputs[0].verilog_name+");\n";
+				wire_string = wire_string+"wire "+comp.outputs[0].verilog_name+";\n";
+			}else if(comp instanceof ORGate) {
+				component_string = component_string+"and("+comp.outputs[0].verilog_name;
+				for(Dot d : comp.inputs) {
+					component_string = component_string +", "+ d.verilog_name;
+				}
+				component_string = component_string+");\n";
+				wire_string = wire_string+"wire "+comp.outputs[0].verilog_name+";\n";
+			}else if(comp instanceof XNORGate) {
+				component_string = component_string+"xnor("+comp.outputs[0].verilog_name;
+				for(Dot d : comp.inputs) {
+					component_string = component_string +", "+ d.verilog_name;
+				}
+				component_string = component_string+");\n";
+				wire_string = wire_string+"wire "+comp.outputs[0].verilog_name+";\n";
+			}else if(comp instanceof XORGate) {
+				component_string = component_string+"xor("+comp.outputs[0].verilog_name;
+				for(Dot d : comp.inputs) {
+					component_string = component_string +", "+ d.verilog_name;
+				}
+				component_string = component_string+");\n";
+				wire_string = wire_string+"wire "+comp.outputs[0].verilog_name+";\n";
+			}
+		}
+		Iterator<Output> output_iterator = outs.iterator();
+		while(output_iterator.hasNext()) {
+			Output out = output_iterator.next();
+			verilog_string = verilog_string+"output "+out.inputs[0].verilog_name+",\n";
+			wire_string = wire_string.replace("wire "+out.inputs[0].verilog_name+";\n","");
+		}		
+		verilog_string = verilog_string+");\n"+wire_string+"\n"+component_string+"endmodule";
+				
 		return verilog_string;
 	}
 	

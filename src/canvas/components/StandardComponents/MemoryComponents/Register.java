@@ -33,5 +33,11 @@ public class Register extends MemoryCanvasComponent {
 		info = new Info();
 		info.setHeadline("Register");
 	}
+	
+	@Override
+	protected void setVerilogString(short[] comp_count) {
+		verilog_string = "Register"+comp_count[8];
+		comp_count[8]++;
+	}
 
 }

@@ -164,4 +164,10 @@ public class XNORGate extends LogicComponent {
 		info = new Info();
 		info.setHeadline("XNOR-Gate");
 	}
+	
+	@Override
+	protected void setVerilogString(short[] comp_count) {
+		verilog_string = "XNOR"+comp_count[9];
+		comp_count[9]++;
+	}
 }

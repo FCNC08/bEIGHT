@@ -95,4 +95,8 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 			}
 		}
 	}
+	@Override
+	protected void setVerilogString(short[] comp_count) {
+		// TODO Auto-generated method stub
+	}
 }

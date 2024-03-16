@@ -164,4 +164,10 @@ public class ANDGate extends LogicComponent {
 		info = new Info();
 		info.setHeadline("AND-Gate");
 	}
+	
+	@Override
+	protected void setVerilogString(short[] comp_count) {
+		verilog_string = "AND"+comp_count[0];
+		comp_count[0]++;
+	}
 }

@@ -154,4 +154,10 @@ public class NOTGate extends LogicComponent {
 		info = new Info();
 		info.setHeadline("NOT-Gate");
 	}
+	
+	@Override
+	protected void setVerilogString(short[] comp_count) {
+		verilog_string = "NOT"+comp_count[4];
+		comp_count[4]++;
+	}
 }

@@ -2,6 +2,7 @@ package canvas.components;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.LinkedHashSet;
 import java.util.ListIterator;
 
 import canvas.LogicSubScene;
@@ -185,7 +186,7 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 		
 	}
 	
-	public void setConnectedVerilog(String verilog_name, ArrayList<FunctionalCanvasComponent> functional_components) {
+	public void setConnectedVerilog(String verilog_name, LinkedHashSet<FunctionalCanvasComponent> functional_components, short[] comp_count) {
 		if(control_color) {
 			return;
 		}else {
@@ -195,12 +196,14 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 				try {
 					SingleCanvasComponent comp = li.next();
 					if(comp instanceof Wire) {
-						((Wire)comp).setConnectedVerilog(verilog_name, functional_components);
+						((Wire)comp).setConnectedVerilog(verilog_name, functional_components, comp_count);
 					}else if(comp instanceof Dot) {
 						Dot d = (Dot) comp;
 						if(d.parent.isInput(d)) {
 							d.verilog_name = verilog_name;
-							functional_components.add(d.parent);
+							if(functional_components.add(d.parent)) {
+								d.parent.createVerilogString(functional_components,comp_count);
+							}
 						}
 					}
 				}catch(ConcurrentModificationException e) {
