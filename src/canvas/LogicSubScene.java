@@ -9,6 +9,7 @@ import java.util.ListIterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -1563,12 +1564,13 @@ public class LogicSubScene extends SubScene {
 				wire_string = wire_string+"wire "+comp.outputs[0].verilog_name+";\n";
 			}
 		}
-		Iterator<Output> output_iterator = outs.iterator();
-		while(output_iterator.hasNext()) {
-			Output out = output_iterator.next();
-			verilog_string = verilog_string+"output "+out.inputs[0].verilog_name+",\n";
-			wire_string = wire_string.replace("wire "+out.inputs[0].verilog_name+";\n","");
-		}		
+		Output[] outs2 = outs.toArray(new Output[0]);
+		for(int i = 0; i<outs2.length-1;i++) {
+			verilog_string = verilog_string+"output "+outs2[i].inputs[0].verilog_name+",\n";
+			wire_string = wire_string.replace("wire "+outs2[i].inputs[0].verilog_name+";\n","");
+		}
+		verilog_string = verilog_string+"output "+outs2[outs2.length-1].inputs[0].verilog_name+"\n";
+		wire_string = wire_string.replace("wire "+outs2[outs2.length-1].inputs[0].verilog_name+";\n","");
 		verilog_string = verilog_string+");\n"+wire_string+"\n"+component_string+"endmodule";
 				
 		return verilog_string;
