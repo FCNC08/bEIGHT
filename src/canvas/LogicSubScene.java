@@ -25,6 +25,7 @@ import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LayerCanvasComponent;
 import canvas.components.SingleCanvasComponent;
 import canvas.components.State;
+import canvas.components.ExternalComponents.ExternalComponent;
 import canvas.components.StandardComponents.Input;
 import canvas.components.StandardComponents.Output;
 import canvas.components.StandardComponents.Wire;
@@ -66,7 +67,7 @@ public class LogicSubScene extends SubScene {
 	public static int cross_distance = wire_height * 2;
 	public static int memory_outline_thickness = (int) (wire_height*1.5);
 	
-	public static int functional_components_count=11;
+	public static int functional_components_count=12;
 
 	protected static Color black_grey = new Color(0.3, 0.3, 0.3, 1.0);
 	protected static Color white_grey = new Color(0.85, 0.85, 0.85, 1.0);
@@ -1562,6 +1563,8 @@ public class LogicSubScene extends SubScene {
 				}
 				component_string = component_string+");\n";
 				wire_string = wire_string+"wire "+comp.outputs[0].verilog_name+";\n";
+			}else if(comp instanceof ExternalComponent) {
+				
 			}
 		}
 		Output[] outs2 = outs.toArray(new Output[0]);
