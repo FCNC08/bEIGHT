@@ -324,6 +324,16 @@ public class Main extends Application {
 		file.getItems().add(saveas);
 		file.getItems().add(saveverilog);
 		bar.getMenus().add(file);
+		
+		Menu setting = new Menu("settings");
+		MenuItem gc = new MenuItem("collect garbage");
+		gc.setOnAction(e->{
+			System.gc();
+		});
+		setting.getItems().add(gc);
+		
+		bar.getMenus().add(setting);
+		
 		/*Input input = Input.getInput(FunctionalCanvasComponent.SIZE_MIDDLE);
 		ANDGate and = null;
 		try {

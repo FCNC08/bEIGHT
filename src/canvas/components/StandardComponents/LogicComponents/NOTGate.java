@@ -55,10 +55,10 @@ public class NOTGate extends LogicComponent {
 		// Removing all background/Color of the pixel 0|0
 		PixelReader reader = component.getPixelReader();
 		PixelWriter writer = component.getPixelWriter();
-		Color background = reader.getColor(width / 2, height / 2);
+		Color maincolor = reader.getColor(0, 0);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				if (background.equals(reader.getColor(x, y))) {
+				if (!maincolor.equals(reader.getColor(x, y))) {
 					writer.setColor(x, y, Color.TRANSPARENT);
 				}
 			}

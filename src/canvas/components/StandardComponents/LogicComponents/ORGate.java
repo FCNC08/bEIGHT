@@ -55,14 +55,16 @@ public class ORGate extends LogicComponent {
 		// Removing all Backgroundpixels (Color of pixel 1|1
 		PixelReader reader = component.getPixelReader();
 		PixelWriter writer = component.getPixelWriter();
-		Color background = reader.getColor(width / 2, height / 2);
+		Color maincolor = reader.getColor(0, 0);
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				if (background.equals(reader.getColor(x, y))) {
+				if (!maincolor.equals(reader.getColor(x, y))) {
 					writer.setColor(x, y, Color.TRANSPARENT);
 				}
 			}
 		}
+		reader = null;
+		writer = null;
 		System.gc();
 		return component;
 	}
