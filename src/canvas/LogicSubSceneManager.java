@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import org.json.JSONObject;
 
-import canvas.components.CanvasComponent;
 import canvas.components.FunctionalCanvasComponent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -23,7 +22,9 @@ public class LogicSubSceneManager extends SubScene{
 	public LogicSubScene actual_sub_scene;
 	private Group root;
 	private int width;
+	@SuppressWarnings("unused")
 	private int height;
+	@SuppressWarnings("unused")
 	private int multiplier;
 	private int X = 0;
 	private int Y = 0;

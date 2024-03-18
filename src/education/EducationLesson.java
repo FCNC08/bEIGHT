@@ -1,7 +1,6 @@
 package education;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -18,7 +17,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 
 public class EducationLesson extends Pane{
 	public EducationLesson(double width, double height, ZipFile file, EducationSubScene scene) {

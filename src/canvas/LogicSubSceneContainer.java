@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import canvas.components.FunctionalCanvasComponent;
-import canvas.components.LayerCanvasComponent;
 import canvas.components.LogicComponent;
 import canvas.components.StandardComponents.Input;
 import canvas.components.StandardComponents.Output;

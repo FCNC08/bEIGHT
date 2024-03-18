@@ -1,11 +1,6 @@
 package canvas.components;
 
 import canvas.LogicSubScene;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import javafx.scene.transform.Transform;
 
 public abstract class MemoryCanvasComponent extends FunctionalCanvasComponent {
 	

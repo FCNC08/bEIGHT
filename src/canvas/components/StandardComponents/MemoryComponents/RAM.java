@@ -2,7 +2,6 @@ package canvas.components.StandardComponents.MemoryComponents;
 
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.MemoryCanvasComponent;
-import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;

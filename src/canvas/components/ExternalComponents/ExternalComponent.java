@@ -12,7 +12,6 @@ import canvas.LogicSubScene;
 import canvas.components.FunctionalCanvasComponent;
 import javafx.scene.image.Image;
 import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 
 public class ExternalComponent extends FunctionalCanvasComponent {
 	public static String json_file = "settings.json";

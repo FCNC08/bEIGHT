@@ -3,7 +3,6 @@ package canvas;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.ListIterator;
 
@@ -95,7 +94,9 @@ public class LogicSubScene extends SubScene {
 	protected double X = 0;
 	protected double Y = 0;
 
+	@SuppressWarnings("unused")
 	private int moves_focused_x;
+	@SuppressWarnings("unused")
 	private int moves_focused_y;
 	private int pressed_x;
 	private int pressed_y;

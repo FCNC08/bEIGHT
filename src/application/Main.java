@@ -50,7 +50,7 @@ public class Main extends Application {
 	Stage MainStage;
  
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(@SuppressWarnings("exports") Stage primaryStage) {
 		main = this;
 		System.out.println("Hallo Welt dies ist ein Test vom Laptop");
 		// Adding different Scenes

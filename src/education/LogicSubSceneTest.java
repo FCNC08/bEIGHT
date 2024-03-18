@@ -45,6 +45,7 @@ public class LogicSubSceneTest extends Pane{
 			ByteArrayOutputStream outputstream = new ByteArrayOutputStream();
 			
 			byte[] buffer = new byte[4096];
+			@SuppressWarnings("unused")
 			int byteRead;
 			while((byteRead = inputstream.read(buffer))!= -1) {
 				outputstream.write(buffer);
@@ -58,6 +59,7 @@ public class LogicSubSceneTest extends Pane{
 		Text headline = new Text(headlineString);
 		headline.setFont(new Font(25));
 		file.extractAll(EducationSubScene.tempmod);
+		@SuppressWarnings("resource")
 		ZipFile temporary_file = new ZipFile(EducationSubScene.tempmod+jsonobject.getString("space"));
 		JSONObject space = null;
 		try {
@@ -68,6 +70,7 @@ public class LogicSubSceneTest extends Pane{
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			
 			byte[] buffer = new byte[4096];
+			@SuppressWarnings("unused")
 			int byteRead;
 			while((byteRead = inputStream.read(buffer)) !=-1) {
 				outputStream.write(buffer);

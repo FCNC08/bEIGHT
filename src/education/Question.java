@@ -13,7 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -38,6 +37,7 @@ public class Question extends Pane{
 			
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			byte[] buffer = new byte[4096];
+			@SuppressWarnings("unused")
 			int bytesRead;
 			while((bytesRead = inputStream.read(buffer))!= -1) {
 				outputStream.write(buffer);
