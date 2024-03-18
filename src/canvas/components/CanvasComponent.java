@@ -13,11 +13,6 @@ public abstract class CanvasComponent extends WritableImage {
 	public static boolean HORIZONTAL = true;
 	public static boolean VERTICAL = false;
 
-	// Standard States
-	public static State OFF = State.OFF;
-	public static State ON = State.ON;
-	public static State UNSET = State.UNSET;
-	public static State ERR = State.ERROR;
 
 	// Objects rotation, id
 	public boolean rotation;

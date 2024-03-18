@@ -17,7 +17,7 @@ public class Input extends FunctionalCanvasComponent{
 
 	protected static int StandardWidth_small = LogicSubScene.cross_distance;
 	
-	private State state = OFF;
+	private State state = State.OFF;
 	LogicSubScene logic_subscene;
 	public Input(int width, String size) throws IllegalArgumentException {
 		super(width, width, 0, 1);
@@ -115,12 +115,12 @@ public class Input extends FunctionalCanvasComponent{
 			@Override
 			public void handle(MouseEvent me) {
 				if(me.isStillSincePress()) {
-					if(state == ON) {
-						state = OFF;
+					if(state.isEqual(State.ON)) {
+						state = State.OFF;
 						simulate();
 						logic_subscene.last_changing_component = null;
-					}else if(state == OFF) {
-						state = ON;
+					}else if(state.isEqual(State.OFF)) {
+						state = State.ON;
 						simulate();
 						logic_subscene.last_changing_component = null;
 					}

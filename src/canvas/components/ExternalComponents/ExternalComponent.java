@@ -9,9 +9,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import canvas.LogicSubScene;
+import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
+import canvas.components.State;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import net.lingala.zip4j.ZipFile;
+import util.ErrorStateExeption;
+import util.Info;
 
 public class ExternalComponent extends FunctionalCanvasComponent {
 	public static String json_file = "settings.json";
@@ -43,7 +49,17 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 
 	@Override
 	public void simulate() {
-		
+		try {
+			State[] output_states = truth_tabel.getState(getInputStates());
+			for(int i = 0; i<output_count; i++) {
+				this.outputs[i].setState(output_states[i]);
+			}
+		} catch (ErrorStateExeption e) {
+			for(Dot d : outputs) {
+				d.setState(State.ERROR);
+			}
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -59,8 +75,8 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 
 	@Override
 	protected void createInfo() {
-		// TODO Auto-generated method stub
-		
+		info = new Info();
+		info.setHeadline(name);
 	}
 
 	@Override
@@ -71,8 +87,19 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 
 	@Override
 	protected void resetStandardImage() {
-		// TODO Auto-generated method stub
-		
+		if(image != null) {
+			ImageView view = new ImageView(image);
+			view.setFitHeight(height);
+			view.setFitWidth(width);
+			view.snapshot(null, this);
+		}else {
+			for(int x = 0; x<width; x++) {
+				for(int y = 0; y<height; y++) {
+					pwriter.setColor(x, y, Color.BLACK);
+				}
+			}
+		}
+
 	}
 	
 	public static ExternalComponent init(String size, ZipFile file) {
