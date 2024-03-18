@@ -23,17 +23,17 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 	public static int height_middle = 2*LogicSubScene.cross_distance;
 	public static int height_big = 4*LogicSubScene.cross_distance;
 	
-	protected int[][] truth_tabel;
+	protected Truthtabel truth_tabel;
 	protected String name;
 	protected Image image;
-	public ExternalComponent(String size, int width, int height, int input_count, int output_count, int[][] truth_tabel, String name) throws IllegalAccessException {
+	public ExternalComponent(String size, int width, int height, int input_count, int output_count, Truthtabel truth_tabel, String name) throws IllegalAccessException {
 		super(width, height, input_count, output_count);
 		this.truth_tabel = truth_tabel;
 		this.name = name;
 		this.size = size;
 	}
 	
-	public ExternalComponent(String size, int width, int height, int input_count, int output_count, int[][] truth_tabel, String name, Image image) throws IllegalAccessException {
+	public ExternalComponent(String size, int width, int height, int input_count, int output_count, Truthtabel truth_tabel, String name, Image image) throws IllegalAccessException {
 		super(width, height, input_count, output_count);
 		this.truth_tabel = truth_tabel;
 		this.image = image;
@@ -42,14 +42,7 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 	}
 
 	@Override
-	public void setFocus(boolean status) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void simulate() {
-		// TODO Auto-generated method stub
 		
 	}
 
