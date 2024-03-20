@@ -231,7 +231,6 @@ public class Main extends Application {
 		Menu returning = new Menu("Return");
 		MenuItem returning_item = new MenuItem("Return to Start");
 		returning_item.setOnAction(me ->{
-			System.out.println("TEst");
 			changeScene(0);
 		});
 		returning.getItems().add(returning_item);
@@ -334,28 +333,6 @@ public class Main extends Application {
 		
 		bar.getMenus().add(setting);
 		
-		/*Input input = Input.getInput(FunctionalCanvasComponent.SIZE_MIDDLE);
-		ANDGate and = null;
-		try {
-			and = ANDGate.getANDGATE(LogicComponent.SIZE_BIG, 2);
-		} catch (IllegalArgumentException e2) {
-		}
-
-		and.setX(1300);
-		and.setY(1000);
-		input.setX(1500);
-		input.setY(1000);*/
-		// LogicSubSceneContainer
-
-		root.getChildren().add(logic_container);
-		vbox.getChildren().add(MainScene);
-		/*try {
-			logic_container.logic_subscene.add(and);
-			logic_container.logic_subscene.add(input);
-		} catch (OcupationExeption e1) {
-			e1.printStackTrace();
-		}*/
-
 		Menu translate = new Menu("Translations");
 		MenuItem standard = new MenuItem("Standard-Zoom");
 		standard.setOnAction(e -> {
@@ -363,6 +340,10 @@ public class Main extends Application {
 			logic_container.logic_subscene.setStandardZoom();
 		});
 		translate.getItems().add(standard);
+
+		root.getChildren().add(logic_container);
+		vbox.getChildren().add(MainScene);
+		
 		bar.getMenus().add(translate);
 
 		Scene scene = new Scene(vbox);

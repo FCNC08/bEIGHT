@@ -68,8 +68,8 @@ public class LogicSubScene extends SubScene {
 	
 	public static int functional_components_count=12;
 
-	protected static Color black_grey = new Color(0.3, 0.3, 0.3, 1.0);
-	protected static Color white_grey = new Color(0.85, 0.85, 0.85, 1.0);
+	public static Color black_grey = new Color(0.3, 0.3, 0.3, 1.0);
+	public static Color white_grey = new Color(0.85, 0.85, 0.85, 1.0);
 	protected static Color black = new Color(0.0, 0.0, 0.0, 1.0);
 
 	public static Color focus_square_main = white_grey;
