@@ -56,7 +56,7 @@ public class Main extends Application {
 		// Adding different Scenes
 		addStartScene();
 		
-		primaryStage.getIcons().add(new Image("Icon.png"));
+		primaryStage.getIcons().add(new Image("/Icon.png"));
 		primaryStage.setTitle("bEIGHT");
 		
 		// set Scene and saves Stage
