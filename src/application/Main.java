@@ -2,6 +2,7 @@ package application;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -266,7 +267,7 @@ public class Main extends Application {
 			fc.setTitle("Save as");
 			ExtensionFilter extFilter = new ExtensionFilter(".pdf files (*.pdf)", "*.pdf");
 	        fc.getExtensionFilters().add(extFilter);
-			var selected_file = fc.showSaveDialog(new Stage());
+			File selected_file = fc.showSaveDialog(new Stage());
 			if (selected_file != null) {
 				logic_container.logic_subscene.SaveAsPDF(selected_file);
 			}

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
+import canvas.components.ExternalComponents.ExternalComponent;
 import canvas.components.StandardComponents.Input;
 import canvas.components.StandardComponents.Output;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
@@ -35,6 +36,8 @@ import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 import util.OcupationExeption;
 
 public class LogicSubSceneContainer extends SubScene {
@@ -141,6 +144,9 @@ public class LogicSubSceneContainer extends SubScene {
 		ComponentGroup group_1 = new ComponentGroup();
 		group_1.add(Input.getInput(FunctionalCanvasComponent.SIZE_BIG));
 		group_1.add(Output.getOutput(FunctionalCanvasComponent.SIZE_BIG));
+		ZipFile file = new ZipFile("dlatch.cmp");
+		ExternalComponent comp = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE, file);
+		group_1.add(comp);
 		grouping.add(group);
 		grouping.add(group_1);
 		// Initializing Container with new Group

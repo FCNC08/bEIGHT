@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,6 +46,7 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 		this.image = image;
 		this.name = name;
 		this.size = size;
+		resetStandardImage();
 	}
 
 	@Override
@@ -66,7 +68,31 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 	public FunctionalCanvasComponent getClone(String size) {
 		ExternalComponent component = null;
 		try {
-			component = new ExternalComponent(size, point_width, height, input_count, output_count, truth_tabel, name);
+			int new_width = Math.max(input_count, output_count)*LogicSubScene.cross_distance;
+			int new_height;
+			
+			switch (size) {
+			case "SMALL": {
+				new_width*=width_point_multiplier_small;
+				break;
+			}
+			case "MIDDLE": {
+				new_width*=width_point_multiplier_middle;
+				break;
+			}
+			case "BIG": {
+				new_width*=width_point_multiplier_big;
+				break;
+			}
+			default:
+				break;
+			}
+			new_height = new_width;
+			if(image != null) {
+				component = new ExternalComponent(size, new_width, new_height, input_count, output_count, truth_tabel, name, image);
+			}else {
+				component = new ExternalComponent(size, new_width, new_height, input_count, output_count, truth_tabel, name);
+			}
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
@@ -128,32 +154,30 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 		switch (size) {
 		case "SMALL": {
 			width*=width_point_multiplier_small;
-			height=height_small;
 			break;
 		}
 		case "MIDDLE": {
 			width*=width_point_multiplier_middle;
-			height=height_middle;
 			break;
 		}
 		case "BIG": {
 			width*=width_point_multiplier_big;
-			height=height_big;
 			break;
 		}
 		default:
-			height = 1;
 			break;
 		}
+		height = width;
+		JSONArray truth = jsonobject.getJSONArray("truth_table");
 		if(jsonobject.getBoolean("image_used")) {
 			try {
-				component = new ExternalComponent(size, width, height, input_count, output_count, null, name, new Image(file.getInputStream(file.getFileHeader(jsonobject.getString("image")))));
+				component = new ExternalComponent(size, width, height, input_count, output_count, new Truthtabel(truth), name, new Image(file.getInputStream(file.getFileHeader(jsonobject.getString("image")))));
 			}catch(IllegalAccessException | JSONException | IOException e) {
 				e.printStackTrace();
 			}
 		}else {
 			try {
-				component = new ExternalComponent(size, width, height, input_count, output_count, null, name);
+				component = new ExternalComponent(size, width, height, input_count, output_count, new Truthtabel(truth), name);
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
 			}

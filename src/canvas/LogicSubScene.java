@@ -1,11 +1,16 @@
 package canvas;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.LinkedHashSet;
 import java.util.ListIterator;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -38,6 +43,7 @@ import canvas.components.StandardComponents.LogicComponents.XNORGate;
 import canvas.components.StandardComponents.LogicComponents.XORGate;
 import canvas.components.StandardComponents.MemoryComponents.RAM;
 import canvas.components.StandardComponents.MemoryComponents.Register;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
@@ -128,7 +134,9 @@ public class LogicSubScene extends SubScene {
 		// initializing LogicSubScene with Height
 		super(Mainroot, StartWidth, StartHeight);
 
-		max_zoom = (int) ((StartWidth * -0.5 * multiplier) + (cross_distance));
+		max_zoom = (int) ((StartWidth * -1* multiplier) + (cross_distance))/StartWidth;
+		System.out.println(max_zoom);
+		System.out.println(multiplier);
 
 		this.Start_Width = StartWidth;
 		this.Start_Height = StartHeight;
@@ -1384,13 +1392,16 @@ public class LogicSubScene extends SubScene {
 
 	public void SaveAsPDF(File filepath) {
 		// Creating PDF out of SubScene
-		/*File temp_image_file = new File("temp.png");
+		File temp_image_file = new File("temp.png");
 		try {
 			double start_Z = getZTranslate();
 
-			// camera_position.setZ(max_zoom);
+			camera_position.setZ(0);
 
-			WritableImage image = this.snapshot(null, null);
+			WritableImage image = new WritableImage((int) (width), (int) (height));
+			
+			snapshot(null, image);
+			
 			BufferedImage buff_image = SwingFXUtils.fromFXImage(image, null);
 
 			// Create a new PDF document
@@ -1418,7 +1429,7 @@ public class LogicSubScene extends SubScene {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		temp_image_file.delete();*/
+		temp_image_file.delete();
 	}
 	
 	public JSONObject getJSON() {

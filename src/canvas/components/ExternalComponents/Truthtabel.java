@@ -1,7 +1,6 @@
 package canvas.components.ExternalComponents;
 
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -13,7 +12,7 @@ public class Truthtabel{
 	protected int input_count;
 	protected int output_count;
 	protected State[] states;
-	protected ArrayList<Outputvalue> truth_tabel;
+	protected ArrayList<Outputvalue> truth_tabel = new ArrayList<>();
 	
 	public Truthtabel(JSONArray json_array) {
 		
@@ -40,8 +39,14 @@ public class Truthtabel{
 				max_state_size = Math.max(max_state_size, x);
 				i++;
 			}
+			max_state_size++;
+			states = new State[max_state_size];
+			for(i = 0; i<max_state_size; i++) {
+				states[i] = State.OFF;
+			}
 			truth_tabel.add(new Outputvalue(input, output));
 		}
+		System.out.println(output_count);
 	}
 	public State[] getState(State[] input_states) throws ErrorStateExeption {
 		State[] ret_value = new State[output_count];
@@ -55,11 +60,10 @@ public class Truthtabel{
 			}
 		}
 		for(int i = 0; i<input_count; i++) {
-			ListIterator<Outputvalue> li = ret_values.listIterator();
-			while(li.hasNext()) {
-				Outputvalue ov = li.next();
-				if((ov.input[i] !=inputs[i])||(ov.input[i]<2)) {
-					ret_values.remove(ov);
+			for(int q = ret_values.size()-1; q>=0;q--) {
+				Outputvalue ov = ret_values.get(q);
+				if(!((ov.input[i] ==inputs[i])||(ov.input[i]>1))) {
+					ret_values.remove(q);
 				}
 			}
 			if(ret_values.size()<2) {

@@ -14,7 +14,7 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 
 	protected ArrayList<SingleCanvasComponent> connected_Components;
 
-	protected State state = new State(State.ERROR_MODE, State.OFF_UNSET);
+	protected State state = State.OFF;
 	
 	protected boolean control_color = false;
 
