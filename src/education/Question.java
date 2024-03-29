@@ -9,11 +9,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -21,13 +22,20 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import net.lingala.zip4j.ZipFile;
 
-public class Question extends Pane{
+public class Question extends ScrollPane{
 	private int correctanswer;
 	private int jumpto;
-	EducationSubScene subscene;
+	protected EducationSubScene subscene;
+	
+	protected VBox vbox = new VBox(20);
+	
 	public Question(double width, double height, ZipFile file, EducationSubScene scene) {
 		super();
 		subscene = scene;
+		setContent(vbox);
+		setMaxHeight(height);
+		setMaxWidth(width);
+		vbox.setAlignment(Pos.CENTER);
 		JSONObject jsonobject = null;
 		try {
 			if(file.isEncrypted()) {
@@ -49,17 +57,13 @@ public class Question extends Pane{
 			e.printStackTrace();
 		}
 		String type = jsonobject.getString("type");
-		double y = 50;
 		
 		for(char t : type.toCharArray()) {
 			switch(t) {
 			case('h'):{
 				Text headline = new Text(jsonobject.getString("headline"));
 				headline.setFont(new Font(40));
-				headline.setX((width-headline.getBoundsInParent().getWidth())/2);
-				headline.setY(y);
-				y+=headline.getBoundsInParent().getHeight();
-				getChildren().add(headline);
+				vbox.getChildren().add(headline);
 				break;
 			}
 			case('i'):{
@@ -77,19 +81,13 @@ public class Question extends Pane{
 					view.setFitHeight(image.getHeight());
 					view.setFitWidth(image.getWidth());
 				}
-				view.setX((width-view.getFitWidth())/2);
-				view.setY(y);
-				y+=view.getFitHeight()+50;
-				getChildren().add(view);
+				vbox.getChildren().add(view);
 				break;
 			}
 			case('q'):{
 				Text text = new Text(jsonobject.getString("question"));
 				text.setFont(new Font(25));
-				text.setX((width-text.getBoundsInParent().getWidth())/2);
-				text.setY(y);
-				y+=text.getBoundsInParent().getHeight()+50;
-				getChildren().add(text);
+				vbox.getChildren().add(text);
 				break;
 			}
 			case('o'):{
@@ -119,9 +117,7 @@ public class Question extends Pane{
 						box.getChildren().add(text);
 					}
 				}
-				box.setLayoutY(y);
-				y+=box.getHeight()+50;
-				getChildren().add(box);
+				vbox.getChildren().add(box);
 				break;
 			}
 			}
@@ -134,9 +130,7 @@ public class Question extends Pane{
 				scene.setPrev();
 			}
 		});
-		button_back.setLayoutY(height-button_back.getHeight()-150);
-		button_back.setLayoutX(25);
-		getChildren().add(button_back);
+		vbox.getChildren().add(button_back);
 	}
 	
 	public void submitAnswer(int answer) {

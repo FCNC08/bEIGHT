@@ -9,18 +9,27 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import net.lingala.zip4j.ZipFile;
 
-public class EducationLesson extends Pane{
+public class EducationLesson extends ScrollPane{
+	
+	protected VBox vbox = new VBox(20);
 	public EducationLesson(double width, double height, ZipFile file, EducationSubScene scene) {
 		super();
+		vbox.setAlignment(Pos.CENTER);
+		setContent(vbox);
+		setMaxHeight(height);
+		setMaxWidth(width);
 		JSONObject jsonobjekt = null;
 		try {
 			if(file.isEncrypted()) {
@@ -41,16 +50,12 @@ public class EducationLesson extends Pane{
 		}
 		
 		String type = jsonobjekt.getString("type");
-		double y = 50;
 		for(char t : type.toCharArray()) {
 			switch(t) {
 			case('h'):{
 				Text headline = new Text(jsonobjekt.getString("headline"));
 				headline.setFont(new Font(50));
-				headline.setX((width-headline.getBoundsInParent().getWidth())/2);
-				headline.setY(y);
-				y+=headline.getBoundsInParent().getHeight();
-				getChildren().add(headline);
+				vbox.getChildren().add(headline);
 				break;
 			}
 			case('i'):{
@@ -58,7 +63,6 @@ public class EducationLesson extends Pane{
 				try {
 					image = new Image(file.getInputStream(file.getFileHeader(jsonobjekt.getString("image"))));
 				} catch (JSONException | IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				ImageView view = new ImageView(image);
@@ -68,44 +72,37 @@ public class EducationLesson extends Pane{
 				}else {
 					view.setFitHeight(image.getHeight());
 				}
-				view.setX((width-view.getFitWidth())/2);
-				view.setY(y);
-				y+=view.getFitHeight()+50;
-				getChildren().add(view);
+				vbox.getChildren().add(view);
 				break;
 			}
 			case('t'):{
 				Text text = new Text(jsonobjekt.getString("text"));
 				text.setFont(new Font(25));
-				text.setX((width-text.getBoundsInParent().getWidth())/2);
-				text.setY(y);
-				y+=text.getBoundsInParent().getHeight()+50;
-				getChildren().add(text);
+				vbox.getChildren().add(text);
 				break;
 			}
 			}
-			Button button_back = new Button("Back");
-			button_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent event) {
-					scene.setPrev();
-				}
-			});
-			button_back.setLayoutY(height-button_back.getHeight()-150);
-			button_back.setLayoutX(25);
-			getChildren().add(button_back);
 			
-			Button button_next = new Button("Next");
-			button_next.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-				@Override
-				public void handle(MouseEvent event) {
-					scene.setNext();
-				}
-			});
-			button_next.setLayoutY(height-button_next.getHeight()-150);
-			button_next.setLayoutX(width-button_next.getWidth()-50);
-			getChildren().add(button_next);
 		}
+		HBox button_box = new HBox();
+		Button button_back = new Button("Back");
+		button_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				scene.setPrev();
+			}
+		});
+		button_back.setLayoutX(height*0.1);			
+		Button button_next = new Button("Next");
+		button_next.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				scene.setNext();
+			}
+		});
+		button_next.setLayoutX(width*0.9);
+		button_box.getChildren().addAll(button_back, button_next);
+		vbox.getChildren().add(button_box);
 		
 	}
 }

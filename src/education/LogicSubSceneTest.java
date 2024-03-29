@@ -13,6 +13,7 @@ import canvas.ComponentGroup;
 import canvas.ComponentGroupings;
 import canvas.LogicSubSceneContainer;
 import canvas.components.LogicComponent;
+import canvas.components.ExternalComponents.ExternalComponent;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import canvas.components.StandardComponents.LogicComponents.NANDGate;
 import canvas.components.StandardComponents.LogicComponents.NORGate;
@@ -21,18 +22,29 @@ import canvas.components.StandardComponents.LogicComponents.ORGate;
 import canvas.components.StandardComponents.LogicComponents.XNORGate;
 import canvas.components.StandardComponents.LogicComponents.XORGate;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
-public class LogicSubSceneTest extends Pane{
+public class LogicSubSceneTest extends ScrollPane{
+	protected VBox vbox = new VBox(20);
 	public LogicSubSceneTest(double width, double height, ZipFile file, EducationSubScene scene) throws ZipException {
 		super();
+		setContent(vbox);
+		setPrefHeight(height-75);
+		setPrefWidth(width);
+		vbox.setAlignment(Pos.CENTER);
+		vbox.setPadding(Insets.EMPTY);
+		
 		JSONObject jsonobject = null;
 		final ComponentGroupings groupings;
 		LogicSubSceneContainer container;
@@ -41,7 +53,6 @@ public class LogicSubSceneTest extends Pane{
 				throw new IllegalArgumentException();
 			}
 			InputStream inputstream = file.getInputStream(file.getFileHeader("test.json"));
-			
 			ByteArrayOutputStream outputstream = new ByteArrayOutputStream();
 			
 			byte[] buffer = new byte[4096];
@@ -125,10 +136,24 @@ public class LogicSubSceneTest extends Pane{
 			}
 		}
 		grouping.add(defaults);
+		try{
+			ComponentGroup external = new ComponentGroup();
+			JSONArray externalcomponents = jsonobject.getJSONArray("externalcomponents");
+			temporary_file.extractAll(EducationSubScene.tempext);
+			for(Object externalcomponent : externalcomponents) {
+				if(externalcomponent instanceof String) {
+					ZipFile external_file = new ZipFile(EducationSubScene.tempext+(String)externalcomponent);
+					ExternalComponent comp = ExternalComponent.init(ExternalComponent.SIZE_MIDDLE, external_file);
+					external.add(comp);
+				}
+			}
+			//new File(EducationSubScene.tempext).delete();
+			grouping.add(external);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		groupings = grouping;
-		/*JSONArray externalcomponents = jsonobject.getJSONArray("externalcomponents");
-		ComponentGroup external = new ComponentGroup();
-		*/
+		
 		container = new LogicSubSceneContainer((int)width, (int)(height-headline.getBoundsInParent().getHeight()-75), new Group(), grouping, 2);
 		File tempfile = new File(EducationSubScene.tempmod);
 		if(tempfile.isDirectory()&&tempfile.exists()) {
@@ -140,36 +165,32 @@ public class LogicSubSceneTest extends Pane{
                 }
             }
 		}
-		getChildren().add(container);
-		headline.setX((width-headline.getBoundsInParent().getWidth())/2);
-		headline.setY(container.getHeight());
-		getChildren().add(headline);
+		HBox button_box = new HBox();
 		Button button_back = new Button("Back");
 		button_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				getChildren().remove(container);
+				vbox.getChildren().clear();
 				LogicSubSceneContainer container = new LogicSubSceneContainer((int)width, (int)(height-headline.getBoundsInParent().getHeight()-75), new Group(), groupings, 2);
-				getChildren().add(container);
+				vbox.getChildren().addAll(container, headline, button_box);
 				scene.setPrev();
 			}
 		});
-		button_back.setLayoutY(height-button_back.getHeight()-150);
-		button_back.setLayoutX(25);
-		getChildren().add(button_back);
+		button_back.setLayoutX(width*0.1);
 		
 		Button button_next = new Button("Next");
 		button_next.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				getChildren().remove(container);
+				vbox.getChildren().clear();
 				LogicSubSceneContainer container = new LogicSubSceneContainer((int)width, (int)(height-headline.getBoundsInParent().getHeight()-75), new Group(), groupings, 2);
-				getChildren().add(container);
+				vbox.getChildren().addAll(container, headline, button_box);
 				scene.setNext();
 			}
 		});
-		button_next.setLayoutY(height-button_next.getHeight()-150);
-		button_next.setLayoutX(width-button_next.getWidth()-50);
-		getChildren().add(button_next);
+		button_next.setLayoutX(width*0.9);
+		button_box.getChildren().addAll(button_back, button_next);
+		vbox.getChildren().addAll(container, headline, button_box);
+		requestLayout();
 	}
 }

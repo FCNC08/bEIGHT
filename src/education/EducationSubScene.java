@@ -15,8 +15,9 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -27,8 +28,9 @@ public class EducationSubScene extends SubScene{
 
 	public static String tempedu = "temporary/education/";
 	public static String tempmod = "temporary/modul/";
+	public static String tempext = "temporary/external";
 	protected Group root;
-	protected ArrayList<Pane> order;
+	protected ArrayList<ScrollPane> order;
 	int position = 0;
 	public EducationSubScene(double width, double height, ZipFile questions) throws ZipException {
 		super(new Group(), width, height);
@@ -51,19 +53,19 @@ public class EducationSubScene extends SubScene{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Pane choosing_area = new Pane();
+		VBox choosing_root = new VBox(20);
+		ScrollPane choosing_area = new ScrollPane(choosing_root);
 		String headline_text = jsonobject.getString("name");
 		Text headline = new Text(headline_text);
 		headline.setFont(new Font(50));
 		headline.setX((width-headline.getBoundsInParent().getWidth())/2);
 		headline.setY(50);
-		choosing_area.getChildren().add(headline);
 		String difficulty_text = jsonobject.getString("difficulty");
 		Text difficulty = new Text(difficulty_text);
 		difficulty.setFont(new Font(25));
 		difficulty.setX((width-difficulty.getBoundsInParent().getWidth())/2);
 		difficulty.setY(headline.getBoundsInParent().getHeight()*1.2);
-		choosing_area.getChildren().add(difficulty);
+		choosing_root.getChildren().add(difficulty);
 		order = new ArrayList<>();
 		order.add(choosing_area);
 		JSONArray modules = jsonobject.getJSONArray("order");
@@ -97,7 +99,8 @@ public class EducationSubScene extends SubScene{
 				}
 			}
 		}
-		Pane ending = new Pane();
+		VBox ending_root = new VBox(20);
+		ScrollPane ending = new ScrollPane(ending_root);
 		Text finish = new Text("You got it.");
 		finish.setFont(new Font(100));
 		Button end = new Button("go to StartScene");
@@ -111,10 +114,10 @@ public class EducationSubScene extends SubScene{
 		});
 		finish.setX((width-finish.getBoundsInParent().getWidth())/2);
 		finish.setY((height-finish.getBoundsInParent().getHeight()-end.getBoundsInParent().getHeight())/2);
-		ending.getChildren().add(finish);
+		ending_root.getChildren().add(finish);
 		end.setLayoutY((height-finish.getBoundsInParent().getHeight()-end.getBoundsInParent().getHeight())/2+end.getBoundsInParent().getHeight());
 		end.setLayoutX((width-end.getBoundsInParent().getWidth())/2);
-		ending.getChildren().add(end);
+		ending_root.getChildren().add(end);
 		order.add(ending);
 		File tempfile = new File(tempedu);
 		if(tempfile.isDirectory()&&tempfile.exists()) {
@@ -132,7 +135,7 @@ public class EducationSubScene extends SubScene{
 			error.setFill(Color.RED);
 			error.setX((width-error.getBoundsInParent().getWidth())/2);
 			error.setY((height-error.getBoundsInParent().getHeight())/2);
-			choosing_area.getChildren().add(error);
+			choosing_root.getChildren().add(error);
 		}else {
 			Button starting_button = new Button("Start");
 			starting_button.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -148,7 +151,7 @@ public class EducationSubScene extends SubScene{
 			starting_button.setMinHeight(height*0.2);
 			starting_button.setLayoutX((width-starting_button.getBoundsInParent().getWidth())/2);
 			starting_button.setLayoutY((height-starting_button.getBoundsInParent().getHeight())/2);
-			choosing_area.getChildren().add(starting_button);
+			choosing_root.getChildren().add(starting_button);
 			
 		}
 		root.getChildren().add(choosing_area);
@@ -177,7 +180,7 @@ public class EducationSubScene extends SubScene{
 			position = order.size()-1;
 		}
 		root.getChildren().clear();
-		root.getChildren().add(order.get(number));
+		root.getChildren().add(order.get(position));
 	}
 
 }
