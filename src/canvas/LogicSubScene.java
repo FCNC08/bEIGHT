@@ -245,7 +245,7 @@ public class LogicSubScene extends SubScene {
 			public void handle(MouseEvent me) {
 				// Checks which Mousebutton is pressed to figure out which action to perform(
 				// try to build new Wire/moves Object or moves scene)
-				System.out.println("pressed");
+				
 				// Setting the coord to createWire/moveScene
 				if (me.isPrimaryButtonDown()) {
 					moves_focused_x = pressed_x = (int) (me.getSceneX() - X + getXTranslate());

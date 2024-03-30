@@ -296,7 +296,6 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				}
 			} else {
 				resetStandardImage();
-				System.out.println("Reset");
 			}
 			this.focus = focus;
 		}

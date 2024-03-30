@@ -2,11 +2,13 @@ package canvas.components.StandardComponents.MemoryComponents;
 
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.MemoryCanvasComponent;
+import canvas.components.State;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
+import util.ErrorStateExeption;
 import util.Info;
 
 public class RAM extends MemoryCanvasComponent {
@@ -14,16 +16,26 @@ public class RAM extends MemoryCanvasComponent {
 	public static Image MemoryComponent_Image = new Image("RAM.png");
 
 	public RAM(int width, int height, int memory_width, int memory_height) throws IllegalArgumentException {
-		super(width, height, memory_width, memory_height, 1);
+		super(width, height, memory_width, memory_height);
 	}
 
 	@Override
 	public void simulate() {
-
+		State[] states = getInputStates();
+		boolean set_state = false;
+		try {
+			set_state = states[0].getStateBoolean();
+		} catch (ErrorStateExeption e) {
+			e.printStackTrace();
+		}
+		if(set_state) {
+			
+		}
+		
 	}
 
 	public static RAM get8bitRAM(String size, int inputs) throws IllegalArgumentException {
-		// Creating a ANDGate with standard sizes
+		// Creating a RAM with standard sizes
 		int height;
 		int width;
 		switch (size) {

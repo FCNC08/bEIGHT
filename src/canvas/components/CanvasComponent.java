@@ -21,7 +21,7 @@ public abstract class CanvasComponent extends WritableImage {
 	protected boolean focus;
 
 	// SetState for missing double simulation
-	protected boolean set_state = false;
+	//protected boolean set_state = false;
 
 	// ImageView to add to LogicSubScene
 	protected ImageView image_view;
@@ -95,13 +95,13 @@ public abstract class CanvasComponent extends WritableImage {
 	}
 
 	// Setter/Getter setState for simulation
-	public void setSetState(boolean new_set_state) {
+	/*public void setSetState(boolean new_set_state) {
 		set_state = new_set_state;
 	}
 
 	public boolean getSetState() {
 		return set_state;
-	}
+	}*/
 
 	public abstract void setFocus(boolean status);
 

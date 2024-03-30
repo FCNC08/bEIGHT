@@ -17,6 +17,7 @@ import canvas.components.StandardComponents.LogicComponents.NOTGate;
 import canvas.components.StandardComponents.LogicComponents.ORGate;
 import canvas.components.StandardComponents.LogicComponents.XNORGate;
 import canvas.components.StandardComponents.LogicComponents.XORGate;
+import canvas.components.StandardComponents.MemoryComponents.Register;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
@@ -37,7 +38,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 import util.OcupationExeption;
 
 public class LogicSubSceneContainer extends SubScene {
@@ -138,17 +138,19 @@ public class LogicSubSceneContainer extends SubScene {
 			group.add(XORGate.getXORGate(LogicComponent.SIZE_MIDDLE, 2));
 			group.add(XNORGate.getXNORGate(LogicComponent.SIZE_MIDDLE, 2));
 			group.add(NOTGate.getNOTGATE(LogicComponent.SIZE_MIDDLE));
-			//group.add(RAM.getRAM(MemoryCanvasComponent.SIZE_MIDDLE, 8));
 		} catch (IllegalArgumentException iae) {
 		}
 		ComponentGroup group_1 = new ComponentGroup();
 		group_1.add(Input.getInput(FunctionalCanvasComponent.SIZE_BIG));
 		group_1.add(Output.getOutput(FunctionalCanvasComponent.SIZE_BIG));
+		ComponentGroup group_2 = new ComponentGroup();
 		ZipFile file = new ZipFile("dlatch.cmp");
 		ExternalComponent comp = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE, file);
-		group_1.add(comp);
+		group_2.add(comp);
+		group_2.add(Register.getRegister(LogicComponent.SIZE_MIDDLE, 8));
 		grouping.add(group);
 		grouping.add(group_1);
+		grouping.add(group_2);
 		// Initializing Container with new Group
 		return new LogicSubSceneContainer(width, height, new Group(), grouping, 4);
 	}

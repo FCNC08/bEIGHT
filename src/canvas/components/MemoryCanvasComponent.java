@@ -10,14 +10,14 @@ public abstract class MemoryCanvasComponent extends FunctionalCanvasComponent {
 
 	protected static int StandardWidth_small = LogicSubScene.cross_distance * 9, StandardHeight_small = LogicSubScene.cross_distance * 2;
 	
-	public boolean[][] memory;
+	public State[][] memory;
 	public int memory_width;
 	public int memory_height;
 	protected String name;
 
-	public MemoryCanvasComponent(int width, int height, int memory_width, int memory_height, int other_inputs) throws IllegalArgumentException {
-		super(width, height, memory_width + memory_height, memory_height);
-		memory = new boolean[memory_height][memory_width];
+	public MemoryCanvasComponent(int width, int height, int memory_width, int memory_height) throws IllegalArgumentException {
+		super(width, height, memory_width + memory_height+1, memory_width);
+		memory = new State[memory_height][memory_width];
 		this.memory_width = memory_width;
 		this.memory_height = memory_height;
 		resetStandardImage();

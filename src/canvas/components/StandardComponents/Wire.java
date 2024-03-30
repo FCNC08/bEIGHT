@@ -33,7 +33,6 @@ public class Wire extends SingleCanvasComponent {
 		// Changing the state means changing the state of each connected component
 		for (SingleCanvasComponent i : connected_Components) {
 			i.setState(this.state);
-			i.setSetState(LogicSubScene.actual_set_state);
 		}
 
 		PaintWire();
