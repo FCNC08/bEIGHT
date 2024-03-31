@@ -18,6 +18,11 @@ public abstract class MemoryCanvasComponent extends FunctionalCanvasComponent {
 	public MemoryCanvasComponent(int width, int height, int memory_width, int memory_height) throws IllegalArgumentException {
 		super(width, height, memory_width + memory_height+1, memory_width);
 		memory = new State[memory_height][memory_width];
+		for(int x = 0; x<memory_height; x++) {
+			for(int y = 0; y<memory_width; y++) {
+				memory[x][y] = State.UNSET;
+			}
+		}
 		this.memory_width = memory_width;
 		this.memory_height = memory_height;
 		resetStandardImage();

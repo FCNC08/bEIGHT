@@ -10,7 +10,7 @@ import util.Info;
 public class Register extends MemoryCanvasComponent {
 	protected int bit_size;
 	public Register(int width, int height, int bit_size) {
-		super(width, height, bit_size,0);
+		super(width, height, bit_size,1);
 		this.bit_size = bit_size;
 		rotation = VERTICAL;
 		setStandardDotLocations();
@@ -32,7 +32,11 @@ public class Register extends MemoryCanvasComponent {
 			}
 		}else {
 			for(int i = 0; i<bit_size; i++) {
-				outputs[i].setState(memory[0][i]);
+				try{
+					outputs[i].setState(memory[0][i]);
+				}catch(NullPointerException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		

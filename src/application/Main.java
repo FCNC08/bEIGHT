@@ -404,7 +404,7 @@ public class Main extends Application {
 		MainScene.setFill(Color.GRAY);
 		EducationSubScene subscene = null;
 		try {
-			subscene = new EducationSubScene(width, height, new ZipFile("testfiles/lection.lct"));
+			subscene = new EducationSubScene(width, height, new ZipFile("testfiles/test.lct"));
 		} catch (IllegalArgumentException | ZipException e) {
 			e.printStackTrace();
 		}
