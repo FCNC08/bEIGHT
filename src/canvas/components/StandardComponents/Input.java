@@ -30,7 +30,7 @@ public class Input extends FunctionalCanvasComponent{
 	}
 	
 	@Override
-	public void simulate() {
+	public void simulater() {
 		outputs[0].setState(state);
 		paintImage();
 	}

@@ -14,6 +14,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	
 	public String verilog_string;
 	
+	
 	public String size;
 	
 	protected Info info;
@@ -25,6 +26,10 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 
 	public Dot[] inputs;
 	public Dot[] outputs;
+	
+	protected long[] times = new long[5];
+	protected int time_pointer = 0;
+	
 
 	public FunctionalCanvasComponent(int width, int height, int input_count, int output_count) throws IllegalArgumentException {
 		super(width, height);
@@ -102,7 +107,20 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		}
 	}
 
-	public abstract void simulate();
+	public void simulate() {
+		long actual_time = times[time_pointer] = System.currentTimeMillis();
+		time_pointer++;
+		time_pointer%=5;
+		long latest_time = times[time_pointer];
+		if(latest_time != 0 && (actual_time-latest_time)<100) {
+			System.out.println("Blocked "+this);
+		}else {
+			System.out.println("act:"+actual_time+" lat:"+latest_time+"	"+this);
+			simulater();
+		}
+	}
+	
+	public abstract void simulater();
 
 	public abstract FunctionalCanvasComponent getClone(String size);
 

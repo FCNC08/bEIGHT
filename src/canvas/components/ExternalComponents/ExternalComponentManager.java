@@ -3,8 +3,11 @@ package canvas.components.ExternalComponents;
 import util.IllegalComponentExeption;
 
 public class ExternalComponentManager {
+	@SuppressWarnings("unused")
 	private boolean imageUsed = false;
+	@SuppressWarnings("unused")
 	private int width;
+	@SuppressWarnings("unused")
 	private int height;
 	private int inputs;
 	private int outputs;

@@ -20,7 +20,7 @@ public class RAM extends MemoryCanvasComponent {
 	}
 
 	@Override
-	public void simulate() {
+	public void simulater() {
 		State[] states = getInputStates();
 		boolean set_state = false;
 		try {

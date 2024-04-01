@@ -103,7 +103,7 @@ public class NOTGate extends LogicComponent {
 	}
 
 	@Override
-	public void simulate() {
+	public void simulater() {
 		State[] input = getInputStates();
 		try {
 			boolean bool = input[0].getStateBoolean();

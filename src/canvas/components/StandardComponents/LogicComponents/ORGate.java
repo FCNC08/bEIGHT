@@ -103,7 +103,7 @@ public class ORGate extends LogicComponent {
 	}
 
 	@Override
-	public void simulate() {
+	public void simulater() {
 		State[] input = getInputStates();
 		try {
 			boolean[] bool_states = new boolean[input.length];

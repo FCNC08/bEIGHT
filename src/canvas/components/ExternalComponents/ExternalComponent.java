@@ -50,7 +50,7 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 	}
 
 	@Override
-	public void simulate() {
+	public void simulater() {
 		try {
 			State[] output_states = truth_tabel.getState(getInputStates());
 			for(int i = 0; i<output_count; i++) {

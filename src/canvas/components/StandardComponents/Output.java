@@ -30,7 +30,7 @@ public class Output extends FunctionalCanvasComponent{
 	}
 	
 	@Override
-	public void simulate() {
+	public void simulater() {
 		state = inputs[0].getState();
 		if(parent != null) {
 			parent.changeOutput();

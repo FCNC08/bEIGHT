@@ -53,7 +53,7 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	}
 	
 	@Override
-	public void simulate() {
+	public void simulater() {
 		State[] states = getInputStates();
 		ArrayList<Input> input = logic_subscene.getInputs();
 		for(int i = 0; i < states.length; i++) {
