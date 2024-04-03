@@ -318,6 +318,11 @@ public class Main extends Application {
 				}
 			}
 		});
+		MenuItem savearduino = new MenuItem("Export as arduino");
+		savearduino.setOnAction(me->{
+			
+		});
+		
 		file.getItems().add(savingpdf);
 		file.getItems().add(open);
 		file.getItems().add(save);
