@@ -20,6 +20,7 @@ import canvas.components.StandardComponents.LogicComponents.XORGate;
 import canvas.components.StandardComponents.MemoryComponents.Register;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -38,6 +39,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import net.lingala.zip4j.ZipFile;
+import util.IllegalInputOutputExeption;
 import util.OcupationExeption;
 
 public class LogicSubSceneContainer extends SubScene {
@@ -307,7 +309,7 @@ public class LogicSubSceneContainer extends SubScene {
 		bEIGHT_labels.add(label);
 		chooser_root.getChildren().add(label);
 	}
-	
+
 	public void removeLogicSubScene(LogicSubScene scene) {
 		int number = logic_subscenes.indexOf(scene);
 		removeLogicSubScene(number);
@@ -380,6 +382,22 @@ public class LogicSubSceneContainer extends SubScene {
 		addChooser();
 		addListener();
 		System.gc();
+	}
+	
+	public void saveArduino(File file) {
+		try(FileWriter writer = new FileWriter(file)) {
+			writer.write(logic_subscene.getArduino());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}catch(IllegalInputOutputExeption e) {
+			Stage stage = new Stage();
+			Group scene_root = new Group();
+			Scene scene = new Scene(scene_root);
+			Label label = new Label("Not enough Inputs/Outputs.\nPlease add new Inputs/Outputs");
+			scene_root.getChildren().add(label);
+			stage.setScene(scene);
+			stage.show();
+		}
 	}
 	
 	public void setColor(boolean color) {

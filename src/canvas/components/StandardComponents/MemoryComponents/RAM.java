@@ -152,5 +152,11 @@ public class RAM extends MemoryCanvasComponent {
 		verilog_string = "RAM"+comp_count[7];
 		comp_count[7]++;
 	}
+	
+	@Override
+	protected void setArduinoString(short[] comp_count) {
+		arduino_string = "RAM"+comp_count[7];
+		comp_count[7]++;
+	}
 
 }

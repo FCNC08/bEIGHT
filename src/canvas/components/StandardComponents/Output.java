@@ -2,6 +2,7 @@ package canvas.components.StandardComponents;
 
 import canvas.LogicSubScene;
 import canvas.components.CanvasComponent;
+import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.State;
 import javafx.scene.image.ImageView;
@@ -120,6 +121,12 @@ public class Output extends FunctionalCanvasComponent{
 	protected void setVerilogString(short[] comp_count) {
 		verilog_string = "Output"+comp_count[6];
 		comp_count[6]++;
+	}
+
+	@Override
+	protected void setArduinoString(short[] comp_count) {
+		inputs[0].arduino_type = Dot.arduino_output;
+		inputs[0].setConnectedArduinoType(Dot.arduino_output);
 	}
 
 }

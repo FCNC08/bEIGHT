@@ -136,4 +136,10 @@ public class Input extends FunctionalCanvasComponent{
 		comp_count[1]++;
 	}
 
+	@Override
+	protected void setArduinoString(short[] comp_count) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -172,4 +172,10 @@ public class NANDGate extends LogicComponent {
 		verilog_string = "NAND"+comp_count[2];
 		comp_count[2]++;
 	}
+	
+	@Override
+	protected void setArduinoString(short[] comp_count) {
+		arduino_string = "NAND"+comp_count[2];
+		comp_count[2]++;
+	}
 }

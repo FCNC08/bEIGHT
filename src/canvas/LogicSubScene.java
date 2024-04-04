@@ -1591,6 +1591,146 @@ public class LogicSubScene extends SubScene {
 		return verilog_string;
 	}
 	
+	public String getArduino() throws IllegalInputOutputExeption{
+		if(inputs.size()<1 || outputs.size()<1) {
+			throw new IllegalInputOutputExeption();
+		}		
+		LinkedHashSet<FunctionalCanvasComponent> functional_components = new LinkedHashSet<>();
+		
+		short[] component_count = new short[functional_components_count];
+		/*0:AND
+		 *1:Input
+		 *2:NAND
+		 *3:NOR
+		 *4:NOT
+		 *5:OR
+		 *6:Output
+		 *7:RAM
+		 *8:Register
+		 *9:XNOR
+		 *10:XOR 
+		 */
+		
+		String arduino_string = "#include \"bEIGHduino_util.h\"\n"
+				+ "const int input_size = "+inputs.size()+";\n"
+				+ "Inputs** inputs = new Inputs*[input_size];\nvoid setup() {\n";
+		for(int i = 0; i<inputs.size(); i++) {
+			inputs.get(i).outputs[0].setConnectedArduino("inputs["+i+"]", Dot.arduino_input, functional_components, component_count);
+		}
+		
+		//LinkedHashSet<Output> outs = new LinkedHashSet<>();
+
+		String connection_string = "";
+		String function_string = "";
+		String adding_string = "";
+		for(int i = 0; i<functional_components_count; i++) {
+			component_count[i] = 0;
+		}
+		for(FunctionalCanvasComponent comp : functional_components) {
+			if(comp instanceof Output) {
+				connection_string+="Output* "+comp.inputs[0].arduino_name+" = new Output(4);\n";//TODO Add missing Output Pin Configuration
+			}else if(comp instanceof ANDGate) {
+				function_string = function_string+"AND* "+comp.arduino_string+" = new AND("+comp.input_count+");\n";
+				for(Dot d : comp.inputs) {
+					if(d.arduino_type == Dot.arduino_connection){
+						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+					}else if(d.arduino_type == Dot.arduino_input) {
+						connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+					}
+					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				}
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof NANDGate) {
+				function_string = function_string+"NAND* "+comp.arduino_string+" = new NAND("+comp.input_count+");\n";
+				for(Dot d : comp.inputs) {
+					if(d.arduino_type == Dot.arduino_connection){
+						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+					}else if(d.arduino_type == Dot.arduino_input) {
+						connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+					}
+					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				}
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof NORGate) {
+				function_string = function_string+"NOR* "+comp.arduino_string+" = new NOR("+comp.input_count+");\n";
+				for(Dot d : comp.inputs) {
+					if(d.arduino_type == Dot.arduino_connection){
+						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+					}else if(d.arduino_type == Dot.arduino_input) {
+						connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+					}
+					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				}
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof NOTGate) {
+				function_string = function_string+"NOT* "+comp.arduino_string+" = new NOT();\n";
+				Dot d = comp.inputs[0];
+				if(d.arduino_type == Dot.arduino_connection){
+					connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+				}else if(d.arduino_type == Dot.arduino_input) {
+					connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+				}
+				adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+						+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof ORGate) {
+				function_string = function_string+"OR* "+comp.arduino_string+" = new OR("+comp.input_count+");\n";
+				for(Dot d : comp.inputs) {
+					if(d.arduino_type == Dot.arduino_connection){
+						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+					}else if(d.arduino_type == Dot.arduino_input) {
+						connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+					}
+					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				}
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof XNORGate) {
+				function_string = function_string+"XNOR* "+comp.arduino_string+" = new XNOR("+comp.input_count+");\n";
+				for(Dot d : comp.inputs) {
+					if(d.arduino_type == Dot.arduino_connection){
+						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+					}else if(d.arduino_type == Dot.arduino_input) {
+						connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+					}
+					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				}
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof XORGate) {
+				function_string = function_string+"XOR* "+comp.arduino_string+" = new XOR("+comp.input_count+");\n";
+				for(Dot d : comp.inputs) {
+					if(d.arduino_type == Dot.arduino_connection){
+						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+					}else if(d.arduino_type == Dot.arduino_input) {
+						connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+					}
+					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				}
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof ExternalComponent) {
+				
+			}
+		}
+		arduino_string+=connection_string+function_string+adding_string
+				+"}\n"
+				+ "void loop(){\n"
+				+ "  for(int i = 0; i<input_size; i++){\r\n"
+				+ "    int state = digitalRead(inputs[i]->_pin);\r\n"
+				+ "    if(state == HIGH){\r\n"
+				+ "      inputs[i]->setState(true);\r\n"
+				+ "    }else{\r\n"
+				+ "      inputs[i]->setState(false);\r\n"
+				+ "    }\r\n"
+				+ "  }\n"
+				+ "}";
+		return arduino_string;
+	}
+	
 	public LayerCanvasComponent getLayerCanvasComponent(String size) {
 		LayerCanvasComponent component = LayerCanvasComponent.init(size, this);
 		return component;

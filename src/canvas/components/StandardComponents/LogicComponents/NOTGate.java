@@ -160,4 +160,10 @@ public class NOTGate extends LogicComponent {
 		verilog_string = "NOT"+comp_count[4];
 		comp_count[4]++;
 	}
+	
+	@Override
+	protected void setArduinoString(short[] comp_count) {
+		arduino_string = "NOT"+comp_count[4];
+		comp_count[4]++;
+	}
 }

@@ -167,4 +167,10 @@ public class ORGate extends LogicComponent {
 		verilog_string = "OR"+comp_count[5];
 		comp_count[5]++;
 	}
+	
+	@Override
+	protected void setArduinoString(short[] comp_count) {
+		arduino_string = "OR"+comp_count[5];
+		comp_count[5]++;
+	}
 }

@@ -169,4 +169,10 @@ public class XORGate extends LogicComponent {
 		verilog_string = "XOR"+comp_count[10];
 		comp_count[10]++;
 	}
+	
+	@Override
+	protected void setArduinoString(short[] comp_count) {
+		arduino_string = "XOR"+comp_count[10];
+		comp_count[10]++;
+	}
 }

@@ -17,6 +17,7 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	protected State state = State.OFF;
 	
 	protected boolean control_color = false;
+	protected boolean control_type = false;
 
 	public SingleCanvasComponent(int NewWidth, int NewHeight) {
 		super(NewWidth, NewHeight);
@@ -217,7 +218,59 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 		
 	}
 	
+	public void setConnectedArduino(String arduino_name, String arduino_type, LinkedHashSet<FunctionalCanvasComponent> functional_components, short[] comp_count) {
+		if(control_color) {
+			return;
+		}else {
+			control_color = true;
+			ListIterator<SingleCanvasComponent> li = connected_Components.listIterator();
+			while(li.hasNext()) {
+				try {
+					SingleCanvasComponent comp = li.next();
+					if(comp instanceof Wire) {
+						((Wire)comp).setConnectedArduino(arduino_name,arduino_type, functional_components, comp_count);
+					}else if(comp instanceof Dot) {
+						Dot d = (Dot) comp;
+						if(d.parent.isInput(d)) {
+							d.arduino_name = arduino_name;
+							d.arduino_type = arduino_type;
+							if(functional_components.add(d.parent)) {
+								d.parent.createArduinoString(functional_components, comp_count);
+							}
+						}
+					}
+				}catch(ConcurrentModificationException e) {
+					e.printStackTrace();
+				}
+			}
+			control_color = false;
+		}
+	}
 	
+	public void setConnectedArduinoType(String arduino_type) {
+		if(control_type) {
+			return;
+		}else {
+			control_type = true;
+			ListIterator<SingleCanvasComponent> li = connected_Components.listIterator();
+			while(li.hasNext()) {
+				try {
+					SingleCanvasComponent comp = li.next();
+					if(comp instanceof Wire) {
+						((Wire)comp).setConnectedArduinoType(arduino_type);
+					}else if(comp instanceof Dot) {
+						Dot d = (Dot) comp;
+						if(d.parent.isInput(d)) {
+							d.arduino_type = arduino_type;
+						}
+					}
+				}catch(ConcurrentModificationException e) {
+					e.printStackTrace();
+				}
+			control_type = false;
+			}
+		}
+	}
 	
 	public void printComponents() {
 		for (SingleCanvasComponent i : connected_Components) {

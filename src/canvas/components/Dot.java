@@ -12,7 +12,14 @@ public class Dot extends SingleCanvasComponent {
 	public FunctionalCanvasComponent parent;
 	
 	public String verilog_name;
-
+	
+	public String arduino_name;
+	public String arduino_type;
+	
+	public static String arduino_input = "Input";
+	public static String arduino_connection = "Connection";
+	public static String arduino_output = "Output";
+	
 	// Initializing it with the size of a half wireheight
 	public Dot(FunctionalCanvasComponent parent) {
 		super(LogicSubScene.wire_height / 2, LogicSubScene.wire_height / 2);

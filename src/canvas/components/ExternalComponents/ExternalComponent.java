@@ -107,8 +107,14 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 
 	@Override
 	protected void setVerilogString(short[] comp_count) {
-		verilog_string = "External"+comp_count[0];
-		comp_count[0]++;
+		//verilog_string = "External"+comp_count[0];
+		//comp_count[0]++;
+	}
+	
+	@Override
+	protected void setArduinoString(short[] comp_count) {
+		//arduino_string = "External"+comp_count[0];
+		//comp_count[0]++;
 	}
 
 	@Override

@@ -170,4 +170,10 @@ public class XNORGate extends LogicComponent {
 		verilog_string = "XNOR"+comp_count[9];
 		comp_count[9]++;
 	}
+	
+	@Override
+	protected void setArduinoString(short[] comp_count) {
+		arduino_string = "XNOR"+comp_count[9];
+		comp_count[9]++;
+	}
 }

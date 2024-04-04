@@ -301,7 +301,7 @@ public class Main extends Application {
 			fc.setTitle("Save as");
 			ExtensionFilter extFilter = new ExtensionFilter("Verilog files (*.v)", "*.v");
 			fc.getExtensionFilters().add(extFilter);
-			var selected_file = fc.showSaveDialog(new Stage());
+			File selected_file = fc.showSaveDialog(new Stage());
 			if(selected_file != null) {
 				try(FileWriter writer = new FileWriter(selected_file)){
 					writer.write(logic_container.logic_subscene.getVerilog());
@@ -320,7 +320,14 @@ public class Main extends Application {
 		});
 		MenuItem savearduino = new MenuItem("Export as arduino");
 		savearduino.setOnAction(me->{
-			
+			FileChooser fc = new FileChooser();
+			fc.setTitle("Export Arduino as");
+			ExtensionFilter extFilter = new ExtensionFilter("Arduino-Sketch (*ino)", "*.ino");
+			fc.getExtensionFilters().add(extFilter);
+			File selected_file = fc.showSaveDialog(new Stage());
+			if(selected_file != null ) {
+				logic_container.saveArduino(selected_file);
+			}
 		});
 		
 		file.getItems().add(savingpdf);
@@ -328,6 +335,7 @@ public class Main extends Application {
 		file.getItems().add(save);
 		file.getItems().add(saveas);
 		file.getItems().add(saveverilog);
+		file.getItems().add(savearduino);
 		bar.getMenus().add(file);
 		
 		Menu setting = new Menu("settings");
@@ -409,7 +417,7 @@ public class Main extends Application {
 		MainScene.setFill(Color.GRAY);
 		EducationSubScene subscene = null;
 		try {
-			subscene = new EducationSubScene(width, height, new ZipFile("testfiles/test.lct"));
+			subscene = new EducationSubScene(width, height, new ZipFile("testfiles/lection.lct"));
 		} catch (IllegalArgumentException | ZipException e) {
 			e.printStackTrace();
 		}

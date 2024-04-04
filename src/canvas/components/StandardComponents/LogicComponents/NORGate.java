@@ -170,4 +170,9 @@ public class NORGate extends LogicComponent {
 		verilog_string = "NOR"+comp_count[3];
 		comp_count[3]++;
 	}
+	@Override
+	protected void setArduinoString(short[] comp_count) {
+		arduino_string = "NOR"+comp_count[3];
+		comp_count[3]++;
+	}
 }

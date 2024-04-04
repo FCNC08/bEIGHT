@@ -72,6 +72,12 @@ public class Register extends MemoryCanvasComponent {
 		comp_count[8]++;
 	}
 	
+	@Override
+	protected void setArduinoString(short[] comp_count) {
+		arduino_string = "Register"+comp_count[8];
+		comp_count[8]++;
+	}
+	
 	public static Register getRegister(String size, int bit_size) {
 		int width, height;
 		switch(size) {

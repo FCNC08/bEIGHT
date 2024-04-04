@@ -13,6 +13,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	public static final String SIZE_SMALL = "SMALL";
 	
 	public String verilog_string;
+	public String arduino_string;
 	
 	
 	public String size;
@@ -369,11 +370,20 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	
 	protected abstract void setVerilogString(short[] comp_count);
 	
-	public  void createVerilogString(LinkedHashSet<FunctionalCanvasComponent> functional_components, short[] comp_count) {
+	protected abstract void setArduinoString(short[] comp_count);
+	
+	public void createVerilogString(LinkedHashSet<FunctionalCanvasComponent> functional_components, short[] comp_count) {
 		setVerilogString(comp_count);
 		for(int i = 0; i<outputs.length; i++) {
 			outputs[i].verilog_name = verilog_string+"_out"+i;
 			outputs[i].setConnectedVerilog(verilog_string+"_out"+i, functional_components, comp_count);
+		}
+	}
+	public void createArduinoString(LinkedHashSet<FunctionalCanvasComponent> functional_components, short[] comp_count) {
+		setArduinoString(comp_count);
+		for(int i = 0; i<outputs.length; i++) {
+			outputs[i].arduino_name = arduino_string+"_out"+i;
+			outputs[i].setConnectedArduino(outputs[i].arduino_name, Dot.arduino_connection, functional_components, comp_count);
 		}
 	}
 	

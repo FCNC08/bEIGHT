@@ -169,4 +169,10 @@ public class ANDGate extends LogicComponent {
 		verilog_string = "AND"+comp_count[0];
 		comp_count[0]++;
 	}
+
+	@Override
+	protected void setArduinoString(short[] comp_count) {
+		arduino_string = "AND"+comp_count[0];
+		comp_count[0]++;
+	}
 }
