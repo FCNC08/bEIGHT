@@ -48,7 +48,11 @@ import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
+import javafx.scene.Scene;
 import javafx.scene.SubScene;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
@@ -57,8 +61,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
+import javafx.stage.Stage;
 import util.OcupationExeption;
 import util.ComponentBox;
 import util.IllegalInputOutputExeption;
@@ -1594,7 +1601,44 @@ public class LogicSubScene extends SubScene {
 	public String getArduino() throws IllegalInputOutputExeption{
 		if(inputs.size()<1 || outputs.size()<1) {
 			throw new IllegalInputOutputExeption();
-		}		
+		}
+		Stage pin_planer = new Stage();
+		Group pin_root = new Group();
+		Scene pin_scene = new Scene(pin_root);
+		pin_planer.setScene(pin_scene);	
+		
+		VBox vbox = new VBox();
+		ScrollPane pane = new ScrollPane(vbox);
+		
+		ImageView arduino_schematics = new ImageView();
+		
+		ComboBox<String> pin_chooser = new ComboBox<>();
+		pin_chooser.getItems().addAll("PIN 0", "PIN 1", "PIN 2", "PIN 3", "PIN 4", "PIN 5", "PIN 6", "PIN 7", "PIN 8", "PIN 9", "PIN 10", "PIN 11", "PIN 12", "PIN 13");
+		
+		VBox input_chooser = new VBox();
+		
+		for(int i = 0; i<inputs.size(); i++) {
+			HBox pin_input_chooser = new HBox();
+			Label pin_label = new Label("Input "+(i+1)+":");
+			ComboBox<String> pin_input = new ComboBox<>();
+			pin_input.setItems(pin_chooser.getItems());
+			pin_input_chooser.getChildren().addAll(pin_label, pin_input);
+			input_chooser.getChildren().add(pin_input_chooser);
+		}
+		
+		VBox output_chooser = new VBox();
+		for(int i = 0; i<outputs.size(); i++) {
+			HBox pin_output_chooser = new HBox();
+			Label pin_label = new Label("Output "+(i+1)+":");
+			ComboBox<String> pin_output = new ComboBox<>();
+			pin_output.setItems(pin_chooser.getItems());
+			pin_output_chooser.getChildren().addAll(pin_label, pin_output);
+			output_chooser.getChildren().add(pin_output_chooser);
+		}
+		
+		pin_root.getChildren().add(pane);
+		pin_planer.show();
+		
 		LinkedHashSet<FunctionalCanvasComponent> functional_components = new LinkedHashSet<>();
 		
 		short[] component_count = new short[functional_components_count];
