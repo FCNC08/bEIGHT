@@ -12,8 +12,11 @@ import org.json.JSONObject;
 import canvas.ComponentGroup;
 import canvas.ComponentGroupings;
 import canvas.LogicSubSceneContainer;
+import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
 import canvas.components.ExternalComponents.ExternalComponent;
+import canvas.components.StandardComponents.Input;
+import canvas.components.StandardComponents.Output;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import canvas.components.StandardComponents.LogicComponents.NANDGate;
 import canvas.components.StandardComponents.LogicComponents.NORGate;
@@ -26,6 +29,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -67,7 +71,8 @@ public class LogicSubSceneTest extends ScrollPane{
 			e.printStackTrace();
 		}
 		String headlineString = jsonobject.getString("headline");
-		Text headline = new Text(headlineString);
+		headlineString.replace("\n", "/n");
+		Label headline = new Label(headlineString);
 		headline.setFont(new Font(25));
 		file.extractAll(EducationSubScene.tempmod);
 		@SuppressWarnings("resource")
@@ -136,6 +141,10 @@ public class LogicSubSceneTest extends ScrollPane{
 			}
 		}
 		grouping.add(defaults);
+		ComponentGroup inoutput = new ComponentGroup();
+		inoutput.add(Input.getInput(FunctionalCanvasComponent.SIZE_MIDDLE));
+		inoutput.add(Output.getOutput(FunctionalCanvasComponent.SIZE_MIDDLE));
+		grouping.add(inoutput);
 		try{
 			ComponentGroup external = new ComponentGroup();
 			JSONArray externalcomponents = jsonobject.getJSONArray("externalcomponents");

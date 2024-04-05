@@ -28,7 +28,7 @@ public class EducationLesson extends ScrollPane{
 		super();
 		vbox.setAlignment(Pos.CENTER);
 		setContent(vbox);
-		setMaxHeight(height);
+		setMaxHeight(height-50);
 		setMaxWidth(width);
 		JSONObject jsonobjekt = null;
 		try {
@@ -86,23 +86,24 @@ public class EducationLesson extends ScrollPane{
 		}
 		HBox button_box = new HBox();
 		Button button_back = new Button("Back");
+		button_back.setFont(new Font(25));
 		button_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				scene.setPrev();
 			}
-		});
-		button_back.setLayoutX(height*0.1);			
+		});		
 		Button button_next = new Button("Next");
+		button_next.setFont(new Font(25));
 		button_next.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
 				scene.setNext();
 			}
 		});
-		button_next.setLayoutX(width*0.9);
 		button_box.getChildren().addAll(button_back, button_next);
 		vbox.getChildren().add(button_box);
-		
+		vbox.requestLayout();
+		scene.root.requestLayout();
 	}
 }
