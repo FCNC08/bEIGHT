@@ -18,12 +18,18 @@ import canvas.components.StandardComponents.LogicComponents.ORGate;
 import canvas.components.StandardComponents.LogicComponents.XNORGate;
 import canvas.components.StandardComponents.LogicComponents.XORGate;
 import canvas.components.StandardComponents.MemoryComponents.Register;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -31,6 +37,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -385,19 +392,86 @@ public class LogicSubSceneContainer extends SubScene {
 	}
 	
 	public void saveArduino(File file) {
-		try(FileWriter writer = new FileWriter(file)) {
-			writer.write(logic_subscene.getArduino());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}catch(IllegalInputOutputExeption e) {
-			Stage stage = new Stage();
-			Group scene_root = new Group();
-			Scene scene = new Scene(scene_root);
-			Label label = new Label("Not enough Inputs/Outputs.\nPlease add new Inputs/Outputs");
-			scene_root.getChildren().add(label);
-			stage.setScene(scene);
-			stage.show();
+		Stage pin_planer = new Stage();
+		Group pin_root = new Group();
+		Scene pin_scene = new Scene(pin_root);
+		pin_planer.setScene(pin_scene);	
+		
+		VBox vbox = new VBox(50);
+		ScrollPane pane = new ScrollPane(vbox);
+		
+		ImageView arduino_schematics = new ImageView(new Image("ArduinoUno.png"));
+		vbox.getChildren().add(arduino_schematics);
+		
+		ComboBox<Integer> pin_chooser = new ComboBox<>();
+		pin_chooser.getItems().addAll(0,1,2,3,4,5,6,7,8,9,10,11,12,13);
+		
+		VBox input_chooser = new VBox();
+		int[] input_pins = new int[logic_subscene.getInputs().size()];
+		for(int i = 0; i<logic_subscene.getInputs().size(); i++) {
+			HBox pin_input_chooser = new HBox();
+			Label pin_label = new Label("Input "+(i+1)+":");
+			ComboBox<Integer> pin_input = new ComboBox<>();
+			pin_input.setItems(pin_chooser.getItems());
+			final int number = i;
+			pin_input.valueProperty().addListener(new ChangeListener<Integer>() {
+				@Override
+				public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+					input_pins[number] = newValue;
+				}
+			});
+			pin_input.setValue(2);
+			pin_input_chooser.getChildren().addAll(pin_label, pin_input);
+			input_chooser.getChildren().add(pin_input_chooser);
 		}
+		int[] output_pins = new int[logic_subscene.getOutputs().size()];
+		VBox output_chooser = new VBox();
+		for(int i = 0; i<logic_subscene.getOutputs().size(); i++) {
+			HBox pin_output_chooser = new HBox();
+			Label pin_label = new Label("Output "+(i+1)+":");
+			ComboBox<Integer> pin_output = new ComboBox<>();
+			pin_output.setItems(pin_chooser.getItems());
+			final int number = i;
+			pin_output.valueProperty().addListener(new ChangeListener<Integer>() {
+				@Override
+				public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue) {
+					output_pins[number] = newValue;
+				}
+			});
+			pin_output.setValue(3);
+			pin_output_chooser.getChildren().addAll(pin_label, pin_output);
+			output_chooser.getChildren().add(pin_output_chooser);
+		}
+		HBox pin_choosers = new HBox();
+		pin_choosers.getChildren().addAll(input_chooser, output_chooser);
+		HBox ButtonBox = new HBox();
+		Button cancel = new Button("cancel");
+		cancel.setOnAction(e->{
+			pin_planer.close();
+		});
+		Button save = new Button("save");
+		save.setOnAction(e->{
+			try(FileWriter writer = new FileWriter(file)) {
+				writer.write(logic_subscene.getArduino(input_pins, output_pins));
+			} catch (IOException ie) {
+				ie.printStackTrace();
+			}catch(IllegalInputOutputExeption ie) {
+				Stage stage = new Stage();
+				Group scene_root = new Group();
+				Scene scene = new Scene(scene_root);
+				Label label = new Label("Not enough Inputs/Outputs.\nPlease add new Inputs/Outputs");
+				scene_root.getChildren().add(label);
+				stage.setScene(scene);
+				stage.show();
+			}
+			pin_planer.close();
+		});
+		ButtonBox.getChildren().addAll(cancel, save);
+		vbox.getChildren().addAll(pin_choosers, ButtonBox);
+		
+		pin_root.getChildren().add(pane);
+		pin_planer.show();
+		
 	}
 	
 	public void setColor(boolean color) {

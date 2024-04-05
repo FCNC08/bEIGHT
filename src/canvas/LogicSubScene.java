@@ -48,11 +48,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
@@ -61,11 +57,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
-import javafx.stage.Stage;
 import util.OcupationExeption;
 import util.ComponentBox;
 import util.IllegalInputOutputExeption;
@@ -1598,46 +1591,10 @@ public class LogicSubScene extends SubScene {
 		return verilog_string;
 	}
 	
-	public String getArduino() throws IllegalInputOutputExeption{
+	public String getArduino(int input_pins[], int output_pins[]) throws IllegalInputOutputExeption{
 		if(inputs.size()<1 || outputs.size()<1) {
 			throw new IllegalInputOutputExeption();
 		}
-		Stage pin_planer = new Stage();
-		Group pin_root = new Group();
-		Scene pin_scene = new Scene(pin_root);
-		pin_planer.setScene(pin_scene);	
-		
-		VBox vbox = new VBox();
-		ScrollPane pane = new ScrollPane(vbox);
-		
-		ImageView arduino_schematics = new ImageView();
-		
-		ComboBox<String> pin_chooser = new ComboBox<>();
-		pin_chooser.getItems().addAll("PIN 0", "PIN 1", "PIN 2", "PIN 3", "PIN 4", "PIN 5", "PIN 6", "PIN 7", "PIN 8", "PIN 9", "PIN 10", "PIN 11", "PIN 12", "PIN 13");
-		
-		VBox input_chooser = new VBox();
-		
-		for(int i = 0; i<inputs.size(); i++) {
-			HBox pin_input_chooser = new HBox();
-			Label pin_label = new Label("Input "+(i+1)+":");
-			ComboBox<String> pin_input = new ComboBox<>();
-			pin_input.setItems(pin_chooser.getItems());
-			pin_input_chooser.getChildren().addAll(pin_label, pin_input);
-			input_chooser.getChildren().add(pin_input_chooser);
-		}
-		
-		VBox output_chooser = new VBox();
-		for(int i = 0; i<outputs.size(); i++) {
-			HBox pin_output_chooser = new HBox();
-			Label pin_label = new Label("Output "+(i+1)+":");
-			ComboBox<String> pin_output = new ComboBox<>();
-			pin_output.setItems(pin_chooser.getItems());
-			pin_output_chooser.getChildren().addAll(pin_label, pin_output);
-			output_chooser.getChildren().add(pin_output_chooser);
-		}
-		
-		pin_root.getChildren().add(pane);
-		pin_planer.show();
 		
 		LinkedHashSet<FunctionalCanvasComponent> functional_components = new LinkedHashSet<>();
 		
@@ -1661,6 +1618,9 @@ public class LogicSubScene extends SubScene {
 		for(int i = 0; i<inputs.size(); i++) {
 			inputs.get(i).outputs[0].setConnectedArduino("inputs["+i+"]", Dot.arduino_input, functional_components, component_count);
 		}
+		for(int i = 0; i<outputs.size(); i++) {
+			outputs.get(i).pin = output_pins[i];
+		}
 		
 		//LinkedHashSet<Output> outs = new LinkedHashSet<>();
 
@@ -1672,14 +1632,15 @@ public class LogicSubScene extends SubScene {
 		}
 		for(FunctionalCanvasComponent comp : functional_components) {
 			if(comp instanceof Output) {
-				connection_string+="Output* "+comp.inputs[0].arduino_name+" = new Output(4);\n";//TODO Add missing Output Pin Configuration
+				connection_string+="Output* "+comp.inputs[0].arduino_name+" = new Output("+((Output)comp).pin+");\n";
 			}else if(comp instanceof ANDGate) {
 				function_string = function_string+"AND* "+comp.arduino_string+" = new AND("+comp.input_count+");\n";
 				for(Dot d : comp.inputs) {
 					if(d.arduino_type == Dot.arduino_connection){
 						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
 					}else if(d.arduino_type == Dot.arduino_input) {
-						connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+						int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+						connection_string+=d.arduino_name+" = new Inputs("+input_pins[input_number]+");\n";//TODO Add missing Input Pin Configuration
 					}
 					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
 							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
