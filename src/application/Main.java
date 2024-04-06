@@ -460,7 +460,7 @@ public class Main extends Application {
 		MainScene.setFill(Color.GRAY);
 		EducationSubScene subscene = null;
 		try {
-			subscene = new EducationSubScene(width, height, new ZipFile("testfiles/fulladder.lct"));
+			subscene = new EducationSubScene(width, height, new ZipFile("testfiles/fullader.lct"));
 		} catch (IllegalArgumentException | ZipException e) {
 			e.printStackTrace();
 		}
