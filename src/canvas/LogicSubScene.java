@@ -1640,7 +1640,7 @@ public class LogicSubScene extends SubScene {
 						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
 					}else if(d.arduino_type == Dot.arduino_input) {
 						int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
-						connection_string+=d.arduino_name+" = new Inputs("+input_pins[input_number]+");\n";//TODO Add missing Input Pin Configuration
+						connection_string+=d.arduino_name+" = new Inputs("+input_pins[input_number]+");\n";
 					}
 					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
 							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
@@ -1652,7 +1652,8 @@ public class LogicSubScene extends SubScene {
 					if(d.arduino_type == Dot.arduino_connection){
 						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
 					}else if(d.arduino_type == Dot.arduino_input) {
-						connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+						int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+						connection_string+=d.arduino_name+" = new Inputs("+input_pins[input_number]+");\n";
 					}
 					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
 							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
@@ -1664,7 +1665,8 @@ public class LogicSubScene extends SubScene {
 					if(d.arduino_type == Dot.arduino_connection){
 						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
 					}else if(d.arduino_type == Dot.arduino_input) {
-						connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+						int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+						connection_string+=d.arduino_name+" = new Inputs("+input_pins[input_number]+");\n";
 					}
 					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
 							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
@@ -1676,7 +1678,8 @@ public class LogicSubScene extends SubScene {
 				if(d.arduino_type == Dot.arduino_connection){
 					connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
 				}else if(d.arduino_type == Dot.arduino_input) {
-					connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+					int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+					connection_string+=d.arduino_name+" = new Inputs("+input_pins[input_number]+");\n";
 				}
 				adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
 						+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
@@ -1687,7 +1690,8 @@ public class LogicSubScene extends SubScene {
 					if(d.arduino_type == Dot.arduino_connection){
 						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
 					}else if(d.arduino_type == Dot.arduino_input) {
-						connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+						int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+						connection_string+=d.arduino_name+" = new Inputs("+input_pins[input_number]+");\n";
 					}
 					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
 							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
@@ -1699,7 +1703,8 @@ public class LogicSubScene extends SubScene {
 					if(d.arduino_type == Dot.arduino_connection){
 						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
 					}else if(d.arduino_type == Dot.arduino_input) {
-						connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+						int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+						connection_string+=d.arduino_name+" = new Inputs("+input_pins[input_number]+");\n";
 					}
 					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
 							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
@@ -1711,7 +1716,8 @@ public class LogicSubScene extends SubScene {
 					if(d.arduino_type == Dot.arduino_connection){
 						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
 					}else if(d.arduino_type == Dot.arduino_input) {
-						connection_string+=d.arduino_name+" = new Inputs(3);\n";//TODO Add missing Input Pin Configuration
+						int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+						connection_string+=d.arduino_name+" = new Inputs("+input_pins[input_number]+");\n";
 					}
 					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
 							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
@@ -1724,13 +1730,176 @@ public class LogicSubScene extends SubScene {
 		arduino_string+=connection_string+function_string+adding_string
 				+"}\n"
 				+ "void loop(){\n"
-				+ "  for(int i = 0; i<input_size; i++){\r\n"
-				+ "    int state = digitalRead(inputs[i]->_pin);\r\n"
-				+ "    if(state == HIGH){\r\n"
-				+ "      inputs[i]->setState(true);\r\n"
-				+ "    }else{\r\n"
-				+ "      inputs[i]->setState(false);\r\n"
-				+ "    }\r\n"
+				+ "  for(int i = 0; i<input_size; i++){\n"
+				+ "    int state = digitalRead(inputs[i]->_pin);\n"
+				+ "    if(state == HIGH){\n"
+				+ "      inputs[i]->setState(true);\n"
+				+ "    }else{\n"
+				+ "      inputs[i]->setState(false);\n"
+				+ "    }\n"
+				+ "  }\n"
+				+ "}";
+		return arduino_string;
+	}
+	
+	public String getBeighduinoshield() throws IllegalInputOutputExeption {
+		if(inputs.size()<1 || outputs.size()<1) {
+			throw new IllegalInputOutputExeption();
+		}
+		
+		LinkedHashSet<FunctionalCanvasComponent> functional_components = new LinkedHashSet<>();
+		
+		short[] component_count = new short[functional_components_count];
+		/*0:AND
+		 *1:Input
+		 *2:NAND
+		 *3:NOR
+		 *4:NOT
+		 *5:OR
+		 *6:Output
+		 *7:RAM
+		 *8:Register
+		 *9:XNOR
+		 *10:XOR 
+		 */
+		
+		String arduino_string = "#include \"bEIGHduino-shield_util.h\"\r\n"
+				+ "#include <Adafruit_NeoPixel.h>\r\n"
+				+ "#define PIN1 10\r\n"
+				+ "#define PIN2 11\r\n"
+				+ "#define inputlenght 8\r\n"
+				+ "#define outputlenght 8\r\n"
+				+ "Adafruit_NeoPixel input_pixel = Adafruit_NeoPixel(inputlenght, PIN1, NEO_GRB +NEO_KHZ800);\r\n"
+				+ "Adafruit_NeoPixel output_pixel= Adafruit_NeoPixel(outputlenght, PIN2, NEO_GRB +NEO_KHZ800);\r\n"
+				+ "uint32_t green = input_pixel.Color(0,0,255);\r\n"
+				+ "const int input_size = 2;\r\n"
+				+ "Inputs** inputs = new Inputs*[input_size];\r\n"
+				+ "void setup() {";
+		for(int i = 0; i<inputs.size(); i++) {
+			inputs.get(i).outputs[0].setConnectedArduino("inputs["+i+"]", Dot.arduino_input, functional_components, component_count);
+		}
+		for(int i = 0; i<outputs.size(); i++) {
+			outputs.get(i).pin = i;
+		}
+		
+		//LinkedHashSet<Output> outs = new LinkedHashSet<>();
+
+		String connection_string = "";
+		String function_string = "";
+		String adding_string = "";
+		for(int i = 0; i<functional_components_count; i++) {
+			component_count[i] = 0;
+		}
+		for(FunctionalCanvasComponent comp : functional_components) {
+			if(comp instanceof Output) {
+				connection_string+="Output* "+comp.inputs[0].arduino_name+" = new Output("+((Output)comp).pin+", &output_pixel);\n";
+			}else if(comp instanceof ANDGate) {
+				function_string = function_string+"AND* "+comp.arduino_string+" = new AND("+comp.input_count+");\n";
+				for(Dot d : comp.inputs) {
+					if(d.arduino_type == Dot.arduino_connection){
+						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+					}else if(d.arduino_type == Dot.arduino_input) {
+						int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+						connection_string+=d.arduino_name+" = new Inputs("+(input_number+2)+");\n";
+					}
+					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				}
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof NANDGate) {
+				function_string = function_string+"NAND* "+comp.arduino_string+" = new NAND("+comp.input_count+");\n";
+				for(Dot d : comp.inputs) {
+					if(d.arduino_type == Dot.arduino_connection){
+						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+					}else if(d.arduino_type == Dot.arduino_input) {
+						int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+						connection_string+=d.arduino_name+" = new Inputs("+(input_number+2)+");\n";
+					}
+					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				}
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof NORGate) {
+				function_string = function_string+"NOR* "+comp.arduino_string+" = new NOR("+comp.input_count+");\n";
+				for(Dot d : comp.inputs) {
+					if(d.arduino_type == Dot.arduino_connection){
+						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+					}else if(d.arduino_type == Dot.arduino_input) {
+						int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+						connection_string+=d.arduino_name+" = new Inputs("+(input_number+2)+");\n";
+					}
+					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				}
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof NOTGate) {
+				function_string = function_string+"NOT* "+comp.arduino_string+" = new NOT();\n";
+				Dot d = comp.inputs[0];
+				if(d.arduino_type == Dot.arduino_connection){
+					connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+				}else if(d.arduino_type == Dot.arduino_input) {
+					int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+					connection_string+=d.arduino_name+" = new Inputs("+(input_number+2)+");\n";
+				}
+				adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+						+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof ORGate) {
+				function_string = function_string+"OR* "+comp.arduino_string+" = new OR("+comp.input_count+");\n";
+				for(Dot d : comp.inputs) {
+					if(d.arduino_type == Dot.arduino_connection){
+						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+					}else if(d.arduino_type == Dot.arduino_input) {
+						int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+						connection_string+=d.arduino_name+" = new Inputs("+(input_number+2)+");\n";
+					}
+					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				}
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof XNORGate) {
+				function_string = function_string+"XNOR* "+comp.arduino_string+" = new XNOR("+comp.input_count+");\n";
+				for(Dot d : comp.inputs) {
+					if(d.arduino_type == Dot.arduino_connection){
+						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+					}else if(d.arduino_type == Dot.arduino_input) {
+						int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+						connection_string+=d.arduino_name+" = new Inputs("+(input_number+2)+");\n";
+					}
+					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				}
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof XORGate) {
+				function_string = function_string+"XOR* "+comp.arduino_string+" = new XOR("+comp.input_count+");\n";
+				for(Dot d : comp.inputs) {
+					if(d.arduino_type == Dot.arduino_connection){
+						connection_string+="Connection* "+d.arduino_name+" = new Connection();\n";
+					}else if(d.arduino_type == Dot.arduino_input) {
+						int input_number = Integer.parseInt(d.arduino_name.substring(d.arduino_name.indexOf('[')+1, d.arduino_name.length()-1));
+						connection_string+=d.arduino_name+" = new Inputs("+(input_number+2)+");\n";
+					}
+					adding_string+=comp.arduino_string+"->addInput("+d.arduino_name+");\n"
+							+ d.arduino_name+"->addFunction("+comp.arduino_string+");\n";
+				}
+				adding_string+=comp.arduino_string+"->addOutput("+comp.outputs[0].arduino_name+");\n";
+			}else if(comp instanceof ExternalComponent) {
+				
+			}
+		}
+		arduino_string+=connection_string+function_string+adding_string
+				+"for(int i = 0; i<input_size; i++){\n"
+				+ "  input_pixel.setPixelColor(i, green);\n"
+				+ "}\n"
+				+ "}\n"
+				+ "void loop(){\n"
+				+ "  for(int i = 0; i<input_size; i++){\n"
+				+ "    int state = digitalRead(inputs[i]->_pin);\n"
+				+ "    if(state == HIGH){\n"
+				+ "      inputs[i]->setState(true);\n"
+				+ "    }else{\n"
+				+ "      inputs[i]->setState(false);\n"
+				+ "    }\n"
 				+ "  }\n"
 				+ "}";
 		return arduino_string;

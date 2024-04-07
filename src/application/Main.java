@@ -332,6 +332,18 @@ public class Main extends Application {
 			}
 		});
 		
+		MenuItem savearduinshield = new MenuItem("Export as beighduinoShield");
+		savearduinshield.setOnAction(me->{
+			FileChooser fc = new FileChooser();
+			fc.setTitle("Export Arduino as");
+			ExtensionFilter extFilter = new ExtensionFilter("Arduino-Sketch (*ino)", "*.ino");
+			fc.getExtensionFilters().add(extFilter);
+			File selected_file = fc.showSaveDialog(new Stage());
+			if(selected_file != null ) {
+				logic_container.saveArduinoShield(selected_file);
+			}
+		});
+		
 		MenuItem uploadarduino = new MenuItem("Upload onto Arduino");
 		uploadarduino.setOnAction(me->{
 			logic_container.saveArduino(new File("beighduino/beighduino.ino"));
@@ -378,6 +390,7 @@ public class Main extends Application {
 		file.getItems().add(saveas);
 		file.getItems().add(saveverilog);
 		file.getItems().add(savearduino);
+		file.getItems().add(savearduinshield);
 		file.getItems().add(uploadarduino);
 		bar.getMenus().add(file);
 		
@@ -460,7 +473,7 @@ public class Main extends Application {
 		MainScene.setFill(Color.GRAY);
 		EducationSubScene subscene = null;
 		try {
-			subscene = new EducationSubScene(width, height, new ZipFile("testfiles/fullader.lct"));
+			subscene = new EducationSubScene(width, height, new ZipFile("testfiles/fulladder1.lct"));
 		} catch (IllegalArgumentException | ZipException e) {
 			e.printStackTrace();
 		}
