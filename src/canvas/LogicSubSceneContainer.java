@@ -476,6 +476,14 @@ public class LogicSubSceneContainer extends SubScene {
 		
 	}
 	
+	public void saveArduinoShield(File file) {
+		try(FileWriter writer = new FileWriter(file)){
+			writer.write(logic_subscene.getBeighduinoshield());
+		} catch (IOException | IllegalInputOutputExeption e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void setColor(boolean color) {
 		if(color != this.color) {
 			this.color = color;

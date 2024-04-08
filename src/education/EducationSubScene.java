@@ -73,7 +73,7 @@ public class EducationSubScene extends SubScene{
 		for(Object object : modules) {
 			if(object instanceof JSONObject) {
 				JSONObject modul = (JSONObject) object;
-				
+				System.out.println(modul.getString("filename"));
 				switch(modul.getString("type")) {
 				case("lesson"):{
 					ZipFile temporary_file = new ZipFile(tempedu+modul.getString("filename"));
@@ -99,6 +99,7 @@ public class EducationSubScene extends SubScene{
 				}
 			}
 		}
+		System.out.println(order.size());
 		VBox ending_root = new VBox(20);
 		ScrollPane ending = new ScrollPane(ending_root);
 		Text finish = new Text("You got it.");
@@ -157,6 +158,7 @@ public class EducationSubScene extends SubScene{
 		root.getChildren().add(choosing_area);
 	}
 	public void setNext() {
+		System.out.println(position);
 		position++;
 		if(position>=order.size()) {
 			position = 0;

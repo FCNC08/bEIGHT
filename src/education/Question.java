@@ -95,7 +95,7 @@ public class Question extends ScrollPane{
 				box.setMaxWidth(width);
 				correctanswer = jsonobject.getInt("correctanswer");
 				jumpto = jsonobject.getInt("jumpto");
-				int number = 0;
+				int number = 1;
 				for(Object c : jsonobject.getJSONArray("options")) {
 					if(c instanceof String) {
 						if(number>0) {
@@ -137,7 +137,8 @@ public class Question extends ScrollPane{
 		if(answer == correctanswer) {
 			subscene.setNext();
 		}else {
-			subscene.setPane(jumpto);
+			subscene.setPane(jumpto-3);
+			System.out.println("Correct");
 		}
 	}
 }
