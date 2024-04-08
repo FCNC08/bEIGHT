@@ -337,7 +337,7 @@ public class Main extends Application {
 			logic_container.saveArduino(new File("beighduino/beighduino.ino"));
 			try {
 				String compileCommand = "beighduino/arduino-cli.exe compile --fqbn arduino:avr:uno beighduino/beighduino.ino";
-	            String uploadCommand = "beighduino/arduino-cli.exe upload -p COM6 --fqbn arduino:avr:uno beighduino/beighduino.ino";
+	            String uploadCommand = "beighduino/arduino-cli.exe upload -p COM9 --fqbn arduino:avr:uno beighduino/beighduino.ino";
 
 	            ProcessBuilder builder = new ProcessBuilder(compileCommand.split(" "));
 	            builder.redirectErrorStream(true);

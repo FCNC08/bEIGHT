@@ -446,10 +446,12 @@ public class LogicSubSceneContainer extends SubScene {
 		pin_choosers.getChildren().addAll(input_chooser, output_chooser);
 		HBox ButtonBox = new HBox();
 		Button cancel = new Button("cancel");
+		cancel.setFont(new Font(50));
 		cancel.setOnAction(e->{
 			pin_planer.close();
 		});
 		Button save = new Button("save");
+		save.setFont(new Font(50));
 		save.setOnAction(e->{
 			try(FileWriter writer = new FileWriter(file)) {
 				writer.write(logic_subscene.getArduino(input_pins, output_pins));
