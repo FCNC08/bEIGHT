@@ -1,8 +1,10 @@
 package canvas;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import canvas.components.FunctionalCanvasComponent;
@@ -476,12 +478,194 @@ public class LogicSubSceneContainer extends SubScene {
 		
 	}
 	
+	public void uploadArduino() {
+		saveArduino(new File("beighduino/beighduino.ino"));
+		Stage output_chooser = new Stage();
+		Group output_root = new Group();
+		Scene output_scene = new Scene(output_root);
+		output_chooser.setScene(output_scene);
+		ComboBox<String> port = new ComboBox<String>();
+		port.setValue("Port");
+		ArrayList<String> boards = new ArrayList<String>();
+		try {
+			Process board_read = Runtime.getRuntime().exec("beighduino/arduino-cli.exe board list");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(board_read.getInputStream()));
+			String line = reader.readLine();
+            while ((line = reader.readLine()) != null) {
+        		try{
+            		String[] line_segments = line.split(" ");
+	            	String board_name = line_segments[0];
+	            	board_name+=" "+line.substring(line.indexOf("Arduino"), line.indexOf("arduino")-1);
+	            	port.getItems().add(board_name);
+	            	boards.add(line);
+	            	System.out.println(board_name);
+        		}catch(StringIndexOutOfBoundsException e) {
+        			
+        		}
+            }
+
+            int exitCode = board_read.waitFor();
+            System.out.println("Exited with code: " + exitCode);
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		}
+		VBox box = new VBox();
+		box.getChildren().add(port);
+		HBox ButtonBox = new HBox();
+		Button cancel = new Button("cancel");
+		cancel.setFont(new Font(50));
+		cancel.setOnAction(e->{
+			output_chooser.close();
+		});
+		Button upload = new Button("upload");
+		upload.setFont(new Font(50));
+		upload.setOnAction(e->{
+			if(port.getItems().contains(port.getValue())) {
+				int number = port.getItems().indexOf(port.getValue());
+				String board_line = boards.get(number);
+				String board_name = board_line.substring(board_line.indexOf("arduino"), board_line.lastIndexOf("arduino")-1);
+				String[] line_segment = port.getValue().split(" ");
+				try {
+					String compileCommand = "beighduino/arduino-cli.exe compile --fqbn "+board_name+" beighduino/beighduino.ino";
+		            String uploadCommand = "beighduino/arduino-cli.exe upload -p "+line_segment[0]+" --fqbn "+board_name+" beighduino/beighduino.ino";
+
+		            ProcessBuilder builder = new ProcessBuilder(compileCommand.split(" "));
+		            builder.redirectErrorStream(true);
+		            Process process = builder.start();
+		            
+		            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		            String line;
+		            while ((line = reader.readLine()) != null) {
+		                System.out.println(line);
+		            }
+
+		            // Wait for the command to finish
+		            int exitCode = process.waitFor();
+		            System.out.println("Compile command exited with code " + exitCode);
+
+		            // Run the upload command
+		            builder = new ProcessBuilder(uploadCommand.split(" "));
+		            builder.redirectErrorStream(true);
+		            process = builder.start();
+
+		            // Read the output of the command
+		            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		            while ((line = reader.readLine()) != null) {
+		                System.out.println(line);
+		            }
+
+		            // Wait for the command to finish
+		            exitCode = process.waitFor();
+		            System.out.println("Upload command exited with code " + exitCode);
+				}catch (IOException | InterruptedException ie) {
+					ie.printStackTrace();
+				}
+				output_chooser.close();
+			}
+		});
+		ButtonBox.getChildren().addAll(cancel, upload);
+		box.getChildren().add(ButtonBox);
+		output_root.getChildren().add(box);
+		output_chooser.show();
+	}
+	
 	public void saveArduinoShield(File file) {
 		try(FileWriter writer = new FileWriter(file)){
 			writer.write(logic_subscene.getBeighduinoshield());
 		} catch (IOException | IllegalInputOutputExeption e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void uploadArduinoShield() {
+		saveArduinoShield(new File("beighduino-shield/beighduino-shield.ino"));
+		Stage output_chooser = new Stage();
+		Group output_root = new Group();
+		Scene output_scene = new Scene(output_root);
+		output_chooser.setScene(output_scene);
+		ComboBox<String> port = new ComboBox<String>();
+		port.setValue("Port");
+		ArrayList<String> boards = new ArrayList<String>();
+		try {
+			Process board_read = Runtime.getRuntime().exec("beighduino/arduino-cli.exe board list");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(board_read.getInputStream()));
+			String line = reader.readLine();
+            while ((line = reader.readLine()) != null) {
+        		try{
+            		String[] line_segments = line.split(" ");
+	            	String board_name = line_segments[0];
+	            	board_name+=" "+line.substring(line.indexOf("Arduino"), line.indexOf("arduino")-1);
+	            	port.getItems().add(board_name);
+	            	boards.add(line);
+	            	System.out.println(board_name);
+        		}catch(StringIndexOutOfBoundsException e) {
+        			
+        		}
+            }
+
+            int exitCode = board_read.waitFor();
+            System.out.println("Exited with code: " + exitCode);
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		}
+		VBox box = new VBox();
+		box.getChildren().add(port);
+		HBox ButtonBox = new HBox();
+		Button cancel = new Button("cancel");
+		cancel.setFont(new Font(50));
+		cancel.setOnAction(e->{
+			output_chooser.close();
+		});
+		Button upload = new Button("upload");
+		upload.setFont(new Font(50));
+		upload.setOnAction(e->{
+			if(port.getItems().contains(port.getValue())) {
+				int number = port.getItems().indexOf(port.getValue());
+				String board_line = boards.get(number);
+				String board_name = board_line.substring(board_line.indexOf("arduino"), board_line.lastIndexOf("arduino")-1);
+				String[] line_segment = port.getValue().split(" ");
+				try {
+					String compileCommand = "beighduino/arduino-cli.exe compile --fqbn "+board_name+" beighduino-shield/beighduino-shield.ino";
+		            String uploadCommand = "beighduino/arduino-cli.exe upload -p "+line_segment[0]+" --fqbn "+board_name+" beighduino-shield/beighduino-shield.ino";
+
+		            ProcessBuilder builder = new ProcessBuilder(compileCommand.split(" "));
+		            builder.redirectErrorStream(true);
+		            Process process = builder.start();
+		            
+		            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		            String line;
+		            while ((line = reader.readLine()) != null) {
+		                System.out.println(line);
+		            }
+
+		            // Wait for the command to finish
+		            int exitCode = process.waitFor();
+		            System.out.println("Compile command exited with code " + exitCode);
+
+		            // Run the upload command
+		            builder = new ProcessBuilder(uploadCommand.split(" "));
+		            builder.redirectErrorStream(true);
+		            process = builder.start();
+
+		            // Read the output of the command
+		            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+		            while ((line = reader.readLine()) != null) {
+		                System.out.println(line);
+		            }
+
+		            // Wait for the command to finish
+		            exitCode = process.waitFor();
+		            System.out.println("Upload command exited with code " + exitCode);
+				}catch (IOException | InterruptedException ie) {
+					ie.printStackTrace();
+				}
+				output_chooser.close();
+			}
+		});
+		ButtonBox.getChildren().addAll(cancel, upload);
+		box.getChildren().add(ButtonBox);
+		output_root.getChildren().add(box);
+		output_chooser.show();
 	}
 	
 	public void setColor(boolean color) {

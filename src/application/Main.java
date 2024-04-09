@@ -332,6 +332,12 @@ public class Main extends Application {
 			}
 		});
 		
+		MenuItem uploadarduino = new MenuItem("Upload onto Arduino");
+		uploadarduino.setOnAction(me->{
+			logic_container.uploadArduino();
+			
+		});
+		
 		MenuItem savearduinshield = new MenuItem("Export as beighduinoShield");
 		savearduinshield.setOnAction(me->{
 			FileChooser fc = new FileChooser();
@@ -343,45 +349,9 @@ public class Main extends Application {
 				logic_container.saveArduinoShield(selected_file);
 			}
 		});
-		
-		MenuItem uploadarduino = new MenuItem("Upload onto Arduino");
-		uploadarduino.setOnAction(me->{
-			logic_container.saveArduino(new File("beighduino/beighduino.ino"));
-			try {
-				String compileCommand = "beighduino/arduino-cli.exe compile --fqbn arduino:avr:uno beighduino/beighduino.ino";
-	            String uploadCommand = "beighduino/arduino-cli.exe upload -p COM9 --fqbn arduino:avr:uno beighduino/beighduino.ino";
-
-	            ProcessBuilder builder = new ProcessBuilder(compileCommand.split(" "));
-	            builder.redirectErrorStream(true);
-	            Process process = builder.start();
-	            
-	            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-	            String line;
-	            while ((line = reader.readLine()) != null) {
-	                System.out.println(line);
-	            }
-
-	            // Wait for the command to finish
-	            int exitCode = process.waitFor();
-	            System.out.println("Compile command exited with code " + exitCode);
-
-	            // Run the upload command
-	            builder = new ProcessBuilder(uploadCommand.split(" "));
-	            builder.redirectErrorStream(true);
-	            process = builder.start();
-
-	            // Read the output of the command
-	            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-	            while ((line = reader.readLine()) != null) {
-	                System.out.println(line);
-	            }
-
-	            // Wait for the command to finish
-	            exitCode = process.waitFor();
-	            System.out.println("Upload command exited with code " + exitCode);
-			}catch (IOException | InterruptedException e) {
-				e.printStackTrace();
-			}
+		MenuItem uploadarduinoshield = new MenuItem("Upload onto beighduinoShield");
+		uploadarduinoshield.setOnAction(me->{
+			logic_container.uploadArduinoShield();
 		});
 		
 		file.getItems().add(savingpdf);
@@ -390,8 +360,9 @@ public class Main extends Application {
 		file.getItems().add(saveas);
 		file.getItems().add(saveverilog);
 		file.getItems().add(savearduino);
-		file.getItems().add(savearduinshield);
 		file.getItems().add(uploadarduino);
+		file.getItems().add(savearduinshield);
+		file.getItems().add(uploadarduinoshield);
 		bar.getMenus().add(file);
 		
 		Menu setting = new Menu("settings");
@@ -473,7 +444,7 @@ public class Main extends Application {
 		MainScene.setFill(Color.GRAY);
 		EducationSubScene subscene = null;
 		try {
-			subscene = new EducationSubScene(width, height, new ZipFile("testfiles/fulladder1.lct"));
+			subscene = new EducationSubScene(width, height, new ZipFile("testfiles/lection.lct"));
 		} catch (IllegalArgumentException | ZipException e) {
 			e.printStackTrace();
 		}

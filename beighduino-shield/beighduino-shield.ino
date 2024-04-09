@@ -9,16 +9,12 @@ Adafruit_NeoPixel output_pixel= Adafruit_NeoPixel(outputlenght, PIN2, NEO_GRB +N
 uint32_t green = input_pixel.Color(0,0,255);
 const int input_size = 2;
 Inputs** inputs = new Inputs*[input_size];
-void setup() {
-inputs[0] = new Inputs(2);
-inputs[1] = new Inputs(3);
-Output* AND0_out0 = new Output(0, &output_pixel);
-AND* AND0 = new AND(2);
-AND0->addInput(inputs[0]);
-inputs[0]->addFunction(AND0);
-AND0->addInput(inputs[1]);
-inputs[1]->addFunction(AND0);
-AND0->addOutput(AND0_out0);
+void setup() {inputs[0] = new Inputs(2);
+Output* NOT0_out0 = new Output(0, &output_pixel);
+NOT* NOT0 = new NOT();
+NOT0->addInput(inputs[0]);
+inputs[0]->addFunction(NOT0);
+NOT0->addOutput(NOT0_out0);
 for(int i = 0; i<input_size; i++){
   input_pixel.setPixelColor(i, green);
 }

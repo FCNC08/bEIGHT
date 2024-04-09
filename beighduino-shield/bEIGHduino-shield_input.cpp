@@ -4,5 +4,5 @@
 
 Inputs::Inputs(int pin):Connection(){
   _pin = pin;
-  pinMode(pin, INPUT);
+  pinMode(pin, INPUT_PULLUP);
 }
