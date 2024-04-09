@@ -1,7 +1,6 @@
 #ifndef bEIGHduino_shield_util_H
 #define bEIGHduino_shield_utl_H
 
-#include <Arduino.h>
 #include "bEIGHduino-shield_connection.h"
 #include "bEIGHduino-shield_function.h"
 #include "bEIGHduino-shield_output.h"
