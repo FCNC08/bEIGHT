@@ -159,4 +159,10 @@ public class RAM extends MemoryCanvasComponent {
 		comp_count[7]++;
 	}
 
+	@Override
+	public void createLayerGate() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

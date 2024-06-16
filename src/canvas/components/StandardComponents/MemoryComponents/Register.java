@@ -99,5 +99,11 @@ public class Register extends MemoryCanvasComponent {
 		return new Register(width, height, bit_size);
 	}
 
+	@Override
+	public void createLayerGate() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
 

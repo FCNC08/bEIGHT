@@ -30,6 +30,7 @@ import canvas.components.LayerCanvasComponent;
 import canvas.components.SingleCanvasComponent;
 import canvas.components.State;
 import canvas.components.ExternalComponents.ExternalComponent;
+import canvas.components.Layercomponents.Connection;
 import canvas.components.StandardComponents.Input;
 import canvas.components.StandardComponents.Output;
 import canvas.components.StandardComponents.Wire;
@@ -122,7 +123,6 @@ public class LogicSubScene extends SubScene {
 	private ArrayList<FunctionalCanvasComponent> components = new ArrayList<>();
 	private ArrayList<Input> inputs = new ArrayList<>();
 	private ArrayList<Output> outputs = new ArrayList<>();
-	public LayerCanvasComponent last_changing_component;
 
 	private Group root;
 
@@ -349,10 +349,8 @@ public class LogicSubScene extends SubScene {
 	public void add(FunctionalCanvasComponent component) throws OcupationExeption {
 		if(component instanceof Input) {
 			inputs.add((Input) component);
-			((Input) component).setLogicSubScene(this);
 		}else if(component instanceof Output) {
 			outputs.add((Output) component);
-			((Output) component).setParent(this);
 		}
 		root.getChildren().add(component.getImageView());
 		component.setStandardDotLocations();
@@ -1384,11 +1382,6 @@ public class LogicSubScene extends SubScene {
 		}
 	}
 	
-	public void changeOutput() {
-		if(last_changing_component != null) {
-			last_changing_component.changeOutputs();
-		}
-	}
 
 	public void SaveAsPDF(File filepath) {
 		// Creating PDF out of SubScene
@@ -1906,6 +1899,22 @@ public class LogicSubScene extends SubScene {
 				+ "  }\n"
 				+ "}";
 		return arduino_string;
+	}
+	
+	public Connection[] initLayerComponent(Dot[] outputs) {
+		canvas.components.Layercomponents.Output output[] = new canvas.components.Layercomponents.Output[outputs.length];
+		for(int i = 0; i<outputs.length; i++) {
+			output[i] = new canvas.components.Layercomponents.Output(outputs[i]);
+			this.outputs.get(i).inputs[0].setConnectedLayerOutput(output[i]);
+		}
+		
+		Connection[] input = new Connection[inputs.size()];
+		for(int i = 0; i<input.length; i++) {
+			input[i] = new Connection();
+			inputs.get(i).outputs[i].setConnectedLayerConnection(input[i]);
+		}
+		
+		return input;
 	}
 	
 	public LayerCanvasComponent getLayerCanvasComponent(String size) {
