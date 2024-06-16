@@ -1771,15 +1771,17 @@ public class LogicSubScene extends SubScene {
 				+ "#define outputlenght 8\r\n"
 				+ "Adafruit_NeoPixel input_pixel = Adafruit_NeoPixel(inputlenght, PIN1, NEO_GRB +NEO_KHZ800);\r\n"
 				+ "Adafruit_NeoPixel output_pixel= Adafruit_NeoPixel(outputlenght, PIN2, NEO_GRB +NEO_KHZ800);\r\n"
-				+ "uint32_t green = input_pixel.Color(0,0,255);\r\n"
-				+ "const int input_size = 2;\r\n"
+				+ "uint32_t blue = input_pixel.Color(0,0,255);\r\n"
+				+ "const int input_size = "+inputs.size()+";\n"
 				+ "Inputs** inputs = new Inputs*[input_size];\r\n"
-				+ "void setup() {";
+				+ "void setup() {\n"
+				+ "input_pixel.begin();\n"
+				+ "output_pixel.begin();\n";
 		for(int i = 0; i<inputs.size(); i++) {
 			inputs.get(i).outputs[0].setConnectedArduino("inputs["+i+"]", Dot.arduino_input, functional_components, component_count);
 		}
 		for(int i = 0; i<outputs.size(); i++) {
-			outputs.get(i).pin = i;
+			outputs.get(i).pin = 7-i;
 		}
 		
 		//LinkedHashSet<Output> outs = new LinkedHashSet<>();
@@ -1888,9 +1890,10 @@ public class LogicSubScene extends SubScene {
 			}
 		}
 		arduino_string+=connection_string+function_string+adding_string
-				+"for(int i = 0; i<input_size; i++){\n"
-				+ "  input_pixel.setPixelColor(i, green);\n"
+				+ "for(int i = inputlenght-1; i>=inputlenght-input_size; i--){\n"
+				+ "  input_pixel.setPixelColor(i, blue);\n"
 				+ "}\n"
+				+ "input_pixel.show();"
 				+ "}\n"
 				+ "void loop(){\n"
 				+ "  for(int i = 0; i<input_size; i++){\n"

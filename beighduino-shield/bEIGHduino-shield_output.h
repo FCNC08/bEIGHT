@@ -8,9 +8,9 @@ class Output : public Connection{
   public:
     Output(int pin, Adafruit_NeoPixel* outputpixel);
     void setState(bool state) override;
+    Adafruit_NeoPixel* _outputpixel;
   private:
     int _pin;
-    Adafruit_NeoPixel* _outputpixel;
 };
 
 #endif
