@@ -1,9 +1,12 @@
 package canvas.components;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 
 import canvas.LogicSubScene;
+import canvas.components.Layercomponents.Connection;
+import canvas.components.Layercomponents.LayerGate;
 import javafx.scene.image.ImageView;
 import util.Info;
 
@@ -14,6 +17,9 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	
 	public String verilog_string;
 	public String arduino_string;
+	
+	public LayerGate gate;
+	public Connection[] output;
 	
 	
 	public String size;
@@ -371,6 +377,29 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	protected abstract void setVerilogString(short[] comp_count);
 	
 	protected abstract void setArduinoString(short[] comp_count);
+	
+	public abstract void createLayerGate();
+	public void setLayerOutput(Dot output_dot, Connection output_connection) {
+		int index = Arrays.asList(outputs).indexOf(output_dot);
+		if(index != -1) {
+			if(output == null) {
+				output = new Connection[output_count];
+			}
+			output[index] = output_connection;
+		}
+	}
+	public void addLayerInput(Dot input_dot, Connection input_connection) {
+		if(gate == null) {
+			createLayerGate();
+		}
+		try {
+			gate.inputs[Arrays.asList(inputs).indexOf(input_dot)] = input_connection;
+			input_connection.addComponent(gate);
+		}catch(NullPointerException e) {
+			System.out.println(this);
+		}
+		
+	}
 	
 	public void createVerilogString(LinkedHashSet<FunctionalCanvasComponent> functional_components, short[] comp_count) {
 		setVerilogString(comp_count);

@@ -10,12 +10,16 @@ public abstract class LayerGate {
 	public Connection outputs[];
 	protected long[] times = new long[5];
 	protected int time_pointer = 0;
+	protected boolean color = false;
 	
 	public LayerGate(int input_count, int output_count) {
 		this.input_count = input_count;
 		this.output_count = output_count;
 		this.inputs = new Connection[input_count];
 		this.outputs = new Connection[output_count];
+		for(int i = 0; i<output_count; i++) {
+			outputs[i] = new Connection();
+		}
 	}
 	
 	public State[] getInputStates() {
@@ -39,5 +43,18 @@ public abstract class LayerGate {
 			System.out.println("act:"+actual_time+" lat:"+latest_time+"	"+this);
 			simulater();
 		}
+	}
+	public void printEvery() {
+		if(color) {
+			
+		}else {
+			color = true;
+			System.out.println(this);
+			for(Connection out : outputs) {
+				out.printEvery();
+			}
+			color = false;
+		}
+		
 	}
 }

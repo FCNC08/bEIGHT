@@ -1,10 +1,8 @@
 package canvas.components;
 
-import java.util.ArrayList;
 
 import canvas.LogicSubScene;
-import canvas.components.StandardComponents.Input;
-import canvas.components.StandardComponents.Output;
+import canvas.components.Layercomponents.Connection;
 import javafx.scene.paint.Color;
 import util.Info;
 
@@ -16,16 +14,18 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	public static int Standard_width_multiplier_middle = 2;
 	public static int Standard_width_multiplier_big = 3;
 	
-	public LogicSubScene logic_subscene;
+	public Connection[] input;
+	public String name = "";
+	
 	
 	public LayerCanvasComponent(String size, int width, int height, LogicSubScene logicscene) throws IllegalArgumentException {
 		super(width, height, logicscene.getInputs().size(), logicscene.getOutputs().size() );
 		this.size = size;
-		this.logic_subscene = logicscene;
 		this.rotation = VERTICAL;
-		System.out.println(logic_subscene);
+		this.name = logicscene.name;
+		input = logicscene.initLayerComponent(outputs);
 		resetStandardImage();
-		info.setHeadline(logic_subscene.getName());
+		info.setHeadline(name);
 	}
 
 	public static LayerCanvasComponent init(String size, LogicSubScene scene) {
@@ -55,33 +55,19 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	@Override
 	public void simulater() {
 		State[] states = getInputStates();
-		ArrayList<Input> input = logic_subscene.getInputs();
-		for(int i = 0; i < states.length; i++) {
-			input.get(i).setState(states[i]);
+		for(int i = 0; i<input_count; i++) {
+			input[i].setState(states[i]);
 		}
-		logic_subscene.last_changing_component = this;
-		System.out.println();
-	}
-
-	public void changeOutputs() {
-		ArrayList<Output> output = logic_subscene.getOutputs();
-		State[] states = new State[output.size()];
-		for(int i = 0; i < states.length; i++) {
-			states[i] = output.get(i).getState();
-		}
-		setOutputStates(states);
 	}
 	
 	@Override
 	public FunctionalCanvasComponent getClone(String size) {
-		return new LayerCanvasComponent(size, width, height, logic_subscene);
+		return new LayerCanvasComponent(size, width, height, null);
 	}
 
 	@Override
 	protected void createInfo() {
 		info = new Info();
-		System.out.println(logic_subscene);
-		info.setHeadline("test");
 	}
 
 	@Override
@@ -100,5 +86,11 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	}
 	@Override
 	protected void setArduinoString(short[] comp_count) {
+	}
+
+	@Override
+	public void createLayerGate() {
+		// TODO Auto-generated method stub
+		
 	}
 }

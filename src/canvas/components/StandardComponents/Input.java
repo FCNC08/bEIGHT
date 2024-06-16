@@ -18,7 +18,6 @@ public class Input extends FunctionalCanvasComponent{
 	protected static int StandardWidth_small = LogicSubScene.cross_distance;
 	
 	private State state = State.OFF;
-	LogicSubScene logic_subscene;
 	public Input(int width, String size) throws IllegalArgumentException {
 		super(width, width, 0, 1);
 		paintImage();
@@ -33,10 +32,6 @@ public class Input extends FunctionalCanvasComponent{
 	public void simulater() {
 		outputs[0].setState(state);
 		paintImage();
-	}
-	
-	public void setLogicSubScene(LogicSubScene scene) {
-		this.logic_subscene = scene;
 	}
 
 	@Override
@@ -118,11 +113,9 @@ public class Input extends FunctionalCanvasComponent{
 					if(state.isEqual(State.ON)) {
 						state = State.OFF;
 						simulate();
-						logic_subscene.last_changing_component = null;
 					}else if(state.isEqual(State.OFF)) {
 						state = State.ON;
 						simulate();
-						logic_subscene.last_changing_component = null;
 					}
 				}
 			}
@@ -138,8 +131,10 @@ public class Input extends FunctionalCanvasComponent{
 
 	@Override
 	protected void setArduinoString(short[] comp_count) {
-		// TODO Auto-generated method stub
-		
+	}
+
+	@Override
+	public void createLayerGate() {		
 	}
 
 }

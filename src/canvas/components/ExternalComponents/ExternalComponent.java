@@ -191,4 +191,8 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 		
 		return component;
 	}
+
+	@Override
+	public void createLayerGate() {		
+	}
 }

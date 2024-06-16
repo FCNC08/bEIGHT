@@ -3,6 +3,7 @@ package canvas.components.StandardComponents.LogicComponents;
 import canvas.components.Dot;
 import canvas.components.LogicComponent;
 import canvas.components.State;
+import canvas.components.Layercomponents.AND;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
@@ -174,5 +175,15 @@ public class ANDGate extends LogicComponent {
 	protected void setArduinoString(short[] comp_count) {
 		arduino_string = "AND"+comp_count[0];
 		comp_count[0]++;
+	}
+
+	@Override
+	public void createLayerGate() {
+		gate = new AND(input_count);
+		if(output[0]!=null) {
+			gate.outputs[0] = output[0]; 
+		}
+		outputs[0].setConnectedLayerConnection(gate.outputs[0]);
+		
 	}
 }

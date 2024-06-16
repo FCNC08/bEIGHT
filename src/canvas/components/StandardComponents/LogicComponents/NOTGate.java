@@ -3,6 +3,7 @@ package canvas.components.StandardComponents.LogicComponents;
 import canvas.components.Dot;
 import canvas.components.LogicComponent;
 import canvas.components.State;
+import canvas.components.Layercomponents.NOT;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
@@ -165,5 +166,14 @@ public class NOTGate extends LogicComponent {
 	protected void setArduinoString(short[] comp_count) {
 		arduino_string = "NOT"+comp_count[4];
 		comp_count[4]++;
+	}
+
+	@Override
+	public void createLayerGate() {
+		gate = new NOT();
+		if(output[0]!=null) {
+			gate.outputs[0] = output[0]; 
+		}
+		outputs[0].setConnectedLayerConnection(gate.outputs[0]);
 	}
 }

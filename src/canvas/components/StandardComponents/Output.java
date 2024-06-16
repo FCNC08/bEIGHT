@@ -18,7 +18,6 @@ public class Output extends FunctionalCanvasComponent{
 	public int pin;
 	
 	private State state = State.OFF;
-	LogicSubScene parent;
 	public Output(int width, String size) throws IllegalArgumentException {
 		super(width, width, 1, 0);
 		paintImage();
@@ -28,16 +27,9 @@ public class Output extends FunctionalCanvasComponent{
 		return state;
 	}
 	
-	public void setParent(LogicSubScene scene) {
-		this.parent = scene;
-	}
-	
 	@Override
 	public void simulater() {
 		state = inputs[0].getState();
-		if(parent != null) {
-			parent.changeOutput();
-		}
 		paintImage();
 	}
 
@@ -129,6 +121,10 @@ public class Output extends FunctionalCanvasComponent{
 	protected void setArduinoString(short[] comp_count) {
 		inputs[0].arduino_type = Dot.arduino_output;
 		inputs[0].setConnectedArduinoType(Dot.arduino_output);
+	}
+
+	@Override
+	public void createLayerGate() {
 	}
 
 }

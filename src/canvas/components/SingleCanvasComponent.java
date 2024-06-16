@@ -6,6 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.ListIterator;
 
 import canvas.LogicSubScene;
+import canvas.components.Layercomponents.Connection;
 import canvas.components.StandardComponents.Wire;
 import javafx.scene.paint.Color;
 import util.ComponentBox;
@@ -269,6 +270,55 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 				}
 			control_type = false;
 			}
+		}
+	}
+	
+	public void setConnectedLayerConnection(Connection con) {
+		if(control_color) {
+			return;
+		}else {
+			control_color = true;
+			ListIterator<SingleCanvasComponent> li = connected_Components.listIterator();
+			while(li.hasNext()) {
+				try {
+					SingleCanvasComponent comp = li.next();
+					if(comp instanceof Wire) {
+						((Wire)comp).setConnectedLayerConnection(con);
+					}else if(comp instanceof Dot) {
+						Dot d = (Dot) comp;
+						if(d.parent.isInput(d)) {
+							d.parent.addLayerInput(d, con);
+						}
+					}
+				}catch(ConcurrentModificationException e) {
+					e.printStackTrace();
+				}
+			}
+			control_color = false;
+		}
+	}
+	public void setConnectedLayerOutput(Connection con) {
+		if(control_color) {
+			return;
+		}else {
+			control_color = true;
+			ListIterator<SingleCanvasComponent> li = connected_Components.listIterator();
+			while(li.hasNext()) {
+				try {
+					SingleCanvasComponent comp = li.next();
+					if(comp instanceof Wire) {
+						((Wire)comp).setConnectedLayerOutput(con);
+					}else if(comp instanceof Dot) {
+						Dot d = (Dot) comp;
+						if(d.parent.isOutput(d)) {
+							d.parent.setLayerOutput(d, con);
+						}
+					}
+				}catch(ConcurrentModificationException e) {
+					e.printStackTrace();
+				}
+			}
+			control_color = false;
 		}
 	}
 	
