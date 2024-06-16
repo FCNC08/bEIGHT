@@ -32,4 +32,14 @@ public class XNOR extends LayerGate {
 		}
 
 	}
+	@Override
+	public void createLayerGate() {
+		gate = new XNOR(input_count);
+		if(output!=null) {
+			if(output[0]!=null) {
+				gate.outputs[0] = output[0]; 
+			}
+		}
+		outputs[0].setConnectedLayerConnection(gate.outputs[0]);
+	}
 }

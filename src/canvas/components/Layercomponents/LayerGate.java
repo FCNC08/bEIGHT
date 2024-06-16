@@ -1,5 +1,7 @@
 package canvas.components.Layercomponents;
 
+import java.util.Arrays;
+
 import canvas.components.State;
 
 public abstract class LayerGate {
@@ -11,6 +13,9 @@ public abstract class LayerGate {
 	protected long[] times = new long[5];
 	protected int time_pointer = 0;
 	protected boolean color = false;
+	
+	protected LayerGate gate;
+	public Connection[] output;
 	
 	public LayerGate(int input_count, int output_count) {
 		this.input_count = input_count;
@@ -39,6 +44,7 @@ public abstract class LayerGate {
 		long latest_time = times[time_pointer];
 		if(latest_time != 0 && (actual_time-latest_time)<100) {
 			System.out.println("Blocked "+this);
+			printEvery();
 		}else {
 			System.out.println("act:"+actual_time+" lat:"+latest_time+"	"+this);
 			simulater();
@@ -54,6 +60,29 @@ public abstract class LayerGate {
 				out.printEvery();
 			}
 			color = false;
+		}
+		
+	}
+	
+	public abstract void createLayerGate();
+	public void setLayerOutput(Connection output_dot, Connection output_connection) {
+		int index = Arrays.asList(outputs).indexOf(output_dot);
+		if(index != -1) {
+			if(output == null) {
+				output = new Connection[output_count];
+			}
+			output[index] = output_connection;
+		}
+	}
+	public void addLayerInput(Connection input_dot, Connection input_connection) {
+		if(gate == null) {
+			createLayerGate();
+		}
+		try {
+			gate.inputs[Arrays.asList(inputs).indexOf(input_dot)] = input_connection;
+			input_connection.addComponent(gate);
+		}catch(NullPointerException e) {
+			System.out.println(this);
 		}
 		
 	}

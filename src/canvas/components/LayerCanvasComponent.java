@@ -3,6 +3,7 @@ package canvas.components;
 
 import canvas.LogicSubScene;
 import canvas.components.Layercomponents.Connection;
+import canvas.components.Layercomponents.LayerComponent;
 import javafx.scene.paint.Color;
 import util.Info;
 
@@ -90,7 +91,27 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 
 	@Override
 	public void createLayerGate() {
-		// TODO Auto-generated method stub
+		Connection newoutput[] = new Connection[outputs.length];
+		for(int i = 0; i<outputs.length; i++) {
+			newoutput[i] = new Connection();
+			this.outputs[i].setConnectedLayerOutput(newoutput[i]);
+		}
 		
+		Connection[] newinput = new Connection[input_count];
+		for(int i = 0; i<input.length; i++) {
+			newinput[i] = new Connection();
+			this.input[i].setConnectedLayerConnection(newinput[i]);
+		}
+		gate = new LayerComponent(input_count, output_count, newinput, newoutput);
+		for(int i = 0; i<output_count; i++) {
+			if(output!=null) {
+				if(output[i]!=null) {
+					gate.outputs[i] = output[i];
+					System.out.println(output[i]);
+				}
+			}
+			outputs[i].setConnectedLayerConnection(gate.outputs[i]);
+			System.out.println(gate.outputs[i]);
+		}
 	}
 }

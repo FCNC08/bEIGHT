@@ -183,8 +183,10 @@ public class NANDGate extends LogicComponent {
 	@Override
 	public void createLayerGate() {
 		gate = new NAND(input_count);
-		if(output[0]!=null) {
-			gate.outputs[0] = output[0]; 
+		if(output!=null) {
+			if(output[0]!=null) {
+				gate.outputs[0] = output[0]; 
+			}
 		}
 		outputs[0].setConnectedLayerConnection(gate.outputs[0]);
 	}

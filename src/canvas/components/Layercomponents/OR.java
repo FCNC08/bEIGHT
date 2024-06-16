@@ -23,11 +23,23 @@ public class OR extends LayerGate {
 			}
 			for (Connection d : outputs) {
 				d.setState(State.getState(State.STANDARD_MODE, output_state ? State.ON_ERROR : State.OFF_UNSET));
+				d.printEvery();
 			}
 		} catch (ErrorStateExeption e) {
 			for (Connection o : outputs) {
 				o.setState(State.getState(State.ERROR_MODE, State.ON_ERROR));
 			}
 		}
+	}
+	
+	@Override
+	public void createLayerGate() {
+		gate = new OR(input_count);
+		if(output!=null) {
+			if(output[0]!=null) {
+				gate.outputs[0] = output[0]; 
+			}
+		}
+		outputs[0].setConnectedLayerConnection(gate.outputs[0]);
 	}
 }
