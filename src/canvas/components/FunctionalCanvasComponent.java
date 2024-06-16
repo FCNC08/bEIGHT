@@ -116,7 +116,6 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		if(latest_time != 0 && (actual_time-latest_time)<100) {
 			System.out.println("Blocked "+this);
 		}else {
-			System.out.println("act:"+actual_time+" lat:"+latest_time+"	"+this);
 			simulater();
 		}
 	}
