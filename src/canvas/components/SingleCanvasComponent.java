@@ -7,6 +7,7 @@ import java.util.ListIterator;
 
 import canvas.LogicSubScene;
 import canvas.components.Layercomponents.Connection;
+import canvas.components.Layercomponents.LayerGate;
 import canvas.components.StandardComponents.Wire;
 import javafx.scene.paint.Color;
 import util.ComponentBox;
@@ -297,9 +298,9 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 			control_color = false;
 		}
 	}
-	public void setConnectedLayerOutput(Connection con) {
+	public LayerGate setConnectedLayerOutput(Connection con) {
 		if(control_color) {
-			return;
+			return null;
 		}else {
 			control_color = true;
 			ListIterator<SingleCanvasComponent> li = connected_Components.listIterator();
@@ -307,12 +308,17 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 				try {
 					SingleCanvasComponent comp = li.next();
 					if(comp instanceof Wire) {
-						((Wire)comp).setConnectedLayerOutput(con);
+						LayerGate lg = ((Wire)comp).setConnectedLayerOutput(con);
+						if(lg != null) {
+							return lg;
+						}
 					}else if(comp instanceof Dot) {
 						Dot d = (Dot) comp;
 						if(d.parent.isOutput(d)) {
 							d.parent.setLayerOutput(d, con);
+							return d.parent.gate;
 						}
+						return null;
 					}
 				}catch(ConcurrentModificationException e) {
 					e.printStackTrace();
@@ -320,6 +326,7 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 			}
 			control_color = false;
 		}
+		return null;
 	}
 	
 	public void printComponents() {

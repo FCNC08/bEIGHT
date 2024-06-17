@@ -81,6 +81,7 @@ public abstract class LayerGate {
 		try {
 			gate.inputs[Arrays.asList(inputs).indexOf(input_dot)] = input_connection;
 			input_connection.addComponent(gate);
+			System.out.println("Test");
 		}catch(NullPointerException e) {
 			System.out.println(this);
 		}

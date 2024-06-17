@@ -1,11 +1,13 @@
 package canvas.components;
 
 
+import java.util.Arrays;
+
 import canvas.LogicSubScene;
 import canvas.components.Layercomponents.Connection;
-import canvas.components.Layercomponents.LayerComponent;
 import javafx.scene.paint.Color;
 import util.Info;
+import util.InputOutputConnectionPair;
 
 public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	public static int Standard_height_small = LogicSubScene.cross_distance;
@@ -15,7 +17,7 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	public static int Standard_width_multiplier_middle = 2;
 	public static int Standard_width_multiplier_big = 3;
 	
-	public Connection[] input;
+	public InputOutputConnectionPair inoutput;
 	public String name = "";
 	
 	
@@ -24,7 +26,7 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 		this.size = size;
 		this.rotation = VERTICAL;
 		this.name = logicscene.name;
-		input = logicscene.initLayerComponent(outputs);
+		inoutput = logicscene.initLayerComponent(outputs);
 		resetStandardImage();
 		info.setHeadline(name);
 	}
@@ -57,7 +59,7 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	public void simulater() {
 		State[] states = getInputStates();
 		for(int i = 0; i<input_count; i++) {
-			input[i].setState(states[i]);
+			inoutput.input[i].setState(states[i]);
 		}
 	}
 	
@@ -91,16 +93,16 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 
 	@Override
 	public void createLayerGate() {
-		Connection newoutput[] = new Connection[outputs.length];
+		/*Connection newoutput[] = new Connection[outputs.length];
 		for(int i = 0; i<outputs.length; i++) {
 			newoutput[i] = new Connection();
 			this.outputs[i].setConnectedLayerOutput(newoutput[i]);
 		}
 		
 		Connection[] newinput = new Connection[input_count];
-		for(int i = 0; i<input.length; i++) {
+		for(int i = 0; i<inoutput.input.length; i++) {
 			newinput[i] = new Connection();
-			this.input[i].setConnectedLayerConnection(newinput[i]);
+			this.inoutput.input[i].setConnectedLayerConnection(newinput[i]);
 		}
 		gate = new LayerComponent(input_count, output_count, newinput, newoutput);
 		for(int i = 0; i<output_count; i++) {
@@ -112,6 +114,24 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 			}
 			outputs[i].setConnectedLayerConnection(gate.outputs[i]);
 			System.out.println(gate.outputs[i]);
+		}*/
+	}
+	
+	@Override
+	public void setLayerOutput(Dot output_dot, Connection output_connection) {
+		int index = Arrays.asList(outputs).indexOf(output_dot);
+		if(index != -1) {
+			inoutput.outputgates[index].setLayerOutput(inoutput.output[index], output_connection);
 		}
+	}
+	
+	@Override
+	public void addLayerInput(Dot input_dot, Connection input_connection) {
+		try {
+			inoutput.input[Arrays.asList(inputs).indexOf(input_dot)].setConnectedLayerConnection(input_connection);
+		}catch(NullPointerException e) {
+			System.out.println(this);
+		}
+		
 	}
 }
