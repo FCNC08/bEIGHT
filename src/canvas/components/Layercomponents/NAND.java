@@ -39,6 +39,7 @@ public class NAND extends LayerGate {
 		if(output!=null) {
 			if(output[0]!=null) {
 				gate.outputs[0] = output[0]; 
+				output[0].addInputGate(gate);
 			}
 		}
 		outputs[0].setConnectedLayerConnection(gate.outputs[0]);

@@ -1905,10 +1905,9 @@ public class LogicSubScene extends SubScene {
 	
 	public InputOutputConnectionPair initLayerComponent(Dot[] outputs) {
 		canvas.components.Layercomponents.Output output[] = new canvas.components.Layercomponents.Output[outputs.length];
-		LayerGate[] lgs = new LayerGate[outputs.length];
 		for(int i = 0; i<outputs.length; i++) {
 			output[i] = new canvas.components.Layercomponents.Output(outputs[i]);
-			lgs[i] = this.outputs.get(i).inputs[0].setConnectedLayerOutput(output[i]);
+			this.outputs.get(i).inputs[0].setConnectedLayerOutput(output[i]);
 		}
 		
 		Connection[] input = new Connection[inputs.size()];
@@ -1917,7 +1916,7 @@ public class LogicSubScene extends SubScene {
 			inputs.get(i).outputs[0].setConnectedLayerConnection(input[i]);
 		}
 		
-		return new InputOutputConnectionPair(input, output, lgs);
+		return new InputOutputConnectionPair(input, output);
 	}
 	
 	public LayerCanvasComponent getLayerCanvasComponent(String size) {

@@ -5,6 +5,7 @@ import java.util.Arrays;
 
 import canvas.LogicSubScene;
 import canvas.components.Layercomponents.Connection;
+import canvas.components.Layercomponents.Output;
 import javafx.scene.paint.Color;
 import util.Info;
 import util.InputOutputConnectionPair;
@@ -59,6 +60,8 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	public void simulater() {
 		State[] states = getInputStates();
 		for(int i = 0; i<input_count; i++) {
+			inoutput.input[i].printEvery();
+			System.out.println("");
 			inoutput.input[i].setState(states[i]);
 		}
 	}
@@ -118,16 +121,19 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	}
 	
 	@Override
-	public void setLayerOutput(Dot output_dot, Connection output_connection) {
+	public void setLayerOutput(Dot output_dot, Output output_connection) {
 		int index = Arrays.asList(outputs).indexOf(output_dot);
 		if(index != -1) {
-			inoutput.outputgates[index].setLayerOutput(inoutput.output[index], output_connection);
+			inoutput.output[index].setConnectedLayerOutput(output_connection);
+		}else {
+			System.out.println("Error");
 		}
 	}
 	
 	@Override
 	public void addLayerInput(Dot input_dot, Connection input_connection) {
 		try {
+			System.out.println("This is a message from LayerCanvasComponent");
 			inoutput.input[Arrays.asList(inputs).indexOf(input_dot)].setConnectedLayerConnection(input_connection);
 		}catch(NullPointerException e) {
 			System.out.println(this);

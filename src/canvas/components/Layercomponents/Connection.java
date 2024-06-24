@@ -20,16 +20,17 @@ public class Connection {
 	public void setState(State state) {
 		if(state != this.state) {
 			this.state = state;
+			System.out.println(state.getStateName());
 			for(LayerGate lg : connected_gates) {
 				lg.simulate();
 			}
 		}else {
-			try {
+			/*try {
 				System.out.println(state.getStateBoolean());
 			} catch (ErrorStateExeption e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
 		}
 	}
 	
@@ -43,7 +44,6 @@ public class Connection {
 			color = true;
 			System.out.println(this);
 			for(LayerGate lg:connected_gates) {
-				System.out.println(lg);
 				lg.printEvery();
 			}
 			color = false;
@@ -64,7 +64,7 @@ public class Connection {
 			control_color = false;
 		}
 	}
-	public void setConnectedLayerOutput(Connection con) {
+	public void setConnectedLayerOutput(Output con) {
 		if(control_color) {
 			return;
 		}else {

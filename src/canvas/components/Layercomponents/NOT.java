@@ -14,18 +14,12 @@ public class NOT extends LayerGate {
 		State[] input = getInputStates();
 		try {
 			boolean bool = input[0].getStateBoolean();
-			System.out.println(bool);
 			outputs[0].setState(State.getState(State.STANDARD_MODE, !bool ? State.ON_ERROR : State.OFF_UNSET));
 		} catch (ErrorStateExeption e) {
 			outputs[0].setState(State.getState(State.ERROR_MODE, State.ON_ERROR));
 			System.out.println("test");
 		}
-		try {
-			System.out.println(outputs[0].state.getStateBoolean());
-		} catch (ErrorStateExeption e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		System.out.println(outputs[0].state.getStateName());
 
 	}
 	@Override
@@ -34,6 +28,7 @@ public class NOT extends LayerGate {
 		if(output!=null) {
 			if(output[0]!=null) {
 				gate.outputs[0] = output[0]; 
+				output[0].addInputGate(gate);
 			}
 		}
 		outputs[0].setConnectedLayerConnection(gate.outputs[0]);

@@ -6,11 +6,9 @@ import canvas.components.Layercomponents.LayerGate;
 public class InputOutputConnectionPair {
 	public Connection[] input;
 	public Connection[] output;
-	public LayerGate[] outputgates;
 	
-	public InputOutputConnectionPair(Connection[] input, Connection[] output, LayerGate[] outputgates) {
+	public InputOutputConnectionPair(Connection[] input, Connection[] output) {
 		this.input = input;
 		this.output = output;
-		this.outputgates = outputgates;
 	}
 }

@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import canvas.LogicSubScene;
 import canvas.components.Layercomponents.Connection;
 import canvas.components.Layercomponents.LayerGate;
+import canvas.components.Layercomponents.Output;
 import javafx.scene.image.ImageView;
 import util.Info;
 
@@ -19,7 +20,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	public String arduino_string;
 	
 	public LayerGate gate;
-	public Connection[] output;
+	public Output[] output;
 	
 	
 	public String size;
@@ -378,11 +379,11 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	protected abstract void setArduinoString(short[] comp_count);
 	
 	public abstract void createLayerGate();
-	public void setLayerOutput(Dot output_dot, Connection output_connection) {
+	public void setLayerOutput(Dot output_dot, Output output_connection) {
 		int index = Arrays.asList(outputs).indexOf(output_dot);
 		if(index != -1) {
 			if(output == null) {
-				output = new Connection[output_count];
+				output = new Output[output_count];
 			}
 			output[index] = output_connection;
 		}

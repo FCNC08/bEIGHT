@@ -77,6 +77,22 @@ public class State {
 			return state;
 		}
 	}
+	
+	public String getStateName() {
+		if(mode == STANDARD_MODE) {
+			if(state == ON_ERROR) {
+				return "ON";
+			}else {
+				return "OFF";
+			}
+		}else {
+			if(state == ON_ERROR) {
+				return "ERROR";
+			}else {
+				return "UNSET";
+			}
+		}
+	}
 
 	public boolean isEqual(State s2) {
 		return mode == s2.mode && state == s2.state;

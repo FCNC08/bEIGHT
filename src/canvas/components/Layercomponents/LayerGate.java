@@ -15,7 +15,7 @@ public abstract class LayerGate {
 	protected boolean color = false;
 	
 	protected LayerGate gate;
-	public Connection[] output;
+	public Output[] output;
 	
 	public LayerGate(int input_count, int output_count) {
 		this.input_count = input_count;
@@ -44,15 +44,12 @@ public abstract class LayerGate {
 		long latest_time = times[time_pointer];
 		if(latest_time != 0 && (actual_time-latest_time)<10) {
 			System.out.println("Blocked "+this);
-			printEvery();
 		}else {
-			System.out.println("act:"+actual_time+" lat:"+latest_time+"	"+this);
 			simulater();
 		}
 	}
 	public void printEvery() {
 		if(color) {
-			
 		}else {
 			color = true;
 			System.out.println(this);
@@ -65,11 +62,11 @@ public abstract class LayerGate {
 	}
 	
 	public abstract void createLayerGate();
-	public void setLayerOutput(Connection output_dot, Connection output_connection) {
+	public void setLayerOutput(Connection output_dot, Output output_connection) {
 		int index = Arrays.asList(outputs).indexOf(output_dot);
 		if(index != -1) {
 			if(output == null) {
-				output = new Connection[output_count];
+				output = new Output[output_count];
 			}
 			output[index] = output_connection;
 		}
@@ -79,9 +76,15 @@ public abstract class LayerGate {
 			createLayerGate();
 		}
 		try {
-			gate.inputs[Arrays.asList(inputs).indexOf(input_dot)] = input_connection;
-			input_connection.addComponent(gate);
-			System.out.println("Test");
+			int index = Arrays.asList(inputs).indexOf(input_dot);
+			if(index != -1) {
+				gate.inputs[index] = input_connection;
+				input_connection.addComponent(gate);
+				System.out.println("Test");
+			}else {
+				System.out.println("Error");
+			}
+			
 		}catch(NullPointerException e) {
 			System.out.println(this);
 		}
