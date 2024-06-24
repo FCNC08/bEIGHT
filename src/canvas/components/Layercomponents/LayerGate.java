@@ -42,7 +42,7 @@ public abstract class LayerGate {
 		time_pointer++;
 		time_pointer%=5;
 		long latest_time = times[time_pointer];
-		if(latest_time != 0 && (actual_time-latest_time)<100) {
+		if(latest_time != 0 && (actual_time-latest_time)<10) {
 			System.out.println("Blocked "+this);
 			printEvery();
 		}else {

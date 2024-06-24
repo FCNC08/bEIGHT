@@ -20,6 +20,12 @@ public class NOT extends LayerGate {
 			outputs[0].setState(State.getState(State.ERROR_MODE, State.ON_ERROR));
 			System.out.println("test");
 		}
+		try {
+			System.out.println(outputs[0].state.getStateBoolean());
+		} catch (ErrorStateExeption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 	@Override
