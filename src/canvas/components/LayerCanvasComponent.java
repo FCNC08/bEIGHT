@@ -140,4 +140,11 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 		}
 		
 	}
+	
+	@Override
+	public void resetLayerComponent() {
+		for(Connection con : inoutput.input) {
+			con.resetLayerComponent();
+		}
+	}
 }

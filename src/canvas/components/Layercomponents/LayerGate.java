@@ -90,4 +90,12 @@ public abstract class LayerGate {
 		}
 		
 	}
+	
+	public void resetLayerComponent() {
+		gate = null;
+		output = null;
+		for(Connection con : outputs) {
+			con.resetLayerComponent();
+		}
+	}
 }

@@ -401,6 +401,15 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		
 	}
 	
+	public void resetLayerComponent() {
+		gate = null;
+		output = null;
+		for(Dot o : outputs) {
+			o.resetLayerComponents();
+		}
+		
+	}
+	
 	public void createVerilogString(LinkedHashSet<FunctionalCanvasComponent> functional_components, short[] comp_count) {
 		setVerilogString(comp_count);
 		for(int i = 0; i<outputs.length; i++) {

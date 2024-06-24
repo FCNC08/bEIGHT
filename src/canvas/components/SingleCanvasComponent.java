@@ -321,6 +321,27 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 			control_color = false;
 		}
 	}
+	public void resetLayerComponents() {
+		if(control_color) {
+		}else {
+			control_color = true;
+			ListIterator<SingleCanvasComponent> li = connected_Components.listIterator();
+			while(li.hasNext()) {
+				try {
+					SingleCanvasComponent comp = li.next();
+					if(comp instanceof Wire) {
+						((Wire)comp).resetLayerComponents();
+					}else if(comp instanceof Dot) {
+						Dot d = (Dot) comp;
+						d.parent.resetLayerComponent();
+					}
+				}catch(ConcurrentModificationException e) {
+					e.printStackTrace();
+				}
+			}
+			control_color = false;
+		}
+	}
 	
 	public void printComponents() {
 		for (SingleCanvasComponent i : connected_Components) {

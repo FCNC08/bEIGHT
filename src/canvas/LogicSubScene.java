@@ -1915,6 +1915,9 @@ public class LogicSubScene extends SubScene {
 			inputs.get(i).outputs[0].setConnectedLayerConnection(input[i]);
 		}
 		
+		for(Input i : inputs) {
+			i.outputs[0].resetLayerComponents();
+		}
 		return new InputOutputConnectionPair(input, output);
 	}
 	

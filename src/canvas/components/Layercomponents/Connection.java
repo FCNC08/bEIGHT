@@ -77,5 +77,18 @@ public class Connection {
 		}
 	}
 	
+	public void resetLayerComponent() {
+		if(control_color) {
+		}else {
+			control_color = true;
+			ListIterator<LayerGate> li = connected_gates.listIterator();
+			while(li.hasNext()) {
+				LayerGate lg = li.next();
+				lg.resetLayerComponent();
+			}
+			control_color = false;
+		}
+	}
+	
 
 }
