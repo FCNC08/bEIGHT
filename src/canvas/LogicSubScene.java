@@ -31,7 +31,6 @@ import canvas.components.SingleCanvasComponent;
 import canvas.components.State;
 import canvas.components.ExternalComponents.ExternalComponent;
 import canvas.components.Layercomponents.Connection;
-import canvas.components.Layercomponents.LayerGate;
 import canvas.components.StandardComponents.Input;
 import canvas.components.StandardComponents.Output;
 import canvas.components.StandardComponents.Wire;

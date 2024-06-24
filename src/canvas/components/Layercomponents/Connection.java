@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.ListIterator;
 
 import canvas.components.State;
-import util.ErrorStateExeption;
 
 public class Connection {
 	protected State state = State.UNSET;

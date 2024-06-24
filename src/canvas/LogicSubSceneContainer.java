@@ -137,7 +137,7 @@ public class LogicSubSceneContainer extends SubScene {
 	}
 	
 	public static LogicSubSceneContainer init(int width, int height) {
-		// Creates example ComponentChooser TODO Adding Filesystem
+		// Creates example ComponentChooser todo Adding Filesystem
 		ComponentGroupings grouping = new ComponentGroupings();
 		ComponentGroup group = new ComponentGroup();
 		try {

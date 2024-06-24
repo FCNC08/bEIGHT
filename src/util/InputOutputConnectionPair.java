@@ -1,7 +1,6 @@
 package util;
 
 import canvas.components.Layercomponents.Connection;
-import canvas.components.Layercomponents.LayerGate;
 
 public class InputOutputConnectionPair {
 	public Connection[] input;

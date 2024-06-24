@@ -7,7 +7,6 @@ import java.util.ListIterator;
 
 import canvas.LogicSubScene;
 import canvas.components.Layercomponents.Connection;
-import canvas.components.Layercomponents.LayerGate;
 import canvas.components.Layercomponents.Output;
 import canvas.components.StandardComponents.Wire;
 import javafx.scene.paint.Color;
