@@ -30,7 +30,12 @@ public abstract class LayerGate {
 	public State[] getInputStates() {
 		State[] states = new State[input_count];
 		for(int i = 0; i<input_count; i++) {
-			states[i] = inputs[i].getState();
+			try {
+				states[i] = inputs[i].getState();
+			}catch(NullPointerException npe) {
+				states[i] = State.OFF;
+			}
+			
 		}
 		return states;
 	}
