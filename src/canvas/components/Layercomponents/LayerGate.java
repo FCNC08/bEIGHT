@@ -2,7 +2,11 @@ package canvas.components.Layercomponents;
 
 import java.util.Arrays;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import canvas.components.State;
+import util.PublicCount;
 
 public abstract class LayerGate {
 	
@@ -15,7 +19,11 @@ public abstract class LayerGate {
 	protected boolean color = false;
 	
 	protected LayerGate gate;
+	protected JSONObject object;
+	protected JSONArray json_inputs;
+	protected JSONArray json_output;
 	public Output[] output;
+	
 	
 	public LayerGate(int input_count, int output_count) {
 		this.input_count = input_count;
@@ -101,6 +109,14 @@ public abstract class LayerGate {
 		output = null;
 		for(Connection con : outputs) {
 			con.resetLayerComponent();
+		}
+	}
+	
+	public abstract void generateJSONObject();
+	
+	public void generateJSON(PublicCount pc, JSONArray functionals, int number) {
+		if(object == null) {
+			generateJSONObject();
 		}
 	}
 }

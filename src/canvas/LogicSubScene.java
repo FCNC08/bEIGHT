@@ -1469,6 +1469,10 @@ public class LogicSubScene extends SubScene {
 				name = "Input";
 			}else if(component instanceof Output) {
 				name = "Output";
+			}else if(component instanceof LayerCanvasComponent) {
+				name = "LayerComponent";
+				JSONObject layersystem = ((LayerCanvasComponent) component).getJSONObject();
+				componentobject.put("layersystem", layersystem);
 			}
 			componentobject.put("type", name);
 			componentobject.put("posx", component.point_X);

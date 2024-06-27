@@ -3,12 +3,16 @@ package canvas.components;
 
 import java.util.Arrays;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import canvas.LogicSubScene;
 import canvas.components.Layercomponents.Connection;
 import canvas.components.Layercomponents.Output;
 import javafx.scene.paint.Color;
 import util.Info;
 import util.InputOutputConnectionPair;
+import util.PublicCount;
 
 public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	public static int Standard_height_small = LogicSubScene.cross_distance;
@@ -146,5 +150,18 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 		for(Connection con : inoutput.input) {
 			con.resetLayerComponent();
 		}
+	}
+	
+	public JSONObject getJSONObject() {
+		//TODO GetJsonObject
+		JSONArray inputs = new JSONArray();
+		JSONArray functionals = new JSONArray();
+		PublicCount pc = new PublicCount(input_count);
+		for(int i = 0; i<input_count; i++) {
+			inputs.put(i);
+			inoutput.input[i].generateConnectedJSON(pc, functionals);
+		}
+		
+		return null;
 	}
 }

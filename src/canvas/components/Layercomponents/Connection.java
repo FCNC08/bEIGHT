@@ -3,7 +3,10 @@ package canvas.components.Layercomponents;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+import org.json.JSONArray;
+
 import canvas.components.State;
+import util.PublicCount;
 
 public class Connection {
 	protected State state = State.UNSET;
@@ -90,5 +93,15 @@ public class Connection {
 		}
 	}
 	
+	public void generateConnectedJSON(PublicCount pc, JSONArray functionals, int inputnumber) {
+		if(color) {
+		}else {
+			color = true;
+			//TODO
+			
+			
+			color = false;
+		}
+	}
 
 }
