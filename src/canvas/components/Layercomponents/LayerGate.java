@@ -19,9 +19,11 @@ public abstract class LayerGate {
 	protected boolean color = false;
 	
 	protected LayerGate gate;
+	
 	protected JSONObject object;
 	protected JSONArray json_inputs;
 	protected JSONArray json_output;
+	
 	public Output[] output;
 	
 	
@@ -114,9 +116,29 @@ public abstract class LayerGate {
 	
 	public abstract void generateJSONObject();
 	
-	public void generateJSON(PublicCount pc, JSONArray functionals, int number) {
+	public void generateJSON(PublicCount pc, JSONArray functionals, int number, Connection input_connection) {
 		if(object == null) {
 			generateJSONObject();
+			if(json_output == null) {
+				json_output = new JSONArray();
+			}
+			for(int i = 0; i<output_count; i++) {
+				pc.increase();
+				json_output.put(pc.getCount());
+				outputs[i].generateConnectedJSON(pc, functionals, pc.getCount());
+			}
+			object.put("outputs", json_output);
+			functionals.put(object);
+		}
+		json_inputs.put(Arrays.asList(inputs).indexOf(input_connection), number);
+	}
+	
+	public void resetJSON() {
+		gate = null;
+		json_output = null;
+		json_inputs = null;
+		for(Connection con : outputs) {
+			con.resetJSON();
 		}
 	}
 }

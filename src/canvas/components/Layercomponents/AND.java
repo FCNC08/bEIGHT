@@ -1,5 +1,6 @@
 package canvas.components.Layercomponents;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import canvas.components.State;
@@ -50,5 +51,12 @@ public class AND extends  LayerGate{
 	public void generateJSONObject() {
 		object = new JSONObject();
 		object.put("Name", "AND");
+		if(json_inputs == null) {
+			json_inputs = new JSONArray();
+		}
+		for(int i = 0; i<input_count; i++) {
+			json_inputs.put(0);
+		}
+		object.put("inputs", json_inputs);
 	}
 }

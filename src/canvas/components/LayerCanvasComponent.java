@@ -153,15 +153,24 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	}
 	
 	public JSONObject getJSONObject() {
-		//TODO GetJsonObject
 		JSONArray inputs = new JSONArray();
 		JSONArray functionals = new JSONArray();
 		PublicCount pc = new PublicCount(input_count);
 		for(int i = 0; i<input_count; i++) {
-			inputs.put(i);
-			inoutput.input[i].generateConnectedJSON(pc, functionals);
+			inputs.put(i+1);
+			inoutput.input[i].generateConnectedJSON(pc, functionals, i+1);
 		}
 		
-		return null;
+		JSONArray json_outputs = new JSONArray();
+		for(Output o : inoutput.output) {
+			json_outputs.put(o.json_number);
+		}
+		
+		JSONObject object = new JSONObject();
+		object.put("inputs", inputs);
+		object.put("functionals", functionals);
+		object.put("outputs", json_outputs);
+		
+		return object;
 	}
 }

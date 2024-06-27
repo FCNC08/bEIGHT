@@ -1,5 +1,8 @@
 package canvas.components.Layercomponents;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import canvas.components.State;
 import util.ErrorStateExeption;
 
@@ -42,5 +45,19 @@ public class XOR extends LayerGate {
 			}
 		}
 		outputs[0].setConnectedLayerConnection(gate.outputs[0]);
+	}
+	
+	@Override
+	public void generateJSONObject() {
+		object = new JSONObject();
+		object.put("Name", "XOR");
+		if(json_inputs == null) {
+			json_inputs = new JSONArray();
+		}
+		for(int i = 0; i<input_count; i++) {
+			json_inputs.put(0);
+		}
+		object.put("inputs", json_inputs);
+		object.put("outputs", json_output);
 	}
 }

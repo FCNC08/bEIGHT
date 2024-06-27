@@ -3,13 +3,18 @@ package canvas.components.Layercomponents;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+import org.json.JSONArray;
+
 import canvas.components.Dot;
 import canvas.components.State;
 import util.ErrorStateExeption;
+import util.PublicCount;
 
 public class Output extends Connection{
-	Dot output;
-	ArrayList<LayerGate> input_gates = new ArrayList<>();
+	protected Dot output;
+	protected ArrayList<LayerGate> input_gates = new ArrayList<>();
+	public int json_number;
+	
 	public Output(Dot output) {
 		this.output = output;
 	}
@@ -95,6 +100,19 @@ public class Output extends Connection{
 			}
 			output.resetLayerComponents();
 			control_color = false;
+		}
+	}
+	
+	@Override
+	public void generateConnectedJSON(PublicCount pc, JSONArray functionals, int inputnumber) {
+		if(color) {
+		}else {
+			color = true;
+			json_number = inputnumber;
+			for(LayerGate lg : connected_gates) {
+				lg.generateJSON(pc, functionals, inputnumber, this);
+			}
+			color = false;
 		}
 	}
 	

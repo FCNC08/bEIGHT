@@ -1,5 +1,8 @@
 package canvas.components.Layercomponents;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import canvas.components.State;
 import util.ErrorStateExeption;
 
@@ -32,5 +35,17 @@ public class NOT extends LayerGate {
 			}
 		}
 		outputs[0].setConnectedLayerConnection(gate.outputs[0]);
+	}
+	
+	@Override
+	public void generateJSONObject() {
+		object = new JSONObject();
+		object.put("Name", "NOT");
+		if(json_inputs == null) {
+			json_inputs = new JSONArray();
+		}
+		json_inputs.put(0);
+		object.put("inputs", json_inputs);
+		object.put("outputs", json_output);
 	}
 }

@@ -94,13 +94,23 @@ public class Connection {
 	}
 	
 	public void generateConnectedJSON(PublicCount pc, JSONArray functionals, int inputnumber) {
-		if(color) {
+		if(control_color) {
 		}else {
-			color = true;
-			//TODO
-			
-			
-			color = false;
+			control_color = true;
+			for(LayerGate lg : connected_gates) {
+				lg.generateJSON(pc, functionals, inputnumber, this);
+			}
+			control_color = false;
+		}
+	}
+	
+	public void resetJSON() {
+		if(control_color) {
+		}else {
+			control_color = true;
+			for(LayerGate lg : connected_gates) {
+				lg.resetJSON();
+			}
 		}
 	}
 
