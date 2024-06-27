@@ -39,7 +39,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	protected int time_pointer = 0;
 	
 
-	public FunctionalCanvasComponent(int width, int height, int input_count, int output_count) throws IllegalArgumentException {
+	public FunctionalCanvasComponent(int width, int height, int input_count, int output_count, String size) throws IllegalArgumentException {
 		super(width, height);
 
 		if (point_width < input_count || point_width < output_count) {
@@ -60,6 +60,8 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 			outputs[i] = new Dot(this);
 			outputs[i].setParent(this);
 		}
+		
+		this.size = size;
 		createInfo();
 	}
 

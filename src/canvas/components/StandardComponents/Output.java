@@ -19,7 +19,7 @@ public class Output extends FunctionalCanvasComponent{
 	
 	private State state = State.OFF;
 	public Output(int width, String size) throws IllegalArgumentException {
-		super(width, width, 1, 0);
+		super(width, width, 1, 0, size);
 		paintImage();
 	}
 	

@@ -15,8 +15,8 @@ public abstract class MemoryCanvasComponent extends FunctionalCanvasComponent {
 	public int memory_height;
 	protected String name;
 
-	public MemoryCanvasComponent(int width, int height, int memory_width, int memory_height) throws IllegalArgumentException {
-		super(width, height, memory_width + memory_height+1, memory_width);
+	public MemoryCanvasComponent(String size, int width, int height, int memory_width, int memory_height) throws IllegalArgumentException {
+		super(width, height, memory_width + memory_height+1, memory_width, size);
 		memory = new State[memory_height][memory_width];
 		for(int x = 0; x<memory_height; x++) {
 			for(int y = 0; y<memory_width; y++) {

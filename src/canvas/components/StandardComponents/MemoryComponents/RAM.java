@@ -15,8 +15,8 @@ public class RAM extends MemoryCanvasComponent {
 
 	public static Image MemoryComponent_Image = new Image("RAM.png");
 
-	public RAM(int width, int height, int memory_width, int memory_height) throws IllegalArgumentException {
-		super(width, height, memory_width, memory_height);
+	public RAM(String size,int width, int height, int memory_width, int memory_height) throws IllegalArgumentException {
+		super(size, width, height, memory_width, memory_height);
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class RAM extends MemoryCanvasComponent {
 			break;
 		}
 		// Creating it/painting the Image
-		RAM component = new RAM(width, height, 8, inputs);
+		RAM component = new RAM(size, width, height, 8, inputs);
 		ImageView temp_view = new ImageView(MemoryComponent_Image);
 		temp_view.setFitHeight(height);
 		temp_view.setFitWidth(width);
@@ -103,7 +103,7 @@ public class RAM extends MemoryCanvasComponent {
 			height = 1;
 			break;
 		}
-		RAM component = new RAM(width, height, 8, inputs);
+		RAM component = new RAM(size, width, height, 8, inputs);
 		ImageView temp_view = new ImageView(MemoryComponent_Image);
 		temp_view.setFitHeight(height);
 		temp_view.setFitWidth(width);

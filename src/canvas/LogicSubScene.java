@@ -1171,9 +1171,23 @@ public class LogicSubScene extends SubScene {
 				}
 				case("Input"):{
 					component = Input.getInput(jsoncomponent.getString("size"));
+					break;
 				}
 				case("Output"):{
 					component = Output.getOutput(jsoncomponent.getString("size"));
+					break;
+				}
+				case("LayerComponent"):{
+					String size;
+					if(FunctionalCanvasComponent.SIZE_SMALL.startsWith(jsoncomponent.getString("size"))) {
+						size = FunctionalCanvasComponent.SIZE_SMALL;
+					}else if(FunctionalCanvasComponent.SIZE_BIG.startsWith(jsoncomponent.getString("size"))) {
+						size = FunctionalCanvasComponent.SIZE_BIG;
+					}else {
+						size = FunctionalCanvasComponent.SIZE_MIDDLE;
+					}
+					System.out.println(jsoncomponent);
+					component = LayerCanvasComponent.init( jsoncomponent.getJSONObject("layersystem"),size ,jsoncomponent.getInt("inputs"), jsoncomponent.getInt("outputs"));
 				}
 				}
 				component.setXPoint(jsoncomponent.getInt("posx"));
@@ -1183,6 +1197,7 @@ public class LogicSubScene extends SubScene {
 				} catch (OcupationExeption e) {
 					e.printStackTrace();
 				}
+				break;
 			}
 		}
 		return logic_sub_scene;

@@ -7,8 +7,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import canvas.LogicSubScene;
+import canvas.components.Layercomponents.AND;
 import canvas.components.Layercomponents.Connection;
+import canvas.components.Layercomponents.NAND;
+import canvas.components.Layercomponents.NOR;
+import canvas.components.Layercomponents.NOT;
+import canvas.components.Layercomponents.OR;
 import canvas.components.Layercomponents.Output;
+import canvas.components.Layercomponents.XNOR;
+import canvas.components.Layercomponents.XOR;
 import javafx.scene.paint.Color;
 import util.Info;
 import util.InputOutputConnectionPair;
@@ -27,13 +34,110 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	
 	
 	public LayerCanvasComponent(String size, int width, int height, LogicSubScene logicscene) throws IllegalArgumentException {
-		super(width, height, logicscene.getInputs().size(), logicscene.getOutputs().size() );
-		this.size = size;
+		super(width, height, logicscene.getInputs().size(), logicscene.getOutputs().size(), size);
 		this.rotation = VERTICAL;
 		this.name = logicscene.name;
 		inoutput = logicscene.initLayerComponent(outputs);
 		resetStandardImage();
 		info.setHeadline(name);
+	}
+	
+	public LayerCanvasComponent(JSONObject jo, int width, int height, String size, int input_count, int output_count) {
+		super(width, height, input_count, output_count, size);
+		Connection[] connections = new Connection[jo.getInt("connection_count")+1];
+		Connection[] new_inputs = new Connection[input_count];
+		Output[] new_outputs = new Output[output_count];
+		for(int i = 0; i<jo.getJSONArray("inputs").length(); i++) {
+			connections[i] = new_inputs[i]= new Connection();
+		}
+		JSONArray ja = jo.getJSONArray("outputs");
+		for(int i = 0; i<ja.length(); i++) {
+			connections[ja.getInt(i)] = new_outputs[i]  = new Output(outputs[i]);
+		}
+		
+		for(int i = 1; i<connections.length; i++) {
+			if(connections[i] == null) {
+				connections[i] = new Connection();
+			}
+		}
+		for(Object o : jo.getJSONArray("functionals")) {
+			if(o instanceof JSONObject) {
+				JSONObject fjo = (JSONObject) o;
+				switch(fjo.getString("Name")) {
+				case("AND"):{
+					JSONArray finputs = fjo.getJSONArray("inputs");
+					AND comp = new AND(finputs.length());
+					for(int i = 0; i<fjo.length(); i++) {
+						comp.inputs[i] = connections[finputs.getInt(i)];
+						comp.inputs[i].addComponent(comp);
+					}
+					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					break;
+				}
+				case("NAND"):{
+					JSONArray finputs = fjo.getJSONArray("inputs");
+					NAND comp = new NAND(finputs.length());
+					for(int i = 0; i<fjo.length(); i++) {
+						comp.inputs[i] = connections[finputs.getInt(i)];
+						comp.inputs[i].addComponent(comp);
+					}
+					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					break;
+				}
+				case("NOR"):{
+					JSONArray finputs = fjo.getJSONArray("inputs");
+					NOR comp = new NOR(finputs.length());
+					for(int i = 0; i<fjo.length(); i++) {
+						comp.inputs[i] = connections[finputs.getInt(i)];
+						comp.inputs[i].addComponent(comp);
+					}
+					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					break;
+				}
+				case("NOT"):{
+					JSONArray finputs = fjo.getJSONArray("inputs");
+					NOT comp = new NOT();
+					comp.inputs[0] = connections[finputs.getInt(0)];
+					comp.inputs[0].addComponent(comp);
+					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					break;
+				}
+				case("OR"):{
+					JSONArray finputs = fjo.getJSONArray("inputs");
+					OR comp = new OR(finputs.length());
+					for(int i = 0; i<fjo.length(); i++) {
+						comp.inputs[i] = connections[finputs.getInt(i)];
+						comp.inputs[i].addComponent(comp);
+					}
+					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					break;
+				}
+				case("XNOR"):{
+					JSONArray finputs = fjo.getJSONArray("inputs");
+					XNOR comp = new XNOR(finputs.length());
+					for(int i = 0; i<fjo.length(); i++) {
+						comp.inputs[i] = connections[finputs.getInt(i)];
+						comp.inputs[i].addComponent(comp);
+					}
+					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					break;
+				}
+				case("XOR"):{
+					JSONArray finputs = fjo.getJSONArray("inputs");
+					XOR comp = new XOR(finputs.length());
+					for(int i = 0; i<fjo.length(); i++) {
+						comp.inputs[i] = connections[finputs.getInt(i)];
+						comp.inputs[i].addComponent(comp);
+					}
+					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					break;
+				}
+				
+				}
+			}
+		}
+		
+		inoutput = new InputOutputConnectionPair(new_inputs, new_outputs);
 	}
 
 	public static LayerCanvasComponent init(String size, LogicSubScene scene) {
@@ -58,6 +162,30 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 		}
 		LayerCanvasComponent component = new LayerCanvasComponent(size, width, height, scene);
 		return component;
+	}
+	
+	public static LayerCanvasComponent init(JSONObject jo, String size, int input_count, int output_count) {
+		int width, height;
+		switch (size) {
+		case SIZE_BIG:
+			width = LogicSubScene.cross_distance*(Math.max(input_count, output_count)+2)*Standard_width_multiplier_big;
+			height = Standard_height_big;
+			break;
+		case SIZE_MIDDLE:
+			width = LogicSubScene.cross_distance*(Math.max(input_count, output_count)+2)*Standard_width_multiplier_middle;
+			height = Standard_height_middle;
+			break;
+		case SIZE_SMALL:
+			width = LogicSubScene.cross_distance*(Math.max(input_count, output_count)+2)*Standard_width_multiplier_small;
+			height = Standard_height_small;
+			break;
+		default:
+			width = 1;
+			height = 1;
+			break;
+		}
+		return new LayerCanvasComponent(jo, width, height, size, input_count, output_count);
+		
 	}
 	
 	@Override
@@ -99,30 +227,7 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	}
 
 	@Override
-	public void createLayerGate() {
-		/*Connection newoutput[] = new Connection[outputs.length];
-		for(int i = 0; i<outputs.length; i++) {
-			newoutput[i] = new Connection();
-			this.outputs[i].setConnectedLayerOutput(newoutput[i]);
-		}
-		
-		Connection[] newinput = new Connection[input_count];
-		for(int i = 0; i<inoutput.input.length; i++) {
-			newinput[i] = new Connection();
-			this.inoutput.input[i].setConnectedLayerConnection(newinput[i]);
-		}
-		gate = new LayerComponent(input_count, output_count, newinput, newoutput);
-		for(int i = 0; i<output_count; i++) {
-			if(output!=null) {
-				if(output[i]!=null) {
-					gate.outputs[i] = output[i];
-					System.out.println(output[i]);
-				}
-			}
-			outputs[i].setConnectedLayerConnection(gate.outputs[i]);
-			System.out.println(gate.outputs[i]);
-		}*/
-	}
+	public void createLayerGate() {}
 	
 	@Override
 	public void setLayerOutput(Dot output_dot, Output output_connection) {
@@ -170,7 +275,8 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 		object.put("inputs", inputs);
 		object.put("functionals", functionals);
 		object.put("outputs", json_outputs);
-		
+		object.put("connection_count", pc.getCount());
+		object.put("name", name);
 		return object;
 	}
 }

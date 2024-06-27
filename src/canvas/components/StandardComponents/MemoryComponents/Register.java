@@ -9,8 +9,8 @@ import util.Info;
 
 public class Register extends MemoryCanvasComponent {
 	protected int bit_size;
-	public Register(int width, int height, int bit_size) {
-		super(width, height, bit_size,1);
+	public Register(String size, int width, int height, int bit_size) {
+		super(size, width, height, bit_size,1);
 		this.bit_size = bit_size;
 		rotation = VERTICAL;
 		setStandardDotLocations();
@@ -96,7 +96,7 @@ public class Register extends MemoryCanvasComponent {
 		default:
 			width =height = 0;
 		}
-		return new Register(width, height, bit_size);
+		return new Register(size, width, height, bit_size);
 	}
 
 	@Override
