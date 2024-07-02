@@ -45,6 +45,7 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	public LayerCanvasComponent(JSONObject jo, int width, int height, String size, int input_count, int output_count) {
 		super(width, height, input_count, output_count, size);
 		Connection[] connections = new Connection[jo.getInt("connection_count")+1];
+		System.out.println(connections.length);
 		Connection[] new_inputs = new Connection[input_count];
 		Output[] new_outputs = new Output[output_count];
 		for(int i = 0; i<jo.getJSONArray("inputs").length(); i++) {

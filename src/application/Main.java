@@ -9,14 +9,13 @@ import java.io.PrintStream;
 import java.util.Random;
 
 import canvas.LogicSubSceneContainer;
-import education.EducationSubScene;
+import education.EducationSubSceneContainer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
 import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 import util.IllegalInputOutputExeption;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -440,12 +439,8 @@ public class Main extends Application {
 		MainScene.heightProperty().bind(vbox.heightProperty());
 		MainScene.widthProperty().bind(vbox.widthProperty());
 		MainScene.setFill(Color.GRAY);
-		EducationSubScene subscene = null;
-		try {
-			subscene = new EducationSubScene(width, height, new ZipFile("testfiles/lection.lct"));
-		} catch (IllegalArgumentException | ZipException e) {
-			e.printStackTrace();
-		}
+		EducationSubSceneContainer subscene = new EducationSubSceneContainer(width, height);
+		subscene.addLesson(new ZipFile("testfiles/lection.lct"));
 		root.getChildren().add(subscene);
 		
 		vbox.getChildren().add(MainScene);

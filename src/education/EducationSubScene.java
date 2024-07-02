@@ -10,13 +10,19 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import application.Main;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -29,12 +35,22 @@ public class EducationSubScene extends SubScene{
 	public static String tempedu = "temporary/education/";
 	public static String tempmod = "temporary/modul/";
 	public static String tempext = "temporary/external";
+	
+	protected EducationSubSceneContainer container;
+	
 	protected Group root;
 	protected ArrayList<ScrollPane> order;
 	int position = 0;
-	public EducationSubScene(double width, double height, ZipFile questions) throws ZipException {
+	
+	protected Pane icon = new Pane();
+	protected Text text;
+	
+	public EducationSubScene(double width, double height, ZipFile questions, EducationSubSceneContainer essc) throws ZipException {
 		super(new Group(), width, height);
 		this.root = (Group) getRoot();
+		
+		this.container = essc;
+		
 		JSONObject jsonobject = null;
 		try {
 			if(questions.isEncrypted()) {
@@ -110,7 +126,7 @@ public class EducationSubScene extends SubScene{
 			@Override
 			public void handle(MouseEvent event) {
 				setNext();
-				Main.main.changeScene(0);
+				container.gotoStart();
 			}
 		});
 		finish.setX((width-finish.getBoundsInParent().getWidth())/2);
@@ -156,6 +172,15 @@ public class EducationSubScene extends SubScene{
 			
 		}
 		root.getChildren().add(choosing_area);
+		
+		text = new Text(headline_text);
+		text.setFont(new Font(width*0.01));
+		text.setLayoutY(width*0.05);
+		text.setLayoutX((width*0.1-text.getBoundsInParent().getWidth())*0.5);
+		icon.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+		icon.getChildren().addAll(text);
+		icon.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.MEDIUM)));
+	
 	}
 	public void setNext() {
 		System.out.println(position);
@@ -183,6 +208,10 @@ public class EducationSubScene extends SubScene{
 		}
 		root.getChildren().clear();
 		root.getChildren().add(order.get(position));
+	}
+	
+	public Pane getIcon() {
+		return icon;
 	}
 
 }
