@@ -440,7 +440,7 @@ public class Main extends Application {
 		MainScene.widthProperty().bind(vbox.widthProperty());
 		MainScene.setFill(Color.GRAY);
 		EducationSubSceneContainer subscene = new EducationSubSceneContainer(width, height);
-		subscene.addLesson(new ZipFile("testfiles/lection.lct"));
+		subscene.addLesson(new ZipFile("testfiles/fulladder1.lct"));
 		root.getChildren().add(subscene);
 		
 		vbox.getChildren().add(MainScene);
