@@ -8,12 +8,15 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Random;
 
+import org.apache.commons.io.FileUtils;
+
 import canvas.LogicSubSceneContainer;
 import education.EducationSubSceneContainer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.stage.FileChooser.ExtensionFilter;
 import net.lingala.zip4j.ZipFile;
 import util.IllegalInputOutputExeption;
@@ -61,6 +64,17 @@ public class Main extends Application {
 		
 		// set Scene and saves Stage
 		MainStage = primaryStage;
+		
+		MainStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(WindowEvent event) {
+				try {
+					FileUtils.cleanDirectory(new File("temporary/"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 		changeScene(0);
 		MainStage.show();
 

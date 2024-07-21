@@ -4,6 +4,11 @@
   <artifactId>bEIGHT</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <dependencies>
+  	<dependency>
+	    <groupId>commons-io</groupId>
+	    <artifactId>commons-io</artifactId>
+	    <version>2.11.0</version>
+	</dependency>
     <dependency>
         <groupId>org.openjfx</groupId>
         <artifactId>javafx-controls</artifactId>
