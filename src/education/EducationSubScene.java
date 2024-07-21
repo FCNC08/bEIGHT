@@ -34,7 +34,7 @@ public class EducationSubScene extends SubScene{
 
 	public static String tempedu = "temporary/education/";
 	public static String tempmod = "temporary/modul/";
-	public static String tempext = "temporary/external";
+	public static String tempext = "temporary/external/";
 	
 	protected EducationSubSceneContainer container;
 	

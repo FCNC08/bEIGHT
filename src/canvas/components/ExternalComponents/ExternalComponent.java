@@ -137,6 +137,7 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 		JSONObject jsonobject = null;
 		try {
 			if(file.isEncrypted()) throw new IllegalArgumentException();
+			System.out.println(file.getFileHeaders());
 			InputStream is = file.getInputStream(file.getFileHeader(json_file));
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			byte[] buffer = new byte[4096];

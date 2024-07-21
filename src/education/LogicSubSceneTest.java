@@ -94,6 +94,7 @@ public class LogicSubSceneTest extends ScrollPane{
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println(space);
 		JSONArray defaultcomponents = space.getJSONArray("defaultcomponents");
 		ComponentGroupings grouping = new ComponentGroupings();
 		ComponentGroup defaults = new ComponentGroup();
@@ -145,7 +146,7 @@ public class LogicSubSceneTest extends ScrollPane{
 		grouping.add(inoutput);
 		try{
 			ComponentGroup external = new ComponentGroup();
-			JSONArray externalcomponents = jsonobject.getJSONArray("externalcomponents");
+			JSONArray externalcomponents = space.getJSONArray("externalcomponents");
 			temporary_file.extractAll(EducationSubScene.tempext);
 			for(Object externalcomponent : externalcomponents) {
 				if(externalcomponent instanceof String) {
