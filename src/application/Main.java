@@ -456,6 +456,7 @@ public class Main extends Application {
 		EducationSubSceneContainer subscene = new EducationSubSceneContainer(width, height);
 		subscene.addLesson(new ZipFile("testfiles/logikgatter.lct"));
 		subscene.addLesson(new ZipFile("testfiles/2bitadder.lct"));
+		subscene.addLesson(new ZipFile("testfiles/2x2multiplier.lct"));
 		root.getChildren().add(subscene);
 		
 		vbox.getChildren().add(MainScene);
