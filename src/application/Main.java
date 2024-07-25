@@ -68,10 +68,14 @@ public class Main extends Application {
 		MainStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent event) {
-				try {
-					FileUtils.cleanDirectory(new File("temporary/"));
-				} catch (IOException e) {
-					e.printStackTrace();
+				if(new File("temporary/").exists()) {
+					try {
+						FileUtils.cleanDirectory(new File("temporary/"));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}else {
+					System.out.println("No temp.");
 				}
 			}
 		});

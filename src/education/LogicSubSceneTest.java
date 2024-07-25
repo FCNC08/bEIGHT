@@ -71,6 +71,8 @@ public class LogicSubSceneTest extends ScrollPane{
 		}
 		String headlineString = jsonobject.getString("headline");
 		Label headline = new Label(headlineString);
+		headline.setWrapText(true);
+		headline.setMaxWidth(width-40);
 		headline.setFont(new Font(25));
 		file.extractAll(EducationSubScene.tempmod);
 		@SuppressWarnings("resource")

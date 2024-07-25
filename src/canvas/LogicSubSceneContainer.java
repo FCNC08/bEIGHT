@@ -157,15 +157,20 @@ public class LogicSubSceneContainer extends SubScene {
 		ComponentGroup group_2 = new ComponentGroup();
 		ZipFile file = new ZipFile("dlatch.cmp");
 		ExternalComponent comp = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE, file);
-		ExternalComponent fulladder = ExternalComponent.init(ExternalComponent.SIZE_MIDDLE, new ZipFile("testfiles/FullAdder.cmp"));
+		System.out.println("DLatch added");
+		//ExternalComponent fulladder = ExternalComponent.init(ExternalComponent.SIZE_MIDDLE, new ZipFile("testfiles/FullAdder.cmp"));
+		System.out.println("FullAdder added");
 		ExternalComponent twobitadder = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE, new ZipFile("testfiles/2BitAdder.cmp"));
+		System.out.println("2BitAdder added");
 		group_2.add(comp);
-		group_2.add(fulladder);
+		//group_2.add(fulladder);
 		group_2.add(twobitadder);
-		group_2.add(Register.getRegister(LogicComponent.SIZE_MIDDLE, 8));
+		ComponentGroup group_3 = new ComponentGroup();
+		group_3.add(Register.getRegister(LogicComponent.SIZE_MIDDLE, 8));
 		grouping.add(group);
 		grouping.add(group_1);
 		grouping.add(group_2);
+		grouping.add(group_3);
 		// Initializing Container with new Group
 		return new LogicSubSceneContainer(width, height, new Group(), grouping, 4);
 	}
