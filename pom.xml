@@ -22,22 +22,22 @@
 	<dependency>
 		<groupId>org.openjfx</groupId>
 		<artifactId>javafx-graphics</artifactId>
-		<version>23-ea+22</version>
+		<version>22-ea+16</version>
 	</dependency>
 	<dependency>
 		<groupId>org.openjfx</groupId>
 		<artifactId>javafx-base</artifactId>
-		<version>23-ea+22</version>
+		<version>23-ea+3</version>
 	</dependency>
 	<dependency>
 		<groupId>org.openjfx</groupId>
 		<artifactId>javafx-fxml</artifactId>
-		<version>23-ea+22</version>
+		<version>22-ea+16</version>
 	</dependency>
 	<dependency>
 		<groupId>org.openjfx</groupId>
 		<artifactId>javafx-swing</artifactId>
-		<version>23-ea+22</version>
+		<version>22-ea+16</version>
 	</dependency>
 	<dependency>
 		<groupId>net.lingala.zip4j</groupId>
@@ -74,6 +74,8 @@
 	        <version>3.8.0</version>
 	        <configuration>
 	            <release>11</release>
+	            <source>1.8</source>
+	            <target>1.8</target>
 	        </configuration>
 	    </plugin>
 	    <plugin>

@@ -168,7 +168,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		image_view.setLayoutX(X);
 		info.setLayoutX(X);
 		setStandardDotLocations();
-		}
+	}
 
 	@Override
 	public void addY(int Y_coord) {

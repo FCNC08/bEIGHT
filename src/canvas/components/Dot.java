@@ -21,8 +21,10 @@ public class Dot extends SingleCanvasComponent {
 	public static String arduino_output = "Output";
 	
 	// Initializing it with the size of a half wireheight
+	public static int dot_width = LogicSubScene.wire_height/2;
+	
 	public Dot(FunctionalCanvasComponent parent) {
-		super(LogicSubScene.wire_height / 2, LogicSubScene.wire_height / 2);
+		super(dot_width, dot_width);
 		this.parent = parent;
 		paintCircle();
 	}

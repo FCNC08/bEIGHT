@@ -144,14 +144,14 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 
 	@Override
 	public void setXPoint(int point_x) {
-		this.X = point_x * LogicSubScene.cross_distance - LogicSubScene.wire_height / 2;
+		this.X = point_x * LogicSubScene.cross_distance - Dot.dot_width/2;
 		this.point_X = point_x;
 		image_view.setLayoutX(X);
 	}
 
 	@Override
 	public void setYPoint(int point_y) {
-		this.Y = point_y * LogicSubScene.cross_distance - LogicSubScene.wire_height / 2;
+		this.Y = point_y * LogicSubScene.cross_distance - Dot.dot_width/2;
 		this.point_Y = point_y;
 		image_view.setLayoutY(Y);
 	}
