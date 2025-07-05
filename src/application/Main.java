@@ -22,13 +22,18 @@ import net.lingala.zip4j.ZipFile;
 import util.IllegalInputOutputExeption;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.SubScene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -213,8 +218,28 @@ public class Main extends Application {
 		};
 		education_area.addEventFilter(MouseEvent.MOUSE_CLICKED, education_click);
 		
+		/*Canvas canvas = new Canvas(100, 180);
+		GraphicsContext gc = canvas.getGraphicsContext2D();
+		
+		gc.setFill(Color.PURPLE);
+		gc.fillRect(0, 0, 100, 180);
+		gc.setFill(Color.BLACK);
+		double width1 = 20;
+		double height1 = 60;
+		gc.fillRect(width1, 0, height1, width1);
+		gc.fillRect(0, width1, width1, height1);
+		gc.fillRect(width1+height1, width1, width1, height1);
+		gc.fillRect(width1, height1+width1, height1, width1);
+		gc.fillRect(0, height1+2*width1, width1, height1);
+		gc.fillRect(width1+height1, height1+2*width1, width1, height1);
+		gc.fillRect(width1, (height1+width1)*2, height1, width1);
+		
+		WritableImage i1 = new WritableImage(100,180);
+		canvas.snapshot(new SnapshotParameters(), i1);*/
+		
 		root.getChildren().add(logic_area);
 		root.getChildren().add(education_area);
+		//root.getChildren().add(new ImageView(i1));
 		vbox.getChildren().add(MainScene);
 
 		Scene scene = new Scene(vbox);

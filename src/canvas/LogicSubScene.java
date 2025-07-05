@@ -33,6 +33,7 @@ import canvas.components.ExternalComponents.ExternalComponent;
 import canvas.components.Layercomponents.Connection;
 import canvas.components.StandardComponents.Input;
 import canvas.components.StandardComponents.Output;
+import canvas.components.StandardComponents.SevenSegmentDisplay;
 import canvas.components.StandardComponents.Wire;
 import canvas.components.StandardComponents.WireDoublet;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
@@ -344,6 +345,15 @@ public class LogicSubScene extends SubScene {
 		};
 
 		addEventFilter(ScrollEvent.SCROLL, zoom_Event_Handler);*/
+		try {
+			SevenSegmentDisplay ssd = new SevenSegmentDisplay(cross_distance*5, cross_distance*9, "big");
+			ssd.setXPoint(60);
+			ssd.setYPoint(50);
+			add(ssd);
+		} catch (IllegalArgumentException | OcupationExeption e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 	
