@@ -347,8 +347,8 @@ public class LogicSubScene extends SubScene {
 		addEventFilter(ScrollEvent.SCROLL, zoom_Event_Handler);*/
 		try {
 			SevenSegmentDisplay ssd = new SevenSegmentDisplay(cross_distance*5, cross_distance*9, "big");
-			ssd.setXPoint(60);
-			ssd.setYPoint(50);
+			ssd.setXPoint(30);
+			ssd.setYPoint(30);
 			add(ssd);
 		} catch (IllegalArgumentException | OcupationExeption e) {
 			// TODO Auto-generated catch block

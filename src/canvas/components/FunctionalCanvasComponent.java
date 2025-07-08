@@ -77,42 +77,59 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 
 	public void setStandardDotLocations() {
 		// creates dot position depending of the width and the dot count
-		int distance = point_width / (inputs.length);
-		int y = point_Y;
-		int x = point_X;
+		int distance;
+		int y;
+		int x;
 		if (rotation == VERTICAL) {
-			x += distance * 0.5;
-			for (int i = inputs.length - 1; i >= 0; i--) {
-				inputs[i].setXPoint(x);
-				inputs[i].setYPoint(y);
-				x += distance;
+			if(input_count!=0) {
+				distance = point_width / (inputs.length);
+				y = point_Y;
+				x = point_X;
+				
+				x += distance * 0.5;
+				for (int i = inputs.length - 1; i >= 0; i--) {
+					inputs[i].setXPoint(x);
+					inputs[i].setYPoint(y);
+					x += distance;
+				}
 			}
-			distance = point_width / (outputs.length);
-			x = point_X;
-			x += distance * 0.5;
-			y = point_Y + point_height;
-			for (int i = outputs.length - 1; i >= 0; i--) {
-				outputs[i].setXPoint(x);
-				outputs[i].setYPoint(y);
-				x += distance;
+			if(output_count!=0) {
+				distance = point_width / (outputs.length);
+				x = point_X;
+				x += distance * 0.5;
+				y = point_Y + point_height;
+				for (int i = outputs.length - 1; i >= 0; i--) {
+					outputs[i].setXPoint(x);
+					outputs[i].setYPoint(y);
+					x += distance;
+				}
 			}
+			
 
 		} else {
-			y += distance * 0.5;
-			for (Dot d : inputs) {
-				d.setXPoint(x);
-				d.setYPoint(y);
-				y += distance;
+			if(input_count!=0) {
+				distance = point_width / (inputs.length);
+				y = point_Y;
+				x = point_X;
+				
+				y += distance * 0.5;
+				for (Dot d : inputs) {
+					d.setXPoint(x);
+					d.setYPoint(y);
+					y += distance;
+				}
 			}
 
-			distance = point_width / (outputs.length);
-			x = point_X + point_height;
-			y = point_Y;
-			y += distance * 0.5;
-			for (Dot d : outputs) {
-				d.setXPoint(x);
-				d.setYPoint(y);
-				y += distance;
+			if(output_count!=0) {
+				distance = point_width / (outputs.length);
+				x = point_X + point_height;
+				y = point_Y;
+				y += distance * 0.5;
+				for (Dot d : outputs) {
+					d.setXPoint(x);
+					d.setYPoint(y);
+					y += distance;
+				}
 			}
 		}
 	}
