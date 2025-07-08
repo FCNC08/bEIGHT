@@ -16,12 +16,6 @@ public class SevenSegmentDisplay extends FunctionalCanvasComponent{
 
 	//Proportions: 10/18
 	
-	protected static int StandardWidth_big = LogicSubScene.cross_distance * 8;
-
-	protected static int StandardWidth_middle = LogicSubScene.cross_distance * 4;
-
-	protected static int StandardWidth_small = LogicSubScene.cross_distance*2;
-	
 	protected boolean[] segments = new boolean[7];
 	
 	protected int number = 0;
@@ -29,6 +23,10 @@ public class SevenSegmentDisplay extends FunctionalCanvasComponent{
 	public SevenSegmentDisplay(int width, int height, String size)
 			throws IllegalArgumentException {
 		super(width, height, 4, 0, size);
+		paintImage();
+	}
+	public SevenSegmentDisplay(int width, int height) {
+		super(width, height, 0,0,"xsmall");
 		paintImage();
 	}
 
@@ -49,8 +47,21 @@ public class SevenSegmentDisplay extends FunctionalCanvasComponent{
 
 	@Override
 	public FunctionalCanvasComponent getClone(String size) {
-		// TODO Auto-generated method stub
-		return null;
+		// Creating a ANDGate with standard sizes
+		int height;
+		int width;
+		switch (size) {
+		case SIZE_BIG:
+			width = LogicSubScene.cross_distance*10;
+			height = LogicSubScene.cross_distance*18;
+			break;
+		default:
+			width = LogicSubScene.cross_distance*5;
+			height = LogicSubScene.cross_distance*9;
+			break;
+		}
+		SevenSegmentDisplay ssd = new SevenSegmentDisplay(width, height, size);
+		return ssd;
 	}
 	
 	protected void paintImage() {
