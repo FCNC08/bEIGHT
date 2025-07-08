@@ -72,32 +72,32 @@ public class SevenSegmentDisplay extends FunctionalCanvasComponent{
 		
 		double height1 = (getWidth())/10*6;
 		double width1 = (getWidth())/5;
-		Color background = Color.DARKGRAY;
+		Color background = LogicSubScene.black_grey;
 		gc.setFill(background);
 		gc.fillRect(0,0,width, height);
 		if(number == 0 || number == 2 || number == 3 || (number>=5 && number!=11 && number!=13)) {
-			gc.setFill(Color.BLACK);
+			gc.setFill(Color.WHITE);
 		}else {
 			gc.setFill(Color.DIMGRAY);
 		}
 		gc.fillRect(width1, 0, height1, width1);
 		
 		if(number==0 || (number>=4 && number<=6) || (number>=8 && number<=12) || number>=14) {
-			gc.setFill(Color.BLACK);
+			gc.setFill(Color.WHITE);
 		}else {
 			gc.setFill(Color.DIMGRAY);
 		}
 		gc.fillRect(0, width1, width1, height1);
 
 		if(number<=4 || (number>=7 && number<=10) || number==13) {
-			gc.setFill(Color.BLACK);
+			gc.setFill(Color.WHITE);
 		}else {
 			gc.setFill(Color.DIMGRAY);
 		}
 		gc.fillRect(width1+height1, width1, width1, height1);
 
 		if((number>=2 && number<=6) || (number>=8 && number<=11) || number>=13) {
-			gc.setFill(Color.BLACK);
+			gc.setFill(Color.WHITE);
 		}else {
 			gc.setFill(Color.DIMGRAY);
 		}
@@ -105,21 +105,21 @@ public class SevenSegmentDisplay extends FunctionalCanvasComponent{
 		
 
 		if(number==0 || number==2 || number == 6 || number == 8 || number >=10) {
-			gc.setFill(Color.BLACK);
+			gc.setFill(Color.WHITE);
 		}else {
 			gc.setFill(Color.DIMGRAY);
 		}
 		gc.fillRect(0, height1+2*width1, width1, height1);
 
 		if(number<=1 || (number>=3 && number<=11) || number==13) {
-			gc.setFill(Color.BLACK);
+			gc.setFill(Color.WHITE);
 		}else {
 			gc.setFill(Color.DIMGRAY);
 		}
 		gc.fillRect(width1+height1, height1+2*width1, width1, height1);
 		
 		if(number==0 || number == 2 || number == 3 || number ==5 || number == 6 || number == 8 || number == 9 ||(number>=11 && number<=14)) {
-			gc.setFill(Color.BLACK);
+			gc.setFill(Color.WHITE);
 		}else {
 			gc.setFill(Color.DIMGRAY);
 		}
@@ -137,6 +137,11 @@ public class SevenSegmentDisplay extends FunctionalCanvasComponent{
 			}
 		}*/
 		
+	}
+	
+	public void setNumber(int number) {
+		this.number = number;
+		paintImage();
 	}
 	
 	@Override

@@ -168,7 +168,9 @@ public class LogicSubSceneContainer extends SubScene {
 		group_2.add(twobitadder);
 		ComponentGroup group_3 = new ComponentGroup();
 		//group_3.add(Register.getRegister(LogicComponent.SIZE_MIDDLE, 8));
-		group_3.add(new SevenSegmentDisplay((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5)));
+		SevenSegmentDisplay ssd = new SevenSegmentDisplay((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5));
+		ssd.setNumber(8);
+		group_3.add(ssd);
 		grouping.add(group);
 		grouping.add(group_1);
 		grouping.add(group_2);
@@ -185,7 +187,7 @@ public class LogicSubSceneContainer extends SubScene {
 			root.getChildren().remove(component_chooser);
 		}
 		// Adding ComponentChooser and set the layout
-		component_chooser = new ComponentChooser(logic_subscene, new Group(), width * 0.15, LogicSubScene.getNearesDot((int) (height * 0.9)), grouping);
+		component_chooser = new ComponentChooser(logic_subscene, new ScrollPane(), width * 0.15, LogicSubScene.getNearesDot((int) (height * 0.9)), grouping);
 		component_chooser.setFill(Color.WHITE);
 		component_chooser.setLayoutX(width * 0.8);
 		component_chooser.setLayoutY(height * 0.01);
