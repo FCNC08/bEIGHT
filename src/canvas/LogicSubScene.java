@@ -31,6 +31,7 @@ import canvas.components.SingleCanvasComponent;
 import canvas.components.State;
 import canvas.components.ExternalComponents.ExternalComponent;
 import canvas.components.Layercomponents.Connection;
+import canvas.components.StandardComponents.HexInput;
 import canvas.components.StandardComponents.Input;
 import canvas.components.StandardComponents.Output;
 import canvas.components.StandardComponents.SevenSegmentDisplay;
@@ -345,15 +346,15 @@ public class LogicSubScene extends SubScene {
 		};
 
 		addEventFilter(ScrollEvent.SCROLL, zoom_Event_Handler);*/
-		/*try {
-			SevenSegmentDisplay ssd = new SevenSegmentDisplay(cross_distance*5, cross_distance*9, "big");
+		try {
+			HexInput ssd = new HexInput(140, 220, "big");
 			ssd.setXPoint(30);
 			ssd.setYPoint(30);
 			add(ssd);
 		} catch (IllegalArgumentException | OcupationExeption e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 
 	}
 	
