@@ -346,7 +346,7 @@ public class LogicSubScene extends SubScene {
 		};
 
 		addEventFilter(ScrollEvent.SCROLL, zoom_Event_Handler);*/
-		try {
+		/*try {
 			HexInput ssd = new HexInput(140, 220, "big");
 			ssd.setXPoint(30);
 			ssd.setYPoint(30);
@@ -354,7 +354,7 @@ public class LogicSubScene extends SubScene {
 		} catch (IllegalArgumentException | OcupationExeption e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 
 	}
 	

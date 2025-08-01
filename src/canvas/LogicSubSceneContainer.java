@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
 import canvas.components.ExternalComponents.ExternalComponent;
+import canvas.components.StandardComponents.HexInput;
 import canvas.components.StandardComponents.Input;
 import canvas.components.StandardComponents.Output;
 import canvas.components.StandardComponents.SevenSegmentDisplay;
@@ -169,8 +170,10 @@ public class LogicSubSceneContainer extends SubScene {
 		ComponentGroup group_3 = new ComponentGroup();
 		//group_3.add(Register.getRegister(LogicComponent.SIZE_MIDDLE, 8));
 		SevenSegmentDisplay ssd = new SevenSegmentDisplay((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5));
+		HexInput hex = new HexInput((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5));
 		ssd.setNumber(8);
 		group_3.add(ssd);
+		group_3.add(hex);
 		grouping.add(group);
 		grouping.add(group_1);
 		grouping.add(group_2);
