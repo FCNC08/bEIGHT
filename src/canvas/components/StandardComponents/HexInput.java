@@ -112,30 +112,30 @@ public class HexInput extends FunctionalCanvasComponent{
 		State[] states = new State[4];
 		int number = current_number;
 		if(number>=8) {
-			states[0] = State.ON;
+			states[3] = State.ON;
 			number-=8;
 		}else {
-			states[0] = State.OFF;
+			states[3] = State.OFF;
 		}
 		
 		if(number>=4) {
-			states[1] = State.ON;
-			number-=4;
-		}else {
-			states[1] = State.OFF;
-		}
-		
-		if(number>=2) {
 			states[2] = State.ON;
-			number-=2;
+			number-=4;
 		}else {
 			states[2] = State.OFF;
 		}
 		
-		if(number==1) {
-			states[3] = State.ON;
+		if(number>=2) {
+			states[1] = State.ON;
+			number-=2;
 		}else {
-			states[3] = State.OFF;
+			states[1] = State.OFF;
+		}
+		
+		if(number==1) {
+			states[0] = State.ON;
+		}else {
+			states[0] = State.OFF;
 		}
 		
 		setOutputStates(states);
