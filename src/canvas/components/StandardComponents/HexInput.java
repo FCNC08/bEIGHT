@@ -1,6 +1,7 @@
 package canvas.components.StandardComponents;
 
 
+import canvas.LogicSubScene;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.State;
 import javafx.event.EventHandler;
@@ -148,15 +149,15 @@ public class HexInput extends FunctionalCanvasComponent{
 		
 		switch(size) {
 		case SIZE_BIG:
-			height = 440;
-			width = 280;
+			height = LogicSubScene.cross_distance*18;
+			width = LogicSubScene.cross_distance*12;
 			break;
 		case SIZE_MIDDLE:
-			height = 330;
-			width = 210;
+			height = LogicSubScene.cross_distance*14;
+			width = LogicSubScene.cross_distance*9;
 		default:
-			height = 220;
-			width = 140;
+			height = LogicSubScene.cross_distance*9;
+			width = LogicSubScene.cross_distance*6;
 			break;
 		}
 		return new HexInput(width, height, size);

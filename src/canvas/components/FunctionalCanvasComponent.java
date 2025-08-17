@@ -77,57 +77,64 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 
 	public void setStandardDotLocations() {
 		// creates dot position depending of the width and the dot count
-		int distance;
-		int y;
 		int x;
-		if (rotation == VERTICAL) {
-			if(input_count!=0) {
-				distance = point_width / (inputs.length);
-				y = point_Y;
-				x = point_X;
+		int y;
+		int distance;
+		int offset;
+		int border;
+		if(rotation == VERTICAL) {
+			if(input_count != 0) {
+				offset = point_width + 1 - input_count;
+				distance = 1+offset/input_count;
+				border = (point_width - distance*(input_count-1))/2;
 				
-				x += distance * 0.5;
+				x = point_X+border;
+				y = point_Y;
 				for (int i = inputs.length - 1; i >= 0; i--) {
 					inputs[i].setXPoint(x);
 					inputs[i].setYPoint(y);
 					x += distance;
 				}
 			}
-			if(output_count!=0) {
-				distance = point_width / (outputs.length);
-				x = point_X;
-				x += distance * 0.5;
-				y = point_Y + point_height;
+			
+			if(output_count != 0) {
+				offset = point_width + 1 - output_count;
+				distance = 1+offset/output_count;
+				border = (point_width - distance*(output_count-1))/2;
+				
+				x = point_X+border;
+				y = point_Y+point_height;
 				for (int i = outputs.length - 1; i >= 0; i--) {
 					outputs[i].setXPoint(x);
 					outputs[i].setYPoint(y);
 					x += distance;
 				}
 			}
-			
-
-		} else {
-			if(input_count!=0) {
-				distance = point_width / (inputs.length);
-				y = point_Y;
-				x = point_X;
+		}else {
+			if(input_count != 0) {
+				offset = point_height + 1 - input_count;
+				distance = 1+offset/input_count;
+				border = (point_height - distance*(input_count-1))/2;
 				
-				y += distance * 0.5;
-				for (Dot d : inputs) {
-					d.setXPoint(x);
-					d.setYPoint(y);
+				x = point_X;
+				y = point_Y+border;
+				for (int i = inputs.length - 1; i >= 0; i--) {
+					inputs[i].setXPoint(x);
+					inputs[i].setYPoint(y);
 					y += distance;
 				}
 			}
-
-			if(output_count!=0) {
-				distance = point_width / (outputs.length);
-				x = point_X + point_height;
-				y = point_Y;
-				y += distance * 0.5;
-				for (Dot d : outputs) {
-					d.setXPoint(x);
-					d.setYPoint(y);
+			
+			if(output_count != 0) {
+				offset = point_height + 1 - output_count;
+				distance = 1+offset/output_count;
+				border = (point_height - distance*(output_count-1))/2;
+				
+				x = point_X+point_width;
+				y = point_Y+border;
+				for (int i = outputs.length - 1; i >= 0; i--) {
+					outputs[i].setXPoint(x);
+					outputs[i].setYPoint(y);
 					y += distance;
 				}
 			}

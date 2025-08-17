@@ -9,7 +9,7 @@ import canvas.components.State;
 import util.PublicCount;
 
 public class Connection {
-	protected State state = State.UNSET;
+	protected State state = State.OFF;
 	protected ArrayList<LayerGate> connected_gates = new ArrayList<>();
 	protected boolean color = false;
 	protected boolean control_color = false;

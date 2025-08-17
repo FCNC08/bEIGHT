@@ -58,6 +58,9 @@ public class LogicSubSceneContainer extends SubScene {
 	public static boolean BLACK = false;
 	public static boolean WHITE = true;
 	
+	protected static ComponentGroupings master_grouping;
+	protected static ComponentGroupings slave_grouping;
+	
 	protected File location;
 	protected boolean color = BLACK;
 	
@@ -75,18 +78,46 @@ public class LogicSubSceneContainer extends SubScene {
 	protected TextField eddited_field;
 	
 	public LogicSubScene logic_subscene;
-	public SubScene component_chooser;
+	public SubScene component_chooser_master;
+	public SubScene component_chooser_slave;
 	public VBox chooser_root;
 	public SubScene bEIGHT_chooser;
 	private FunctionalCanvasComponent adding_component;
 	private Group root;
 
 	public LogicSubSceneContainer(int width, int height, Group Mainroot, ComponentGroupings groupings, int multiplier) {
+		//Initializing for the Education unit
 		super(Mainroot, width, height);
 		this.root = Mainroot;
 		this.width = width;
 		this.height = height;
 		this.grouping = groupings;
+		// Adding LogicScene
+		logic_subscene = LogicSubScene.init(LogicSubScene.getNearesDot((int) (width * 0.80)), LogicSubScene.getNearesDot((int) (height * 0.9)), multiplier);
+
+		logic_subscene.setFill(LogicSubScene.black_grey);
+		
+		logic_subscene.setName("Main bEIGHT");
+
+		logic_subscene.addY((int) (height * 0.01));
+		
+		
+		root.getChildren().add(logic_subscene);
+
+		addChooser();
+		addListener();
+	}
+	
+	public LogicSubSceneContainer(int width, int height, Group Mainroot, int multiplier) {
+		super(Mainroot, width, height);
+		this.root = Mainroot;
+		this.width = width;
+		this.height = height;
+		
+		if(master_grouping == null) {
+			addGroupings();
+		}
+		
 		chooser_root = new VBox();
 		chooser_root.setBackground(new Background(new BackgroundFill(LogicSubScene.black_grey, null, null)));
 		bEIGHT_chooser= new SubScene(chooser_root, width*0.0975, height);
@@ -101,7 +132,7 @@ public class LogicSubSceneContainer extends SubScene {
 				scene.setFill(LogicSubScene.black_grey);
 				scene.addX((int)(width*0.1));
 				scene.addY((int) (height*0.01));
-				addLogicSubScene(scene);
+				addLogicSubScene(scene, false);
 			}
 		};
 		addnew.addEventFilter(MouseEvent.MOUSE_CLICKED, create_new_bEIGHT);
@@ -119,12 +150,12 @@ public class LogicSubSceneContainer extends SubScene {
 
 		logic_subscene.setFill(LogicSubScene.black_grey);
 		
-		logic_subscene.setName("Main bEIGHT");
+		logic_subscene.setName("Master beight");
 
 		logic_subscene.addX((int) (width * 0.1));
 		logic_subscene.addY((int) (height * 0.01));
 		
-		addLogicSubScene(logic_subscene);
+		addLogicSubScene(logic_subscene, true);
 		
 		root.getChildren().add(logic_subscene);
 
@@ -139,8 +170,13 @@ public class LogicSubSceneContainer extends SubScene {
 	}
 	
 	public static LogicSubSceneContainer init(int width, int height) {
-		// Creates example ComponentChooser todo Adding Filesystem
-		ComponentGroupings grouping = new ComponentGroupings();
+		
+		return new LogicSubSceneContainer(width, height, new Group(), 4);
+	}
+	
+	public static void addGroupings() {
+		//Add all elements to the master grouping you can choose from on the master beight. E.g. you cannot use a Hex-Input in a slave beight
+		master_grouping = new ComponentGroupings();
 		ComponentGroup group = new ComponentGroup();
 		try {
 
@@ -161,41 +197,67 @@ public class LogicSubSceneContainer extends SubScene {
 		ExternalComponent comp = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE, file);
 		System.out.println("DLatch added");
 		//ExternalComponent fulladder = ExternalComponent.init(ExternalComponent.SIZE_MIDDLE, new ZipFile("testfiles/FullAdder.cmp"));
-		System.out.println("FullAdder added");
+		//System.out.println("FullAdder added");
 		ExternalComponent twobitadder = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE, new ZipFile("testfiles/2BitAdder.cmp"));
 		System.out.println("2BitAdder added");
 		group_2.add(comp);
 		//group_2.add(fulladder);
 		group_2.add(twobitadder);
 		ComponentGroup group_3 = new ComponentGroup();
-		//group_3.add(Register.getRegister(LogicComponent.SIZE_MIDDLE, 8));
 		SevenSegmentDisplay ssd = new SevenSegmentDisplay((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5));
 		HexInput hex = new HexInput((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5));
+		//group_3.add(Register.getRegister(LogicComponent.SIZE_MIDDLE, 8));
 		ssd.setNumber(8);
 		group_3.add(ssd);
 		group_3.add(hex);
-		grouping.add(group);
-		grouping.add(group_1);
-		grouping.add(group_2);
-		grouping.add(group_3);
-		// Initializing Container with new Group
-		return new LogicSubSceneContainer(width, height, new Group(), grouping, 4);
+		master_grouping.add(group);
+		master_grouping.add(group_1);
+		master_grouping.add(group_2);
+		master_grouping.add(group_3);
+		
+		//Add all elements to the slave grouping you can choose from on the slave beight. E.g. you cannot use a Hex-Input in a slave beight
+		slave_grouping= new ComponentGroupings();
+		ComponentGroup sgroup = new ComponentGroup();
+		try {
+
+			sgroup.add(ANDGate.getANDGATE(LogicComponent.SIZE_MIDDLE, 2));
+			sgroup.add(NANDGate.getNANDGATE(LogicComponent.SIZE_MIDDLE, 2));
+			sgroup.add(ORGate.getORGATE(LogicComponent.SIZE_MIDDLE, 2));
+			sgroup.add(NORGate.getNORGATE(LogicComponent.SIZE_MIDDLE, 2));
+			sgroup.add(XORGate.getXORGate(LogicComponent.SIZE_MIDDLE, 2));
+			sgroup.add(XNORGate.getXNORGate(LogicComponent.SIZE_MIDDLE, 2));
+			sgroup.add(NOTGate.getNOTGATE(LogicComponent.SIZE_MIDDLE));
+		} catch (IllegalArgumentException iae) {
+		}
+		ComponentGroup sgroup_1 = new ComponentGroup();
+		sgroup_1.add(Input.getInput(FunctionalCanvasComponent.SIZE_BIG));
+		sgroup_1.add(Output.getOutput(FunctionalCanvasComponent.SIZE_BIG));
+
+		slave_grouping.add(sgroup);
+		slave_grouping.add(sgroup_1);
 	}
 
 	public void triggerKeyEvent(KeyEvent ke) {
 		logic_subscene.triggerKeyEvent(ke);
 	}
 	private void addChooser() {
-		if(component_chooser != null) {
-			root.getChildren().remove(component_chooser);
+		if(component_chooser_master != null) {
+			root.getChildren().remove(component_chooser_master);
 		}
 		// Adding ComponentChooser and set the layout
-		component_chooser = new ComponentChooser(logic_subscene, new ScrollPane(), width * 0.15, LogicSubScene.getNearesDot((int) (height * 0.9)), grouping);
-		component_chooser.setFill(Color.WHITE);
-		component_chooser.setLayoutX(width * 0.8);
-		component_chooser.setLayoutY(height * 0.01);
-		component_chooser.setFill(LogicSubScene.black_grey);
-		root.getChildren().add(component_chooser);		
+		component_chooser_master = new ComponentChooser(logic_subscene, new ScrollPane(), width * 0.15, LogicSubScene.getNearesDot((int) (height * 0.9)), master_grouping);
+		component_chooser_master.setFill(Color.WHITE);
+		component_chooser_master.setLayoutX(width * 0.8);
+		component_chooser_master.setLayoutY(height * 0.01);
+		component_chooser_master.setFill(LogicSubScene.black_grey);
+		
+		component_chooser_slave = new ComponentChooser(logic_subscene, new ScrollPane(), width*0.15, LogicSubScene.getNearesDot((int) height), slave_grouping);
+		component_chooser_slave.setFill(Color.WHITE);
+		component_chooser_slave.setLayoutX(width * 0.8);
+		component_chooser_slave.setLayoutY(height * 0.01);
+		component_chooser_slave.setFill(LogicSubScene.black_grey);
+		
+		root.getChildren().add(component_chooser_master);		
 	}
 	private void addListener() {
 		if(createNewLogicComponent != null) {
@@ -215,7 +277,7 @@ public class LogicSubSceneContainer extends SubScene {
 				}
 				// Checks bounds of component chooser. If in bound of component chooser it
 				// clones the FunctionalComponent
-				if (component_chooser.getLayoutX() < me.getX() && component_chooser.getLayoutY() < me.getY()) {
+				if (component_chooser_master.getLayoutX() < me.getX() && component_chooser_master.getLayoutY() < me.getY()) {
 					if (me.getTarget() instanceof ImageView) {
 						ImageView view = (ImageView) me.getTarget();
 						if (view.getImage() instanceof FunctionalCanvasComponent) {
@@ -284,7 +346,7 @@ public class LogicSubSceneContainer extends SubScene {
 		addEventFilter(MouseEvent.MOUSE_DRAGGED, moveNewLogicComponent);
 	}
 	
-	public void addLogicSubScene(LogicSubScene scene) {
+	public void addLogicSubScene(LogicSubScene scene, boolean ismaster) {
 		logic_subscenes.add(scene);
 		TextField label = new TextField(scene.getName());
 		label.setBackground(new Background(new BackgroundFill(LogicSubScene.black_grey, null, null)));
@@ -293,7 +355,7 @@ public class LogicSubSceneContainer extends SubScene {
 		EventHandler<MouseEvent> add_component_handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
-				if(scene.getInputs().size()>0&&scene.getOutputs().size()>0) {
+				if(scene.getInputs().size()>0&&scene.getOutputs().size()>0&&!ismaster) {
 					if (me.getButton() == MouseButton.PRIMARY) {
 						System.out.println("Middle");
 						adding_component = scene.getLayerCanvasComponent(FunctionalCanvasComponent.SIZE_MIDDLE);
@@ -315,13 +377,20 @@ public class LogicSubSceneContainer extends SubScene {
 		EventHandler<MouseEvent> rename_event_handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
-				if(me.getClickCount()>=2) {
+				if(me.getClickCount()>=2 && !ismaster) {
 					label.setEditable(true);
 					eddited_field = label;
 				}else {
 					root.getChildren().remove(logic_subscene);
 					logic_subscene = scene;
 					root.getChildren().add(logic_subscene);
+					if(ismaster) {
+						root.getChildren().removeAll(component_chooser_master, component_chooser_slave);
+						root.getChildren().add(component_chooser_master);
+					}else {
+						root.getChildren().removeAll(component_chooser_master, component_chooser_slave);
+						root.getChildren().add(component_chooser_slave);
+					}
 				}
 			}
 		};
@@ -400,7 +469,7 @@ public class LogicSubSceneContainer extends SubScene {
 		logic_subscene.addX((int) (width * 0.1));
 		logic_subscene.addY((int) (height * 0.01));
 		
-		addLogicSubScene(logic_subscene);
+		addLogicSubScene(logic_subscene, false);
 		
 		root.getChildren().add(logic_subscene);
 		location = file;
@@ -689,10 +758,12 @@ public class LogicSubSceneContainer extends SubScene {
 			this.color = color;
 			if(color == WHITE) {
 				logic_subscene.setFill(LogicSubScene.white_grey);
-				component_chooser.setFill(LogicSubScene.white_grey);
+				component_chooser_master.setFill(LogicSubScene.white_grey);
+				component_chooser_slave.setFill(LogicSubScene.white_grey);
 			}else {
 				logic_subscene.setFill(LogicSubScene.black_grey);
-				component_chooser.setFill(LogicSubScene.black_grey);
+				component_chooser_master.setFill(LogicSubScene.black_grey);
+				component_chooser_slave.setFill(LogicSubScene.black_grey);
 			}
 		}
 	}

@@ -145,15 +145,16 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 		int width, height;
 		switch (size) {
 		case SIZE_BIG:
-			width = LogicSubScene.cross_distance*(Math.max(scene.getInputs().size(), scene.getOutputs().size())+2)*Standard_width_multiplier_big;
+			width = LogicSubScene.cross_distance*(Math.max(scene.getInputs().size(), scene.getOutputs().size())+1)*Standard_width_multiplier_big;
 			height = Standard_height_big;
 			break;
 		case SIZE_MIDDLE:
-			width = LogicSubScene.cross_distance*(Math.max(scene.getInputs().size(), scene.getOutputs().size())+2)*Standard_width_multiplier_middle;
+			width = LogicSubScene.cross_distance*(Math.max(scene.getInputs().size(), scene.getOutputs().size())+1)*Standard_width_multiplier_middle;
 			height = Standard_height_middle;
 			break;
 		case SIZE_SMALL:
-			width = LogicSubScene.cross_distance*(Math.max(scene.getInputs().size(), scene.getOutputs().size())+2)*Standard_width_multiplier_small;
+			width = LogicSubScene.cross_distance*(Math.max(scene.getInputs().size(), scene.getOutputs().size())+1)*Standard_width_multiplier_small;
+			System.out.println(width);
 			height = Standard_height_small;
 			break;
 		default:
@@ -193,8 +194,8 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	public void simulater() {
 		State[] states = getInputStates();
 		for(int i = 0; i<input_count; i++) {
-			inoutput.input[i].printEvery();
-			System.out.println("");
+			//inoutput.input[i].printEvery();
+			//System.out.println("");
 			inoutput.input[i].setState(states[i]);
 		}
 	}
@@ -211,10 +212,12 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 
 	@Override
 	protected void resetStandardImage() {
-		double border_size = Math.min(width*0.1, height*0.3);
+		double border_size = Math.min(width*0.05, height*0.15);
 		for(int x = 0; x<width; x++) {
 			for(int y = 0; y<height; y++) {
-				if((x<border_size||x > width-border_size)&&(y<border_size||y<height-border_size)) {
+				if((x<border_size||x > width-border_size)||(y<border_size||y>height-border_size)) {
+					pwriter.setColor(x, y, Color.GREY);
+				}else {
 					pwriter.setColor(x, y, Color.BLACK);
 				}
 			}
