@@ -10,6 +10,7 @@ import java.util.ListIterator;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,9 +47,12 @@ import canvas.components.StandardComponents.MemoryComponents.RAM;
 import canvas.components.StandardComponents.MemoryComponents.Register;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
-import javafx.scene.Camera;
 import javafx.scene.Group;
-import javafx.scene.PerspectiveCamera;
+import javafx.geometry.Point2D;
+import javafx.scene.input.ScrollEvent;
+import javafx.scene.transform.Scale;
+import javafx.scene.SnapshotParameters;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -114,8 +118,11 @@ public class LogicSubScene extends SubScene {
 	private CanvasComponent last_focused_component = null;
 	private Info addedInfo = null;
 
-	protected Camera camera;
-	protected Translate camera_position;
+	// Pan (translate) + Zoom (scale) applied to the canvas root Group
+	private Scale zoomTransform;
+	protected Translate camera_position; // keep the name to minimize changes; it's the "pan"
+	private double minScale;
+	private double maxScale;
 
 	private FunctionalCanvasComponent adding_CanvasComponent;
 	private WireDoublet adding_WireDoublet;
@@ -169,75 +176,79 @@ public class LogicSubScene extends SubScene {
 
 		Mainroot.getChildren().add(new ImageView(Test_Background));
 
-		// Adding camera and setting it to the middle of the area
-		camera_position = new Translate(0, 0, 0);
-		camera = new PerspectiveCamera();
-		camera.getTransforms().add(camera_position);
-
-		camera_position.setX(width / 4 - cross_distance / 2);
-		camera_position.setY(height / 4 - cross_distance / 2);
-
-		setCamera(camera);
-
-		addZTranslate(multiplier);
-
 		root = Mainroot;
+		
+	    camera_position = new Translate(0, 0);      // pan (in screen pixels)
+	    zoomTransform    = new Scale(1.0, 1.0, 0, 0); // uniform zoom
+	    
+	    // Order matters: scale first, then translate -> translation is NOT scaled
+	    root.getTransforms().setAll(zoomTransform, camera_position);
+	    
+	    // reasonable zoom bounds
+	    // content is (width x height), viewport is (Start_Width x Start_Height)
+	    minScale = Math.min((double) StartWidth / width, (double) StartHeight / height) * 0.2; // allow a bit more zoom out
+	    maxScale = 5.0;
+	    
 		EventHandler<MouseEvent> dragging_Event_Handler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
 				// Checking which mousebutton is down
 				if (me.isSecondaryButtonDown()) {
-					addXTranslate(moves_x - (me.getSceneX() - X));
-					addYTranslate(moves_y - (me.getSceneY() - Y));
-					moves_x = me.getSceneX() - X;
-					moves_y = me.getSceneY() - Y;
+				    // Pan in screen pixels (independent of zoom)
+				    double dx = me.getX() - moves_x;
+				    double dy = me.getY() - moves_y;
+				    addXTranslate(dx);
+				    addYTranslate(dy);
+				    moves_x = me.getX();
+				    moves_y = me.getY();
 
 				} else if (me.isPrimaryButtonDown()) {
-					boolean moved = false;
-					if (me.getTarget() instanceof ImageView) {
-						ImageView view = (ImageView) me.getTarget();
-						if (view.getImage() instanceof CanvasComponent) {
-							CanvasComponent component = (CanvasComponent) view.getImage();
-							if (component == last_focused_component) {
-								try {
-									if((int) ((me.getSceneX() - X + getXTranslate()))>0||(int) ((me.getSceneY() - Y - 25 + getYTranslate()))>0) {
-										move(component, (int) ((me.getSceneX() - X + getXTranslate())), (int) ((me.getSceneY() - Y - 25 + getYTranslate())));
-										moves_focused_x = (int) (me.getSceneX() - X + getXTranslate());
-										moves_focused_y = (int) (me.getSceneY() - Y - 25 + getYTranslate());
-										moved = true;
-									}
-									
-								} catch (OcupationExeption e) {
-									e.printStackTrace();
-									moved = false;
-								}
-							}
+				    boolean moved = false;
 
-						}
-					}
-					if (adding_WireDoublet != null && !moved) {
-						// Checking if a WireDoublet already exists
-						try {
-							// Trys to remove old WireDoublet(doesn't work) and adding new Wiredoublet with
-							// new coordinates
-							removeTry(adding_WireDoublet);
-							adding_WireDoublet = getWires(pressed_x, pressed_y, (int) (me.getSceneX() - X + getXTranslate()), (int) (me.getSceneY() - Y - 25 + getYTranslate()));
-							addTry(adding_WireDoublet);
-						} catch (Exception e) {
-							System.out.println("Exeption");
-							adding_WireDoublet = null;
-						}
-					} else if (!moved) {
-						try {
-							// No wiredoublet exists so it creates a new and adds it to the SubScene
-							adding_WireDoublet = getWires(pressed_x, pressed_y, (int) (me.getSceneX() - X + getXTranslate()), (int) (me.getSceneY() - Y - 25 + getYTranslate()));
-							addTry(adding_WireDoublet);
-							System.out.println("Added Wire doublet");
-						} catch (Exception e) {
-							System.out.println("Exeption");
-							adding_WireDoublet = null;
-						}
-					}
+				    // Convert cursor to WORLD coords
+				    Point2D world = root.parentToLocal(me.getX(), me.getY());
+				    int wx = (int) world.getX();
+				    int wy = (int) world.getY();
+
+				    if (me.getTarget() instanceof ImageView) {
+				        ImageView view = (ImageView) me.getTarget();
+				        if (view.getImage() instanceof CanvasComponent) {
+				            CanvasComponent component = (CanvasComponent) view.getImage();
+				            if (component == last_focused_component) {
+				                try {
+				                    if (wx >= 0 && wy >= 0) {
+				                        move(component, wx, wy);
+				                        moves_focused_x = wx;
+				                        moves_focused_y = wy;
+				                        moved = true;
+				                    }
+				                } catch (OcupationExeption e) {
+				                    e.printStackTrace();
+				                    moved = false;
+				                }
+				            }
+				        }
+				    }
+
+				    if (adding_WireDoublet != null && !moved) {
+				        try {
+				            removeTry(adding_WireDoublet);
+				            adding_WireDoublet = getWires(pressed_x, pressed_y, wx, wy);
+				            addTry(adding_WireDoublet);
+				        } catch (Exception e) {
+				            System.out.println("Exeption");
+				            adding_WireDoublet = null;
+				        }
+				    } else if (!moved) {
+				        try {
+				            adding_WireDoublet = getWires(pressed_x, pressed_y, wx, wy);
+				            addTry(adding_WireDoublet);
+				            System.out.println("Added Wire doublet");
+				        } catch (Exception e) {
+				            System.out.println("Exeption");
+				            adding_WireDoublet = null;
+				        }
+				    }
 				}
 			}
 		};
@@ -249,11 +260,12 @@ public class LogicSubScene extends SubScene {
 				
 				// Setting the coord to createWire/moveScene
 				if (me.isPrimaryButtonDown()) {
-					moves_focused_x = pressed_x = (int) (me.getSceneX() - X + getXTranslate());
-					moves_focused_y = pressed_y = (int) (me.getSceneY() - Y - 25 + getYTranslate());
+				    Point2D world = root.parentToLocal(me.getX(), me.getY());
+				    moves_focused_x = pressed_x = (int) world.getX();
+				    moves_focused_y = pressed_y = (int) world.getY();
 				} else if (me.isSecondaryButtonDown()) {
-					moves_x = me.getSceneX() - X;
-					moves_y = me.getSceneY() - Y;
+				    moves_x = me.getX();
+				    moves_y = me.getY();
 				}
 
 			}
@@ -335,24 +347,13 @@ public class LogicSubScene extends SubScene {
 		addEventFilter(MouseEvent.MOUSE_DRAGGED, dragging_Event_Handler);
 		addEventFilter(MouseEvent.MOUSE_CLICKED, click_Event_Handler);
 
-		/*EventHandler<ScrollEvent> zoom_Event_Handler = new EventHandler<ScrollEvent>() {
-			@Override
-			public void handle(ScrollEvent se) {
-				// Adds Z-Translate to Camera(Zooms out/in) using the mousewheel
-				addZTranslate(se.getDeltaY());
-			}
-		};
-
-		addEventFilter(ScrollEvent.SCROLL, zoom_Event_Handler);*/
-		/*try {
-			HexInput ssd = new HexInput(140, 220, "big");
-			ssd.setXPoint(30);
-			ssd.setYPoint(30);
-			add(ssd);
-		} catch (IllegalArgumentException | OcupationExeption e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+	    EventHandler<ScrollEvent> zoom_Event_Handler = new EventHandler<ScrollEvent>() {
+	        @Override public void handle(ScrollEvent se) {
+	            double factor = Math.pow(1.0015, se.getDeltaY());
+	            zoomOn(factor, se.getX(), se.getY()); // pivot is the cursor in SubScene coords
+	        }
+	    };
+	    addEventFilter(ScrollEvent.SCROLL, zoom_Event_Handler);
 
 	}
 	
@@ -1128,7 +1129,7 @@ public class LogicSubScene extends SubScene {
 		int real_width = json_object.getInt("width")*cross_distance;
 		int real_height = json_object.getInt("height")*cross_distance;
 		System.out.println(real_width+" "+json_object.getInt("height")*cross_distance);
-		LogicSubScene logic_sub_scene = new LogicSubScene(new Group(), width, height, Math.max(real_width/width,real_height/height));
+		LogicSubScene logic_sub_scene = new LogicSubScene(new Group(), width, height, Math.max((double)real_width/width,(double)real_height/height));
 		JSONArray wires = json_object.getJSONArray("wires");
 		for(Object component : wires) {
 			if(component instanceof JSONObject) {
@@ -1206,7 +1207,6 @@ public class LogicSubScene extends SubScene {
 				} catch (OcupationExeption e) {
 					e.printStackTrace();
 				}
-				break;
 			}
 		}
 		return logic_sub_scene;
@@ -1279,7 +1279,7 @@ public class LogicSubScene extends SubScene {
 			if (error) {
 				throw new IllegalArgumentException();
 			} else {
-				round_start_y = getNearesDot(start_X);
+				round_start_y = getNearesDot(start_Y);
 			}
 		}
 		int round_end_x = getNearesDot(end_X);
@@ -1351,46 +1351,78 @@ public class LogicSubScene extends SubScene {
 
 	// Setting Zoom to standard
 	public void setStandardZoom() {
-		camera_position.setZ(multiplier);
+	    zoomTransform.setX(1.0);
+	    zoomTransform.setY(1.0);
+	    camera_position.setX(0);
+	    camera_position.setY(0);
+	    clampPan();
 	}
 
-	// Adding Camera Translate
+	/** Backwards-compatible "zoom" using scroll-like delta; zooms around viewport center. */
 	public void addZTranslate(double z) {
-		double Z_Postion = camera_position.getZ() + z;
-		if (Z_Postion <= max_zoom) {
-		} else {
-			camera_position.setZ(Z_Postion);
-		}
-		checkXYTanslate();
+	    double factor = Math.pow(1.0015, z);
+	    zoomOn(factor, Start_Width / 2.0, Start_Height / 2.0);
+	}
+	
+	private void zoomOn(double factor, double pivotX, double pivotY) {
+	    double oldScale = zoomTransform.getX();
+	    double newScale = clamp(oldScale * factor, minScale, maxScale);
+	    if (newScale == oldScale) return;
+
+	    // pivot is given in parent (SubScene) coords; convert to local, apply scale, then re-align pan
+	    Point2D pivotInLocal = root.parentToLocal(pivotX, pivotY);
+
+	    zoomTransform.setX(newScale);
+	    zoomTransform.setY(newScale);
+
+	    // Where is that local pivot now (in parent coords)?
+	    Point2D pivotAfter = root.localToParent(pivotInLocal);
+
+	    // Move so that the scene-space pivot stays under the mouse
+	    camera_position.setX(camera_position.getX() + (pivotX - pivotAfter.getX()));
+	    camera_position.setY(camera_position.getY() + (pivotY - pivotAfter.getY()));
+
+	    clampPan();
 	}
 
+	private double clamp(double v, double lo, double hi) {
+	    return Math.max(lo, Math.min(hi, v));
+	}
+
+	private void clampPan() {
+	    double s = zoomTransform.getX();
+	    double scaledW = width  * s;
+	    double scaledH = height * s;
+
+	    double minX = Math.min(0, Start_Width  - scaledW);
+	    double minY = Math.min(0, Start_Height - scaledH);
+	    double maxX = 0;
+	    double maxY = 0;
+
+	    if (camera_position.getX() < minX) camera_position.setX(minX);
+	    if (camera_position.getX() > maxX) camera_position.setX(maxX);
+	    if (camera_position.getY() < minY) camera_position.setY(minY);
+	    if (camera_position.getY() > maxY) camera_position.setY(maxY);
+	}
+	
 	public void addXTranslate(double x) {
-		double X_Postion = camera_position.getX() + x;
-		if (X_Postion < 0 || X_Postion > (width - Start_Width)) {
-		} else {
-			camera_position.setX(X_Postion);
-		}
+	    camera_position.setX(camera_position.getX() + x);
+	    clampPan();
 	}
 
 	public void addYTranslate(double y) {
-		double Y_Position = camera_position.getY() + y;
-		if (Y_Position < 0 || Y_Position > (height - Start_Height)) {
-		} else {
-			camera_position.setY(Y_Position);
-		}
+	    camera_position.setY(camera_position.getY() + y);
+	    clampPan();
 	}
 
+	// kept for compatibility with existing calls
 	public void checkXYTanslate() {
-		// TODO prevent CameraPosition to move outside depending on zoom
-		if (getZTranslate() / -2 > getXTranslate()) {
-			camera_position.setX(getZTranslate() / -2);
-			System.out.println(getXTranslate() + "X-Coord");
-		}
+	    clampPan();
 	}
 
 	// Getting camera Translate
 	public double getZTranslate() {
-		return camera_position.getZ();
+		return zoomTransform.getX();
 	}
 
 	public double getXTranslate() {
@@ -1409,46 +1441,64 @@ public class LogicSubScene extends SubScene {
 	
 
 	public void SaveAsPDF(File filepath) {
-		// Creating PDF out of SubScene
-		File temp_image_file = new File("temp.png");
-		try {
-			double start_Z = getZTranslate();
+	    try {
+	        // 1) Snapshot the canvas at native (canvas) resolution, with transforms reset
+	        double oldScale = zoomTransform.getX();
+	        double oldPanX  = camera_position.getX();
+	        double oldPanY  = camera_position.getY();
 
-			camera_position.setZ(0);
+	        zoomTransform.setX(1.0); zoomTransform.setY(1.0);
+	        camera_position.setX(0); camera_position.setY(0);
 
-			WritableImage image = new WritableImage((int) (width), (int) (height));
-			
-			snapshot(null, image);
-			
-			BufferedImage buff_image = SwingFXUtils.fromFXImage(image, null);
+	        SnapshotParameters sp = new SnapshotParameters();
+	        sp.setViewport(new Rectangle2D(0, 0, width, height));
 
-			// Create a new PDF document
-			PDDocument document = new PDDocument();
-			PDPage page = new PDPage();
-			document.addPage(page);
+	        WritableImage image = new WritableImage(width, height);
+	        root.snapshot(sp, image);
 
-			// Create a content stream for writing to the page
-			PDPageContentStream contentStream = new PDPageContentStream(document, page);
+	        BufferedImage buffImage = SwingFXUtils.fromFXImage(image, null);
 
-			// Draw the image on the page
-			contentStream.drawImage(LosslessFactory.createFromImage(document, buff_image), 0, 0, page.getMediaBox().getWidth(), page.getMediaBox().getHeight());
+	        // 2) Make a PDF page that matches the canvas size / aspect (no stretching)
+	        float imgW = buffImage.getWidth();
+	        float imgH = buffImage.getHeight();
 
-			// Close the content stream
-			contentStream.close();
+	        // PDF "user space" max dimension is ~14400 points (200 inches at 72dpi).
+	        // If larger, use a larger userUnit so the page fits the PDF limits.
+	        final float MAX_POINTS = 14400f;
+	        float userUnit = 1f;
+	        float pageW = imgW;
+	        float pageH = imgH;
 
-			// Save the document to the output file
-			document.save(filepath);
+	        if (pageW > MAX_POINTS || pageH > MAX_POINTS) {
+	            userUnit = (float) Math.ceil(Math.max(pageW, pageH) / MAX_POINTS);
+	            pageW = pageW / userUnit;
+	            pageH = pageH / userUnit;
+	        }
 
-			// Close the document
-			document.close();
+	        PDDocument document = new PDDocument();
+	        PDPage page = new PDPage(new PDRectangle(pageW, pageH));
+	        if (userUnit != 1f) {
+	            page.setUserUnit(userUnit); // enables larger pages with scaled units
+	        }
+	        document.addPage(page);
 
-			camera_position.setZ(start_Z);
+	        // 3) Draw the image 1:1 in page space (preserves aspect, no scaling distortion)
+	        PDPageContentStream cs = new PDPageContentStream(document, page);
+	        cs.drawImage(LosslessFactory.createFromImage(document, buffImage), 0, 0, pageW, pageH);
+	        cs.close();
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		temp_image_file.delete();
+	        document.save(filepath);
+	        document.close();
+
+	        // 4) Restore UI transforms
+	        zoomTransform.setX(oldScale); zoomTransform.setY(oldScale);
+	        camera_position.setX(oldPanX); camera_position.setY(oldPanY);
+
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
 	}
+
 	
 	public JSONObject getJSON() {
 		JSONObject object = new JSONObject();
@@ -1577,7 +1627,7 @@ public class LogicSubScene extends SubScene {
 				component_string = component_string+"not("+comp.outputs[0].verilog_name+", "+comp.inputs[0].verilog_name+");\n";
 				wire_string = wire_string+"wire "+comp.outputs[0].verilog_name+";\n";
 			}else if(comp instanceof ORGate) {
-				component_string = component_string+"and("+comp.outputs[0].verilog_name;
+				component_string = component_string+"or("+comp.outputs[0].verilog_name;
 				for(Dot d : comp.inputs) {
 					component_string = component_string +", "+ d.verilog_name;
 				}

@@ -90,7 +90,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				
 				x = point_X+border;
 				y = point_Y;
-				for (int i = inputs.length - 1; i >= 0; i--) {
+				for (int i = 0; i < inputs.length; i++) {
 					inputs[i].setXPoint(x);
 					inputs[i].setYPoint(y);
 					x += distance;
@@ -104,7 +104,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				
 				x = point_X+border;
 				y = point_Y+point_height;
-				for (int i = outputs.length - 1; i >= 0; i--) {
+				for (int i = 0; i < outputs.length; i++) {
 					outputs[i].setXPoint(x);
 					outputs[i].setYPoint(y);
 					x += distance;
@@ -118,7 +118,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				
 				x = point_X;
 				y = point_Y+border;
-				for (int i = inputs.length - 1; i >= 0; i--) {
+				for (int i = 0; i < inputs.length; i++) {
 					inputs[i].setXPoint(x);
 					inputs[i].setYPoint(y);
 					y += distance;
@@ -132,7 +132,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				
 				x = point_X+point_width;
 				y = point_Y+border;
-				for (int i = outputs.length - 1; i >= 0; i--) {
+				for (int i = 0; i < outputs.length; i++) {
 					outputs[i].setXPoint(x);
 					outputs[i].setYPoint(y);
 					y += distance;

@@ -25,6 +25,7 @@ import canvas.components.StandardComponents.MemoryComponents.Register;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
@@ -277,7 +278,7 @@ public class LogicSubSceneContainer extends SubScene {
 				}
 				// Checks bounds of component chooser. If in bound of component chooser it
 				// clones the FunctionalComponent
-				if (component_chooser_master.getLayoutX() < me.getX() && component_chooser_master.getLayoutY() < me.getY()) {
+				if (isInside(component_chooser_master, me) || isInside(component_chooser_slave, me)) {
 					if (me.getTarget() instanceof ImageView) {
 						ImageView view = (ImageView) me.getTarget();
 						if (view.getImage() instanceof FunctionalCanvasComponent) {
@@ -327,8 +328,15 @@ public class LogicSubSceneContainer extends SubScene {
 					// all Offset in the Subscene
 					if (logic_subscene.getLayoutX() < me.getX() && (logic_subscene.getLayoutX() + logic_subscene.getWidth()) > me.getX() && logic_subscene.getLayoutY() < me.getY()
 							&& (logic_subscene.getLayoutY() + logic_subscene.getHeight()) > me.getY()) {
-						adding_component.setX((int) (me.getX() - logic_subscene.getX() + logic_subscene.getXTranslate()));
-						adding_component.setY((int) (me.getY() - logic_subscene.getY() + logic_subscene.getYTranslate()));
+						double localX = me.getX() - logic_subscene.getLayoutX();
+						double localY = me.getY() - logic_subscene.getLayoutY();
+
+						// Convert container SubScene coords -> LogicSubScene's canvas WORLD coords
+						Point2D world = ((Group) logic_subscene.getRoot()).parentToLocal(localX, localY);
+
+						adding_component.setX((int) world.getX());
+						adding_component.setY((int) world.getY());
+
 						try {
 							logic_subscene.add(adding_component);
 						} catch (OcupationExeption e) {
@@ -415,12 +423,20 @@ public class LogicSubSceneContainer extends SubScene {
 		root.getChildren().remove(index);
 	}
 	
+	private boolean isInside(SubScene chooser, MouseEvent me) {
+	    double x = me.getX(), y = me.getY();
+	    return x >= chooser.getLayoutX() &&
+	           x <= chooser.getLayoutX() + chooser.getWidth() &&
+	           y >= chooser.getLayoutY() &&
+	           y <= chooser.getLayoutY() + chooser.getHeight();
+	}
+	
 	public void addX(int X) {
 		logic_subscene.addX(X);
 		setLayoutX(getLayoutX()+X);
 	}
 	public void addY(int Y) {
-		logic_subscene.addX(Y);
+		logic_subscene.addY(Y);
 		setLayoutY(getLayoutY()+Y);
 	}
 	

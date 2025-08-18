@@ -26,4 +26,7 @@ public class Power extends SingleCanvasComponent{
 		
 	}
 
+	@Override
+	public void setWireWidth(int wires) {}
+
 }

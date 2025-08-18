@@ -37,6 +37,12 @@ public class Dot extends SingleCanvasComponent {
 			connected.setState(getState());
 		}
 	}
+	
+	@Override
+	public void setWireWidth(int wires) {
+		this.wires = wires;
+		paintCircle();
+	}
 
 	public void setFocus(boolean status) {
 	}

@@ -7,11 +7,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
 public class Wire extends SingleCanvasComponent {
-
 	
 	public Wire(int Startwidth) {
 		// Creating Wire with height and painting it using PaintWire()
 		super(Startwidth, LogicSubScene.wire_height);
+		this.wires = 1;
 		focus = false;
 		PaintWire();
 	}
@@ -19,13 +19,20 @@ public class Wire extends SingleCanvasComponent {
 	private void PaintWire() {
 		clearPixels();
 		Color c = getColor();
-		// Painting each pixel with a pixelwriter in the WritableImage
-		for (int x = LogicSubScene.wire_height / 4; x < width; x++) {
-			for (int y = LogicSubScene.wire_height / 4; y < getHeight() - LogicSubScene.wire_height / 4; y++) {
-				pwriter.setColor(x, y, c);
+		if(wires>1) {
+			for (int x = LogicSubScene.wire_height / 4; x < width; x++) {
+				for (int y = 0; y < getHeight(); y++) {
+					pwriter.setColor(x, y, c);
+				}
+			}
+		}else {
+			// Painting each pixel with a pixelwriter in the WritableImage
+			for (int x = LogicSubScene.wire_height / 4; x < width; x++) {
+				for (int y = LogicSubScene.wire_height / 4; y < getHeight() - LogicSubScene.wire_height / 4; y++) {
+					pwriter.setColor(x, y, c);
+				}
 			}
 		}
-
 		c = null;
 	}
 
@@ -37,7 +44,13 @@ public class Wire extends SingleCanvasComponent {
 
 		PaintWire();
 	}
-
+	
+	@Override
+	public void setWireWidth(int wires) {
+		this.wires = wires;
+		PaintWire();
+	}
+	
 	@Override
 	public void setFocus(boolean focus) {
 		// Setting focus and adding Squares at the end or printing the wire new if it

@@ -21,6 +21,8 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	protected boolean control_color = false;
 	protected boolean control_type = false;
 
+	public int wires;
+
 	public SingleCanvasComponent(int NewWidth, int NewHeight) {
 		super(NewWidth, NewHeight);
 		connected_Components = new ArrayList<>();
@@ -52,6 +54,8 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	}
 
 	protected abstract void change();
+	
+	public abstract void setWireWidth(int wires);
 
 	public boolean checkEnd(int x, int y) {
 		// Checks if a coord is on the End of a wire

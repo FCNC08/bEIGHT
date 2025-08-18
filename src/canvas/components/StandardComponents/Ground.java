@@ -26,4 +26,7 @@ public class Ground extends SingleCanvasComponent{
 		
 	}
 
+	@Override
+	public void setWireWidth(int wires) {}
+
 }
