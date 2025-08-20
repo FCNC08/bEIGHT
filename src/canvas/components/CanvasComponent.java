@@ -146,7 +146,7 @@ public abstract class CanvasComponent extends WritableImage {
 
 	public void setX(int X_coord) {
 		int overflow = (X_coord) % LogicSubScene.cross_distance;
-		if (overflow <= LogicSubScene.cross_distance) {
+		if (overflow <= LogicSubScene.cross_distance/2) {
 			this.X = (X_coord) - overflow;
 			this.point_X_rest = 0;
 		} else {
@@ -159,7 +159,7 @@ public abstract class CanvasComponent extends WritableImage {
 
 	public void setY(int Y_coord) {
 		int overflow = (Y_coord) % LogicSubScene.cross_distance;
-		if (overflow <= LogicSubScene.cross_distance) {
+		if (overflow <= LogicSubScene.cross_distance/2) {
 			this.Y = (Y_coord) - overflow;
 			this.point_Y_rest = 0;
 		} else {

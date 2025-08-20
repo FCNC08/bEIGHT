@@ -160,7 +160,7 @@ public class LogicSubSceneContainer extends SubScene {
 		
 		root.getChildren().add(logic_subscene);
 
-		addChooser();
+		addChooserMaster();
 		addListener();
 	}
 
@@ -241,7 +241,7 @@ public class LogicSubSceneContainer extends SubScene {
 	public void triggerKeyEvent(KeyEvent ke) {
 		logic_subscene.triggerKeyEvent(ke);
 	}
-	private void addChooser() {
+	private void addChooserMaster() {
 		if(component_chooser_master != null) {
 			root.getChildren().remove(component_chooser_master);
 		}
@@ -257,6 +257,20 @@ public class LogicSubSceneContainer extends SubScene {
 		component_chooser_slave.setLayoutX(width * 0.8);
 		component_chooser_slave.setLayoutY(height * 0.01);
 		component_chooser_slave.setFill(LogicSubScene.black_grey);
+		
+		root.getChildren().add(component_chooser_master);		
+	}
+	
+	private void addChooser() {
+		if(component_chooser_master != null) {
+			root.getChildren().remove(component_chooser_master);
+		}
+		// Adding ComponentChooser and set the layout
+		component_chooser_master = new ComponentChooser(logic_subscene, new ScrollPane(), width * 0.15, LogicSubScene.getNearesDot((int) (height * 0.9)), grouping);
+		component_chooser_master.setFill(Color.WHITE);
+		component_chooser_master.setLayoutX(width * 0.8);
+		component_chooser_master.setLayoutY(height * 0.01);
+		component_chooser_master.setFill(LogicSubScene.black_grey);
 		
 		root.getChildren().add(component_chooser_master);		
 	}
@@ -278,27 +292,31 @@ public class LogicSubSceneContainer extends SubScene {
 				}
 				// Checks bounds of component chooser. If in bound of component chooser it
 				// clones the FunctionalComponent
-				if (isInside(component_chooser_master, me) || isInside(component_chooser_slave, me)) {
-					if (me.getTarget() instanceof ImageView) {
-						ImageView view = (ImageView) me.getTarget();
-						if (view.getImage() instanceof FunctionalCanvasComponent) {
-							FunctionalCanvasComponent component = (FunctionalCanvasComponent) view.getImage();
-							if (me.getButton() == MouseButton.PRIMARY) {
-								System.out.println("Middle");
-								adding_component = component.getClone(FunctionalCanvasComponent.SIZE_MIDDLE);
-							} else if (me.getButton() == MouseButton.SECONDARY) {
-								System.out.println("Small");
-								adding_component = component.getClone(FunctionalCanvasComponent.SIZE_SMALL);
-							} else {
-								System.out.println("Big");
-								adding_component = component.getClone(FunctionalCanvasComponent.SIZE_BIG);
+				try {
+					if (isInside(component_chooser_master, me) || isInside(component_chooser_slave, me)) {
+						if (me.getTarget() instanceof ImageView) {
+							ImageView view = (ImageView) me.getTarget();
+							if (view.getImage() instanceof FunctionalCanvasComponent) {
+								FunctionalCanvasComponent component = (FunctionalCanvasComponent) view.getImage();
+								if (me.getButton() == MouseButton.PRIMARY) {
+									System.out.println("Middle");
+									adding_component = component.getClone(FunctionalCanvasComponent.SIZE_MIDDLE);
+								} else if (me.getButton() == MouseButton.SECONDARY) {
+									System.out.println("Small");
+									adding_component = component.getClone(FunctionalCanvasComponent.SIZE_SMALL);
+								} else {
+									System.out.println("Big");
+									adding_component = component.getClone(FunctionalCanvasComponent.SIZE_BIG);
+								}
+								adding_component.setX((int) me.getX());
+								adding_component.setY((int) (me.getY()));
+								root.getChildren().add(adding_component.getImageView());
+	
 							}
-							adding_component.setX((int) me.getX());
-							adding_component.setY((int) (me.getY()));
-							root.getChildren().add(adding_component.getImageView());
-
 						}
 					}
+				}catch(NullPointerException e) {
+					e.printStackTrace();
 				}
 			}
 		};

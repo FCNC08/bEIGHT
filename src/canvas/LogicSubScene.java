@@ -3,9 +3,8 @@ package canvas;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.LinkedHashSet;
-import java.util.ListIterator;
+import java.util.List;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -206,7 +205,7 @@ public class LogicSubScene extends SubScene {
 				    boolean moved = false;
 
 				    // Convert cursor to WORLD coords
-				    Point2D world = root.parentToLocal(me.getX(), me.getY());
+				    Point2D world = root.screenToLocal(me.getScreenX(), me.getScreenY());
 				    int wx = (int) world.getX();
 				    int wy = (int) world.getY();
 
@@ -260,7 +259,7 @@ public class LogicSubScene extends SubScene {
 				
 				// Setting the coord to createWire/moveScene
 				if (me.isPrimaryButtonDown()) {
-				    Point2D world = root.parentToLocal(me.getX(), me.getY());
+				    Point2D world = root.screenToLocal(me.getScreenX(), me.getScreenY());
 				    moves_focused_x = pressed_x = (int) world.getX();
 				    moves_focused_y = pressed_y = (int) world.getY();
 				} else if (me.isSecondaryButtonDown()) {
@@ -326,7 +325,18 @@ public class LogicSubScene extends SubScene {
 								if (component instanceof Wire) {
 									Wire wire = (Wire) component;
 									//wire.setState(State.getState(wire.getState().mode, !wire.getState().state));
+									remove(wire);
 									wire.setRotation(!wire.getRotation());
+									try {
+										add(wire);
+									}catch(OcupationExeption e) {
+										wire.setRotation(!wire.getRotation());
+										try {
+											add(wire);
+										} catch (OcupationExeption e1) {
+											e1.printStackTrace();
+										}
+									}
 									System.out.println("rotated");
 								}else if(img instanceof FunctionalCanvasComponent) {
 									FunctionalCanvasComponent functionalcomponent = (FunctionalCanvasComponent) img;
@@ -349,6 +359,7 @@ public class LogicSubScene extends SubScene {
 
 	    EventHandler<ScrollEvent> zoom_Event_Handler = new EventHandler<ScrollEvent>() {
 	        @Override public void handle(ScrollEvent se) {
+	        	se.consume();
 	            double factor = Math.pow(1.0015, se.getDeltaY());
 	            zoomOn(factor, se.getX(), se.getY()); // pivot is the cursor in SubScene coords
 	        }
@@ -857,10 +868,13 @@ public class LogicSubScene extends SubScene {
 						}
 					}
 				}
-					wires.add(component);
-					// Adding component to SubSCene
-					root.getChildren().add(component.getImageView());
-					component.printComponents();
+				
+				wires.add(component);
+				System.out.println(component.getX());
+				System.out.println(component.getY());
+				// Adding component to SubSCene
+				root.getChildren().add(component.getImageView());
+				component.printComponents();
 			}
 			
 		
@@ -944,16 +958,10 @@ public class LogicSubScene extends SubScene {
 			if (used[component.point_X][component.point_Y].Dot == component) {
 				used[component.point_X][component.point_Y].Dot = null;
 			}
-			ListIterator<SingleCanvasComponent> li = component.getConnectedComponents().listIterator();
-			try {
-				while(li.hasNext()) {
-					System.out.println(li.hasNext());
-					SingleCanvasComponent comp = li.next();
-					comp.removeComponent(component);
-					component.removeComponent(comp);
-				}
-			}catch(ConcurrentModificationException cme) {
-				cme.printStackTrace();
+			List<SingleCanvasComponent> li = new ArrayList<>(component.getConnectedComponents());
+			for (SingleCanvasComponent comp : li) {
+			    comp.removeComponent(component);
+			    component.removeComponent(comp);
 			}
 			root.getChildren().remove(component.getImageView());
 		}
@@ -975,17 +983,11 @@ public class LogicSubScene extends SubScene {
 					}
 				}
 			}
-			ListIterator<SingleCanvasComponent> li = component.getConnectedComponents().listIterator();
-				while(li.hasNext()) {
-					SingleCanvasComponent comp = li.next();
-					try {
-						System.out.println(li.hasNext());
-						comp.removeComponent(component);
-						component.removeComponent(comp);
-					}catch(ConcurrentModificationException cme) {
-						cme.printStackTrace();
-					}
-				}
+			List<SingleCanvasComponent> li = new ArrayList<>(component.getConnectedComponents());
+			for(SingleCanvasComponent comp : li) {
+				comp.removeComponent(component);
+				component.removeComponent(comp);
+			}
 			wires.remove(component);
 			root.getChildren().remove(component.getImageView());
 		}
@@ -1103,7 +1105,8 @@ public class LogicSubScene extends SubScene {
 				used[component.getXPoint()][y].VerticalComponent = null;
 			}
 		}
-		for (SingleCanvasComponent i : component.getConnectedComponents()) {
+		List<SingleCanvasComponent> li = new ArrayList<>(component.getConnectedComponents());
+		for (SingleCanvasComponent i : li) {
 			i.removeComponent(component);
 			component.removeComponent(i);
 		}

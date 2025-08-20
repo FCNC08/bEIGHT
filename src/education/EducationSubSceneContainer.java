@@ -49,7 +49,7 @@ public class EducationSubSceneContainer extends SubScene{
 					root.getChildren().add(sections.get(number));
 				}
 			};
-			scene.getIcon().addEventFilter(MouseEvent.MOUSE_CLICKED, open_event_handler);
+			scene.getIcon().addEventHandler(MouseEvent.MOUSE_CLICKED, open_event_handler);
 			//editor.getIcon().setLayoutX(hbox.getBoundsInLocal().getWidth());;
 			fpane.getChildren().add(scene.getIcon());
 		} catch (ZipException e) {

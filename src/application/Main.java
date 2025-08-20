@@ -218,28 +218,8 @@ public class Main extends Application {
 		};
 		education_area.addEventFilter(MouseEvent.MOUSE_CLICKED, education_click);
 		
-		/*Canvas canvas = new Canvas(100, 180);
-		GraphicsContext gc = canvas.getGraphicsContext2D();
-		
-		gc.setFill(Color.PURPLE);
-		gc.fillRect(0, 0, 100, 180);
-		gc.setFill(Color.BLACK);
-		double width1 = 20;
-		double height1 = 60;
-		gc.fillRect(width1, 0, height1, width1);
-		gc.fillRect(0, width1, width1, height1);
-		gc.fillRect(width1+height1, width1, width1, height1);
-		gc.fillRect(width1, height1+width1, height1, width1);
-		gc.fillRect(0, height1+2*width1, width1, height1);
-		gc.fillRect(width1+height1, height1+2*width1, width1, height1);
-		gc.fillRect(width1, (height1+width1)*2, height1, width1);
-		
-		WritableImage i1 = new WritableImage(100,180);
-		canvas.snapshot(new SnapshotParameters(), i1);*/
-		
 		root.getChildren().add(logic_area);
 		root.getChildren().add(education_area);
-		//root.getChildren().add(new ImageView(i1));
 		vbox.getChildren().add(MainScene);
 
 		Scene scene = new Scene(vbox);
