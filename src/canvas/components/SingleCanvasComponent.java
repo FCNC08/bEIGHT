@@ -96,6 +96,9 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 			this.point_X_rest = 0;
 		}
 		this.point_X = X / LogicSubScene.cross_distance;
+		if (rotation == CanvasComponent.VERTICAL) {
+			X = (int) (X- 0.5 * width + 0.5 * height);
+		}
 		this.X -= height / 2;
 		image_view.setLayoutX(X);
 	}
@@ -111,6 +114,9 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 			this.point_Y_rest = 0;
 		}
 		this.point_Y = Y / LogicSubScene.cross_distance;
+		if (rotation == CanvasComponent.VERTICAL) {
+			Y = (int) (Y + 0.5 * width - 0.5 * height);
+		}
 		this.Y -= height / 2;
 		image_view.setLayoutY(Y);
 	}
@@ -357,6 +363,9 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 		if (rotation == CanvasComponent.VERTICAL) {
 			image_view.setLayoutY(image_view.getLayoutY() + 0.5 * width - 0.5 * getHeight());
 			image_view.setLayoutX(image_view.getLayoutX() - 0.5 * width + 0.5 * getHeight());
+		}else {
+			image_view.setLayoutY(image_view.getLayoutY() - 0.5 * width + 0.5 * getHeight());
+			image_view.setLayoutX(image_view.getLayoutX() + 0.5 * width - 0.5 * getHeight());			
 		}
 	}
 }

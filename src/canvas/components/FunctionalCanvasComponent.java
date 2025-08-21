@@ -262,14 +262,6 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		setStandardDotLocations();
 	}
 
-	// Overrides method to change dot location
-	@Override
-	public void setRotation(boolean New_Rotation) {
-		rotation = New_Rotation;
-		setStandardDotLocations();
-		createImageView();
-	}
-
 	@Override
 	public void setFocus(boolean focus) {
 		if (focus != this.focus) {
@@ -369,10 +361,14 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	}
 	@Override
 	protected void changeRotation() {
+		setStandardDotLocations();
 		image_view.setRotate(getRotationDegree());
 		if (rotation == CanvasComponent.VERTICAL) {
 			image_view.setLayoutY(image_view.getLayoutY() + 0.5 * width - 0.5 * getHeight());
 			image_view.setLayoutX(image_view.getLayoutX() - 0.5 * width + 0.5 * getHeight());
+		}else {
+			image_view.setLayoutY(image_view.getLayoutY() - 0.5 * width + 0.5 * getHeight());
+			image_view.setLayoutX(image_view.getLayoutX() + 0.5 * width - 0.5 * getHeight());			
 		}
 	}
 	

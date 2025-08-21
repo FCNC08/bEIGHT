@@ -209,8 +209,10 @@ public abstract class CanvasComponent extends WritableImage {
 
 	// Setter/Getter for rotation
 	public void setRotation(boolean New_Rotation) {
-		rotation = New_Rotation;
-		changeRotation();
+		if(rotation!=New_Rotation) {
+			rotation = New_Rotation;
+			changeRotation();			
+		}
 	}
 
 	protected int getRotationDegree() {

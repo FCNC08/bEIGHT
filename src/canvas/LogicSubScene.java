@@ -125,6 +125,13 @@ public class LogicSubScene extends SubScene {
 
 	private FunctionalCanvasComponent adding_CanvasComponent;
 	private WireDoublet adding_WireDoublet;
+	// remember original grid position while dragging a component
+	private int addingOriginalXPoint = -1;
+	private int addingOriginalYPoint = -1;
+	// wire drag-preview state
+	private Wire moving_Wire = null;
+	private int movingWireOriginalXPoint = -1;
+	private int movingWireOriginalYPoint = -1;
 	protected ComponentBox[][] used;
 	private ArrayList<Wire> wires = new ArrayList<>();
 	private ArrayList<FunctionalCanvasComponent> components = new ArrayList<>();
@@ -208,24 +215,56 @@ public class LogicSubScene extends SubScene {
 				    Point2D world = root.screenToLocal(me.getScreenX(), me.getScreenY());
 				    int wx = (int) world.getX();
 				    int wy = (int) world.getY();
-
-				    if (me.getTarget() instanceof ImageView) {
+	                if(adding_CanvasComponent != null) {
+	                	adding_CanvasComponent.setX(wx);
+	                	adding_CanvasComponent.setY(wy);
+	                	return;
+	                }else if(moving_Wire != null){ 
+	                	int gx = LogicSubScene.getNearesDot(wx);
+	                	int gy = LogicSubScene.getNearesDot(wy);
+	                	moving_Wire.setX(gx);
+	                	moving_Wire.setY(gy);
+	                	return;
+	                }else if (me.getTarget() instanceof ImageView) {
 				        ImageView view = (ImageView) me.getTarget();
 				        if (view.getImage() instanceof CanvasComponent) {
 				            CanvasComponent component = (CanvasComponent) view.getImage();
-				            if (component == last_focused_component) {
-				                try {
-				                    if (wx >= 0 && wy >= 0) {
-				                        move(component, wx, wy);
-				                        moves_focused_x = wx;
-				                        moves_focused_y = wy;
-				                        moved = true;
-				                    }
-				                } catch (OcupationExeption e) {
-				                    e.printStackTrace();
-				                    moved = false;
-				                }
+				            if(component instanceof FunctionalCanvasComponent) {
+				            	if(component == last_focused_component) {
+					            	addingOriginalXPoint = component.getXPoint();
+					            	addingOriginalYPoint = component.getYPoint();
+					            	remove(component);
+					            	adding_CanvasComponent = (FunctionalCanvasComponent) component;
+					            	addTry(adding_CanvasComponent);
+					            	return;
+				            	}
+				            }else if(component instanceof Wire){
+				            	if(component == last_focused_component) {
+					            	movingWireOriginalXPoint = component.getXPoint();
+					            	movingWireOriginalYPoint = component.getYPoint();
+					            	remove(component);
+					            	moving_Wire = (Wire) component;
+					            	addTry(moving_Wire);
+					            	return;
+				            	}
+				            }else {
+				            	if (component == last_focused_component) {
+					                try {
+					                    if (wx >= 0 && wy >= 0) {
+					                        move(component, wx, wy);
+					                        moves_focused_x = wx;
+					                        moves_focused_y = wy;
+					                        moved = true;
+					                    }
+					                } catch (OcupationExeption e) {
+					                    e.printStackTrace();
+					                    moved = false;
+					                }
+	
+					            }	
 				            }
+			               
+
 				        }
 				    }
 
@@ -285,8 +324,46 @@ public class LogicSubScene extends SubScene {
 				}
 
 				if (adding_CanvasComponent != null) {
-					adding_CanvasComponent = null;
+					removeTry(adding_CanvasComponent);
+					try {
+						add(adding_CanvasComponent);
+					}catch(OcupationExeption e) {
+		                // if drop is invalid, revert to original grid position and try again
+		                adding_CanvasComponent.setXPoint(addingOriginalXPoint);
+		                adding_CanvasComponent.setYPoint(addingOriginalYPoint);
+		                try {
+		                    add(adding_CanvasComponent);
+		                } catch (OcupationExeption e1) {
+		                    // last resort: log it; component remains not placed to avoid inconsistent state
+		                    e1.printStackTrace();
+		                }
+					}finally {
+		                adding_CanvasComponent = null;
+		                addingOriginalXPoint = -1;
+		                addingOriginalYPoint = -1;
+		            }
 				}
+				
+		        // finalize wire drag
+		        if (moving_Wire != null) {
+		            removeTry(moving_Wire);
+		            try {
+		                add(moving_Wire); // real add() claims occupancy + reconnects
+		            } catch (OcupationExeption e) {
+		                // revert to original position and try again
+		                moving_Wire.setXPoint(movingWireOriginalXPoint);
+		                moving_Wire.setYPoint(movingWireOriginalYPoint);
+		                try {
+		                    add(moving_Wire);
+		                } catch (OcupationExeption e1) {
+		                    e1.printStackTrace(); // last resort, keep it off-canvas
+		                }
+		            } finally {
+		                moving_Wire = null;
+		                movingWireOriginalXPoint = -1;
+		                movingWireOriginalYPoint = -1;
+		            }
+		        }
 			}
 		};
 		EventHandler<MouseEvent> click_Event_Handler = new EventHandler<MouseEvent>() {
@@ -377,8 +454,8 @@ public class LogicSubScene extends SubScene {
 		root.getChildren().add(component.getImageView());
 		component.setStandardDotLocations();
 
-		// doesnt contain the outline to make it possible to connect to the dots
-		for (int x = component.getXPoint() + 1; x < (component.getXPoint() + component.getHeightPoint()); x++) {
+		// doesn't contain the outline to make it possible to connect to the dots
+		for (int x = component.getXPoint() + 1; x < (component.getXPoint() + component.getWidthPoint()); x++) {
 			for (int y = component.getYPoint() + 1; y < (component.getYPoint() + component.getHeightPoint()); y++) {
 				if (used[x][y].HorizontalComponent != null) {
 					throw new OcupationExeption();
@@ -415,7 +492,19 @@ public class LogicSubScene extends SubScene {
 		}
 
 	}
-
+	
+	private void addTry(Wire wire) {
+	    if (wire != null && !root.getChildren().contains(wire.getImageView())) {
+	        root.getChildren().add(wire.getImageView()); // preview only; no occupancy
+	    }
+	}
+	
+	private void addTry(FunctionalCanvasComponent component) {
+	    if (component != null && !root.getChildren().contains(component.getImageView())) {
+	        root.getChildren().add(component.getImageView()); // only the node; no grid occupancy / dots
+	    }
+	}
+	
 	public void add(WireDoublet doublet) throws OcupationExeption {
 		// Adding each Wire of a WireDoublet
 		add(doublet.getHorizontalWire());
@@ -942,6 +1031,18 @@ public class LogicSubScene extends SubScene {
 		if (doublet.getVerticalWire() != null) {
 			root.getChildren().remove(doublet.getVerticalWire().getImageView());
 		}
+	}
+	
+	private void removeTry(Wire wire) {
+	    if (wire != null) {
+	        root.getChildren().remove(wire.getImageView());
+	    }
+	}
+	
+	private void removeTry(FunctionalCanvasComponent component) {
+	    if (component != null) {
+	        root.getChildren().remove(component.getImageView());
+	    }
 	}
 
 	public void remove(WireDoublet doublet) {
