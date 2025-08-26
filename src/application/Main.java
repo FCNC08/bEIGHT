@@ -408,7 +408,7 @@ public class Main extends Application {
 		bar.getMenus().add(translate);
 
 		Scene scene = new Scene(vbox);
-		scene.getStylesheets().add("style.css");
+		scene.getStylesheets().add("logic_style.css");
 
 		EventHandler<KeyEvent> key_event_handler = new EventHandler<KeyEvent>() {
 			@Override
@@ -472,6 +472,7 @@ public class Main extends Application {
 		vbox.getChildren().add(MainScene);
 
 		Scene scene = new Scene(vbox);
+		//scene.getStylesheets().add("education_style.css");
 
 		// Adding Runnable to maximize and resize
 		Runnables[2] = new Runnable() {

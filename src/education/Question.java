@@ -124,6 +124,7 @@ public class Question extends ScrollPane{
 		}
 		
 		Button button_back = new Button("Back");
+		button_back.setFont(new Font(25));
 		button_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {

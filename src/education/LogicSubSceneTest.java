@@ -177,6 +177,7 @@ public class LogicSubSceneTest extends ScrollPane{
 		}
 		HBox button_box = new HBox();
 		Button button_back = new Button("Back");
+		button_back.setFont(new Font(25));
 		button_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
@@ -199,6 +200,7 @@ public class LogicSubSceneTest extends ScrollPane{
 			}
 		});
 		button_next.setLayoutX(width*0.9);
+		button_next.setFont(new Font(25));
 		button_box.getChildren().addAll(button_back, button_next);
 		vbox.getChildren().addAll(container, headline, button_box);
 		requestLayout();
