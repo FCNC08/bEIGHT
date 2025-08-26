@@ -6,11 +6,14 @@ import canvas.components.State;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import util.ErrorStateExeption;
-import util.Info;
 
 public class SevenSegmentDisplay extends FunctionalCanvasComponent{
 
@@ -150,9 +153,15 @@ public class SevenSegmentDisplay extends FunctionalCanvasComponent{
 	}
 
 	@Override
-	protected void createInfo() {
-		info = new Info();
-		info.setHeadline("7-Segment Display");
+	protected void createContextMenu() {
+		Label name_label = new Label("7-Segment Display");
+		name_label.getStyleClass().add("cm-header");
+		name_label.setMouseTransparent(true);
+		CustomMenuItem name_item = new CustomMenuItem(name_label);
+		name_item.getStyleClass().add("cm-header-item");
+		menu.getItems().add(name_item);
+		menu.getItems().add(new SeparatorMenuItem());
+		menu.getItems().add(turn);
 	}
 
 	@Override

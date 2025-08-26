@@ -8,8 +8,11 @@ import canvas.LogicSubScene;
 import canvas.components.Layercomponents.Connection;
 import canvas.components.Layercomponents.LayerGate;
 import canvas.components.Layercomponents.Output;
+import canvas.components.StandardComponents.Wire;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
-import util.Info;
+import util.OcupationExeption;
 
 public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	public static final String SIZE_BIG = "BIG";
@@ -25,9 +28,10 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	
 	public String size;
 	
-	protected Info info;
-
-	protected HashMap<State[], State[]> truth_table;
+	protected ContextMenu menu = new ContextMenu();
+	protected MenuItem turn;
+	
+	protected LogicSubScene parent;
 
 	public int input_count;
 	public int output_count;
@@ -62,7 +66,26 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		}
 		
 		this.size = size;
-		createInfo();
+
+		turn = new MenuItem("Turn");
+		turn.setOnAction(en->{
+			
+			parent.remove(this);
+			setRotation(!getRotation());
+			try {
+				parent.add(this);
+			}catch(OcupationExeption e) {
+				setRotation(!getRotation());
+				try {
+					parent.add(this);
+				} catch (OcupationExeption e1) {
+					e1.printStackTrace();
+				}
+			}
+			System.out.println("rotated");
+		});
+		menu.getStyleClass().add("app-context-menu");
+		createContextMenu();
 	}
 
 	public static FunctionalCanvasComponent initImage(String url, int inputs, int outputs, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
@@ -190,7 +213,6 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		}
 		this.point_X = X / LogicSubScene.cross_distance;
 		image_view.setLayoutX(X);
-		info.setLayoutX(X);
 		setStandardDotLocations();
 	}
 
@@ -207,7 +229,6 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		System.out.println(point_Y_rest+"");
 		this.point_Y = Y / LogicSubScene.cross_distance;
 		image_view.setLayoutY(Y);
-		info.setLayoutY(Y);
 		setStandardDotLocations();
 	}
 
@@ -223,7 +244,6 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		}
 		this.point_X = X / LogicSubScene.cross_distance;
 		image_view.setLayoutX(X);
-		info.setLayoutX(X);
 		setStandardDotLocations();
 	}
 
@@ -239,7 +259,6 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		}
 		this.point_Y = Y / LogicSubScene.cross_distance;
 		image_view.setLayoutY(Y);
-		info.setLayoutY(Y);
 		setStandardDotLocations();
 	}
 
@@ -249,7 +268,6 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		this.X = point_x * LogicSubScene.cross_distance;
 		this.point_X = point_x;
 		image_view.setLayoutX(X);
-		info.setLayoutX(X);
 		setStandardDotLocations();
 	}
 
@@ -258,8 +276,13 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		this.Y = point_y * LogicSubScene.cross_distance;
 		this.point_Y = point_y;
 		image_view.setLayoutY(Y);
-		info.setLayoutY(Y);
 		setStandardDotLocations();
+	}
+	
+	protected abstract void createContextMenu();
+	
+	public void setParent(LogicSubScene scene) {
+		parent = scene;
 	}
 
 	@Override
@@ -358,6 +381,11 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 			image_view.setLayoutY(image_view.getLayoutY() + 0.5 * width - 0.5 * getHeight());
 			image_view.setLayoutX(image_view.getLayoutX() - 0.5 * width + 0.5 * getHeight());
 		}
+		
+		image_view.setOnContextMenuRequested((e ->  {
+			if(menu!=null) menu.show(image_view, e.getScreenX(), e.getScreenY());
+			e.consume();
+		}));
 	}
 	@Override
 	protected void changeRotation() {
@@ -389,18 +417,13 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		}
 		return true;
 	}
-
-	public Info getInfo() {
-		return info;
-	}
-	
-	protected abstract void createInfo();
 	
 	protected abstract void setVerilogString(short[] comp_count);
 	
 	protected abstract void setArduinoString(short[] comp_count);
 	
 	public abstract void createLayerGate();
+	
 	public void setLayerOutput(Dot output_dot, Output output_connection) {
 		int index = Arrays.asList(outputs).indexOf(output_dot);
 		if(index != -1) {

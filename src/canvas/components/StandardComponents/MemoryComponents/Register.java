@@ -3,9 +3,12 @@ package canvas.components.StandardComponents.MemoryComponents;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.MemoryCanvasComponent;
 import canvas.components.State;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.paint.Color;
 import util.ErrorStateExeption;
-import util.Info;
 
 public class Register extends MemoryCanvasComponent {
 	protected int bit_size;
@@ -61,9 +64,15 @@ public class Register extends MemoryCanvasComponent {
 	}
 	
 	@Override
-	protected void createInfo() {
-		info = new Info();
-		info.setHeadline("Register");
+	protected void createContextMenu() {
+		Label name_label = new Label("Register");
+		name_label.getStyleClass().add("cm-header");
+		name_label.setMouseTransparent(true);
+		CustomMenuItem name_item = new CustomMenuItem(name_label);
+		name_item.getStyleClass().add("cm-header-item");
+		menu.getItems().add(name_item);
+		menu.getItems().add(new SeparatorMenuItem());
+		menu.getItems().add(turn);
 	}
 	
 	@Override

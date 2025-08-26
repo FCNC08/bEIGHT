@@ -63,10 +63,10 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
+
 import util.OcupationExeption;
 import util.ComponentBox;
 import util.IllegalInputOutputExeption;
-import util.Info;
 import util.InputOutputConnectionPair;
 
 public class LogicSubScene extends SubScene {
@@ -115,7 +115,6 @@ public class LogicSubScene extends SubScene {
 	private double moves_y;
 
 	private CanvasComponent last_focused_component = null;
-	private Info addedInfo = null;
 
 	// Pan (translate) + Zoom (scale) applied to the canvas root Group
 	private Scale zoomTransform;
@@ -370,10 +369,6 @@ public class LogicSubScene extends SubScene {
 			@Override
 			public void handle(MouseEvent me) {
 				// Used to highlight a component but not working
-				if(addedInfo != null) {
-					root.getChildren().remove(addedInfo);
-					addedInfo = null;
-				}
 				if (me.getButton() == MouseButton.PRIMARY) {
 					if (last_focused_component != null) {
 						last_focused_component.setFocus(false);
@@ -415,11 +410,6 @@ public class LogicSubScene extends SubScene {
 										}
 									}
 									System.out.println("rotated");
-								}else if(img instanceof FunctionalCanvasComponent) {
-									FunctionalCanvasComponent functionalcomponent = (FunctionalCanvasComponent) img;
-									addedInfo = functionalcomponent.getInfo();
-									root.getChildren().add(addedInfo);
-									
 								}
 							}
 						}						
@@ -478,6 +468,7 @@ public class LogicSubScene extends SubScene {
 		for (Dot d : component.outputs) {
 			add(d);
 		}
+		component.setParent(this);
 		components.add(component);
 		// Adding component to the ID-System
 	}

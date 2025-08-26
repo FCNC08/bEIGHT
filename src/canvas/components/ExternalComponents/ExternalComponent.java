@@ -13,12 +13,15 @@ import canvas.LogicSubScene;
 import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.State;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import net.lingala.zip4j.ZipFile;
 import util.ErrorStateExeption;
-import util.Info;
 
 public class ExternalComponent extends FunctionalCanvasComponent {
 	public static String json_file = "settings.json";
@@ -37,6 +40,7 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 		super(width, height, input_count, output_count, size);
 		this.truth_tabel = truth_tabel;
 		this.name = name;
+		createContextMenu();
 	}
 	
 	public ExternalComponent(String size, int width, int height, int input_count, int output_count, Truthtabel truth_tabel, String name, Image image) throws IllegalAccessException {
@@ -45,6 +49,7 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 		this.image = image;
 		this.name = name;
 		resetStandardImage();
+		createContextMenu();
 	}
 
 	@Override
@@ -97,11 +102,6 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 		return component;
 	}
 
-	@Override
-	protected void createInfo() {
-		info = new Info();
-		info.setHeadline(name);
-	}
 
 	@Override
 	protected void setVerilogString(short[] comp_count) {
@@ -189,6 +189,19 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 		}
 		
 		return component;
+	}
+	
+	@Override
+	protected void createContextMenu() {
+		Label name_label = new Label(name);
+		name_label.getStyleClass().add("cm-header");
+		name_label.setMouseTransparent(true);
+		CustomMenuItem name_item = new CustomMenuItem(name_label);
+		name_item.getStyleClass().add("cm-header-item");
+		menu.getItems().clear();
+		menu.getItems().add(name_item);
+		menu.getItems().add(new SeparatorMenuItem());
+		menu.getItems().add(turn);
 	}
 
 	@Override

@@ -4,13 +4,16 @@ import canvas.components.Dot;
 import canvas.components.LogicComponent;
 import canvas.components.State;
 import canvas.components.Layercomponents.XOR;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
 import util.ErrorStateExeption;
-import util.Info;
 
 public class XORGate extends LogicComponent {
 
@@ -160,9 +163,15 @@ public class XORGate extends LogicComponent {
 	}
 	
 	@Override
-	protected void createInfo() {
-		info = new Info();
-		info.setHeadline("XOR-Gate");
+	protected void createContextMenu() {
+		Label name_label = new Label("XOR-Gate");
+		name_label.getStyleClass().add("cm-header");
+		name_label.setMouseTransparent(true);
+		CustomMenuItem name_item = new CustomMenuItem(name_label);
+		name_item.getStyleClass().add("cm-header-item");
+		menu.getItems().add(name_item);
+		menu.getItems().add(new SeparatorMenuItem());
+		menu.getItems().add(turn);
 	}
 	
 	@Override

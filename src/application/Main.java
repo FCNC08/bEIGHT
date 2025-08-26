@@ -408,6 +408,7 @@ public class Main extends Application {
 		bar.getMenus().add(translate);
 
 		Scene scene = new Scene(vbox);
+		scene.getStylesheets().add("style.css");
 
 		EventHandler<KeyEvent> key_event_handler = new EventHandler<KeyEvent>() {
 			@Override

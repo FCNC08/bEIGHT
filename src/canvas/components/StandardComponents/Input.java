@@ -5,10 +5,13 @@ import canvas.components.CanvasComponent;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.State;
 import javafx.event.EventHandler;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import util.Info;
 
 public class Input extends FunctionalCanvasComponent{
 	protected static int StandardWidth_big = LogicSubScene.cross_distance * 4;
@@ -55,12 +58,6 @@ public class Input extends FunctionalCanvasComponent{
             }
         }
 
-	}
-	
-	@Override
-	protected void createInfo() {
-		info = new Info();
-		info.setHeadline("Input");
 	}
 
 	@Override
@@ -121,6 +118,18 @@ public class Input extends FunctionalCanvasComponent{
 			}
 		};
 		image_view.addEventFilter(MouseEvent.MOUSE_CLICKED, change_mouse_event);
+	}
+	
+	@Override
+	protected void createContextMenu() {
+		Label name_label = new Label("Input");
+		name_label.getStyleClass().add("cm-header");
+		name_label.setMouseTransparent(true);
+		CustomMenuItem name_item = new CustomMenuItem(name_label);
+		name_item.getStyleClass().add("cm-header-item");
+		menu.getItems().add(name_item);
+		menu.getItems().add(new SeparatorMenuItem());
+		menu.getItems().add(turn);
 	}
 	
 	@Override

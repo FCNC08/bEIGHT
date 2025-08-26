@@ -1,6 +1,5 @@
 package canvas.components;
 
-
 import java.util.Arrays;
 
 import org.json.JSONArray;
@@ -16,8 +15,11 @@ import canvas.components.Layercomponents.OR;
 import canvas.components.Layercomponents.Output;
 import canvas.components.Layercomponents.XNOR;
 import canvas.components.Layercomponents.XOR;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.paint.Color;
-import util.Info;
 import util.InputOutputConnectionPair;
 import util.PublicCount;
 
@@ -39,7 +41,7 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 		this.name = logicscene.name;
 		inoutput = logicscene.initLayerComponent(outputs);
 		resetStandardImage();
-		info.setHeadline(name);
+		createContextMenu();
 	}
 	
 	public LayerCanvasComponent(JSONObject jo, int width, int height, String size, int input_count, int output_count) {
@@ -139,6 +141,7 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 		}
 		
 		inoutput = new InputOutputConnectionPair(new_inputs, new_outputs);
+		createContextMenu();
 	}
 
 	public static LayerCanvasComponent init(String size, LogicSubScene scene) {
@@ -206,11 +209,6 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 	}
 
 	@Override
-	protected void createInfo() {
-		info = new Info();
-	}
-
-	@Override
 	protected void resetStandardImage() {
 		double border_size = Math.min(width*0.05, height*0.15);
 		for(int x = 0; x<width; x++) {
@@ -223,6 +221,20 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 			}
 		}
 	}
+	
+	@Override
+	protected void createContextMenu() {
+		Label name_label = new Label(name);
+		name_label.getStyleClass().add("cm-header");
+		name_label.setMouseTransparent(true);
+		CustomMenuItem name_item = new CustomMenuItem(name_label);
+		name_item.getStyleClass().add("cm-header-item");
+		menu.getItems().clear();
+		menu.getItems().add(name_item);
+		menu.getItems().add(new SeparatorMenuItem());
+		menu.getItems().add(turn);
+	}
+	
 	@Override
 	protected void setVerilogString(short[] comp_count) {
 	}

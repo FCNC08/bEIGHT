@@ -1,0 +1,132 @@
+/* application.css — Context Menu Theme (Option 2: direct hover styling) */
+
+/* === Popup container === */
+.app-context-menu {
+    /* Popup look */
+    -fx-background-color: -fx-control-inner-background;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 10;
+    -fx-padding: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0.20, 0, 2);
+}
+
+/* === Base items === */
+.app-context-menu .menu-item,
+.app-context-menu .custom-menu-item,
+.app-context-menu .check-menu-item,
+.app-context-menu .radio-menu-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-text-fill: -fx-text-base-color;
+}
+
+.app-context-menu .menu-item .label,
+.app-context-menu .custom-menu-item .label,
+.app-context-menu .check-menu-item .label,
+.app-context-menu .radio-menu-item .label {
+    -fx-padding: 6 14 6 14;
+    -fx-text-fill: inherit;
+}
+
+/* === Hover (mouse over) — direct color, not using looked-up variables === */
+.app-context-menu .menu-item:hover,
+.app-context-menu .menu-item:armed,
+.app-context-menu .custom-menu-item:hover,
+.app-context-menu .custom-menu-item:armed,
+.app-context-menu .check-menu-item:hover,
+.app-context-menu .check-menu-item:armed,
+.app-context-menu .radio-menu-item:hover,
+.app-context-menu .radio-menu-item:armed {
+    -fx-background-color: #2a2f3a !important;   /* your hover color */
+}
+.app-context-menu .menu-item:hover .label,
+.app-context-menu .menu-item:armed .label,
+.app-context-menu .custom-menu-item:hover .label,
+.app-context-menu .custom-menu-item:armed .label,
+.app-context-menu .check-menu-item:hover .label,
+.app-context-menu .check-menu-item:armed .label,
+.app-context-menu .radio-menu-item:hover .label,
+.app-context-menu .radio-menu-item:armed .label {
+    -fx-text-fill: #ffffff !important;          /* hover text color */
+}
+
+/* Submenu arrows should match text color on hover */
+.app-context-menu .menu-item .right-container .arrow {
+    -fx-background-color: -fx-text-base-color;
+}
+.app-context-menu .menu-item:hover .right-container .arrow,
+.app-context-menu .menu-item:armed .right-container .arrow {
+    -fx-background-color: #ffffff;
+}
+
+/* === Pressed feedback === */
+.app-context-menu .menu-item:pressed,
+.app-context-menu .custom-menu-item:pressed,
+.app-context-menu .check-menu-item:pressed,
+.app-context-menu .radio-menu-item:pressed {
+    -fx-background-color: derive(#2a2f3a, -10%);
+}
+
+/* === Avoid “stuck” highlight on focus-only (keyboard focus with no hover) === */
+.app-context-menu .menu-item:focused:not(:hover):not(:armed),
+.app-context-menu .custom-menu-item:focused:not(:hover):not(:armed),
+.app-context-menu .check-menu-item:focused:not(:hover):not(:armed),
+.app-context-menu .radio-menu-item:focused:not(:hover):not(:armed) {
+    -fx-background-color: transparent;
+}
+.app-context-menu .menu-item:focused:not(:hover):not(:armed) .label,
+.app-context-menu .custom-menu-item:focused:not(:hover):not(:armed) .label,
+.app-context-menu .check-menu-item:focused:not(:hover):not(:armed) .label,
+.app-context-menu .radio-menu-item:focused:not(:hover):not(:armed) .label {
+    -fx-text-fill: -fx-text-base-color;
+}
+.app-context-menu .menu-item:focused:not(:hover):not(:armed) .right-container .arrow {
+    -fx-background-color: -fx-text-base-color;
+}
+
+/* === Separators === */
+.app-context-menu .separator:horizontal .line {
+    -fx-border-color: -fx-box-border;
+    -fx-opacity: 0.3;
+}
+
+/* === Header (non-clickable title using CustomMenuItem) ===
+   Make sure your code adds:
+   - customMenuItem.getStyleClass().add("cm-header-item");
+   - label.getStyleClass().add("cm-header");
+*/
+.app-context-menu .custom-menu-item.cm-header-item {
+    -fx-background-color: transparent;
+    -fx-background-radius: 8;
+    -fx-cursor: default; /* keep pointer neutral */
+}
+
+/* Keep header flat under ALL interactive states; override general hover rules */
+.app-context-menu .custom-menu-item.cm-header-item:hover,
+.app-context-menu .custom-menu-item.cm-header-item:armed,
+.app-context-menu .custom-menu-item.cm-header-item:focused,
+.app-context-menu .custom-menu-item.cm-header-item:pressed {
+    -fx-background-color: transparent !important;
+}
+
+/* Pin header text color so it never flips to selection color */
+.app-context-menu .custom-menu-item.cm-header-item .cm-header {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-opacity: 0.9;
+    -fx-padding: 6 14 4 14;
+    -fx-text-fill: -fx-text-base-color;
+}
+
+/* Also guard the label against state-based overrides */
+.app-context-menu .custom-menu-item.cm-header-item:hover .cm-header,
+.app-context-menu .custom-menu-item.cm-header-item:armed .cm-header,
+.app-context-menu .custom-menu-item.cm-header-item:focused .cm-header,
+.app-context-menu .custom-menu-item.cm-header-item:pressed .cm-header {
+    -fx-text-fill: -fx-text-base-color !important;
+}
+
+/* === Optional: round submenu popups similarly (global) === */
+.context-menu {
+    -fx-background-radius: 10;
+}
