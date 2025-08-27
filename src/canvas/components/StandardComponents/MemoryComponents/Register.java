@@ -8,7 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.paint.Color;
-import util.ErrorStateExeption;
+import util.ErrorStateException;
 
 public class Register extends MemoryCanvasComponent {
 	protected int bit_size;
@@ -25,7 +25,7 @@ public class Register extends MemoryCanvasComponent {
 		boolean set_state = false;
 		try {
 			set_state = states[0].getStateBoolean();
-		} catch (ErrorStateExeption e) {
+		} catch (ErrorStateException e) {
 			e.printStackTrace();
 		}
 		if(set_state) {

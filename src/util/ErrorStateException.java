@@ -1,6 +1,6 @@
 package util;
 
-public class ErrorStateExeption extends Exception {
+public class ErrorStateException extends Exception {
 	/**
 	 * 
 	 */

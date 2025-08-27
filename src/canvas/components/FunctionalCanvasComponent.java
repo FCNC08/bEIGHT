@@ -12,7 +12,7 @@ import canvas.components.StandardComponents.Wire;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
-import util.OcupationExeption;
+import util.OcupationException;
 
 public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	public static final String SIZE_BIG = "BIG";
@@ -75,11 +75,11 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 			setRotation(!getRotation());
 			try {
 				parent.add(this);
-			}catch(OcupationExeption e) {
+			}catch(OcupationException e) {
 				setRotation(!getRotation());
 				try {
 					parent.add(this);
-				} catch (OcupationExeption e1) {
+				} catch (OcupationException e1) {
 					e1.printStackTrace();
 				}
 			}

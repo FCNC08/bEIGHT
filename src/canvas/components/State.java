@@ -1,7 +1,7 @@
 package canvas.components;
 
 import javafx.scene.paint.Color;
-import util.ErrorStateExeption;
+import util.ErrorStateException;
 
 public class State {
 	public static boolean STANDARD_MODE = true;
@@ -70,9 +70,9 @@ public class State {
 		}
 	}
 
-	public boolean getStateBoolean() throws ErrorStateExeption {
+	public boolean getStateBoolean() throws ErrorStateException {
 		if (mode == ERROR_MODE) {
-			throw new ErrorStateExeption();
+			throw new ErrorStateException();
 		} else {
 			return state;
 		}

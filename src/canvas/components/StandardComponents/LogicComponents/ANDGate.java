@@ -14,7 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
-import util.ErrorStateExeption;
+import util.ErrorStateException;
 
 public class ANDGate extends LogicComponent {
 
@@ -122,7 +122,7 @@ public class ANDGate extends LogicComponent {
 			for (Dot d : outputs) {
 				d.setState(State.getState(State.STANDARD_MODE, output_state ? State.ON_ERROR : State.OFF_UNSET));
 			}
-		} catch (ErrorStateExeption e) {
+		} catch (ErrorStateException e) {
 			for (Dot o : outputs) {
 				o.setState(State.getState(State.ERROR_MODE, State.ON_ERROR));
 			}

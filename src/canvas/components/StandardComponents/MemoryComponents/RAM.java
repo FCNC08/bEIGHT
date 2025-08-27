@@ -12,7 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
-import util.ErrorStateExeption;
+import util.ErrorStateException;
 
 public class RAM extends MemoryCanvasComponent {
 
@@ -28,7 +28,7 @@ public class RAM extends MemoryCanvasComponent {
 		boolean set_state = false;
 		try {
 			set_state = states[0].getStateBoolean();
-		} catch (ErrorStateExeption e) {
+		} catch (ErrorStateException e) {
 			e.printStackTrace();
 		}
 		if(set_state) {

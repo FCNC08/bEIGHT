@@ -7,7 +7,7 @@ import org.json.JSONArray;
 
 import canvas.components.Dot;
 import canvas.components.State;
-import util.ErrorStateExeption;
+import util.ErrorStateException;
 import util.PublicCount;
 
 public class Output extends Connection{
@@ -30,7 +30,7 @@ public class Output extends Connection{
 		}else {
 			try {
 				System.out.println(state.getStateBoolean());
-			} catch (ErrorStateExeption e) {
+			} catch (ErrorStateException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

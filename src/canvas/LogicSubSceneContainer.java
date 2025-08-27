@@ -51,8 +51,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import net.lingala.zip4j.ZipFile;
-import util.IllegalInputOutputExeption;
-import util.OcupationExeption;
+import util.IllegalInputOutputException;
+import util.OcupationException;
 
 public class LogicSubSceneContainer extends SubScene {
 
@@ -357,7 +357,7 @@ public class LogicSubSceneContainer extends SubScene {
 
 						try {
 							logic_subscene.add(adding_component);
-						} catch (OcupationExeption e) {
+						} catch (OcupationException e) {
 							e.printStackTrace();
 						}
 					}
@@ -578,7 +578,7 @@ public class LogicSubSceneContainer extends SubScene {
 				writer.write(logic_subscene.getArduino(input_pins, output_pins));
 			} catch (IOException ie) {
 				ie.printStackTrace();
-			}catch(IllegalInputOutputExeption ie) {
+			}catch(IllegalInputOutputException ie) {
 				Stage stage = new Stage();
 				Group scene_root = new Group();
 				Scene scene = new Scene(scene_root);
@@ -691,7 +691,7 @@ public class LogicSubSceneContainer extends SubScene {
 	public void saveArduinoShield(File file) {
 		try(FileWriter writer = new FileWriter(file)){
 			writer.write(logic_subscene.getBeighduinoshield());
-		} catch (IOException | IllegalInputOutputExeption e) {
+		} catch (IOException | IllegalInputOutputException e) {
 			e.printStackTrace();
 		}
 	}

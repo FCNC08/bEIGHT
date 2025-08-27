@@ -6,7 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import canvas.components.State;
-import util.ErrorStateExeption;
+import util.ErrorStateException;
 
 public class Truthtabel{
 	protected int input_count;
@@ -48,7 +48,7 @@ public class Truthtabel{
 		}
 		System.out.println(output_count);
 	}
-	public State[] getState(State[] input_states) throws ErrorStateExeption {
+	public State[] getState(State[] input_states) throws ErrorStateException {
 		State[] ret_value = new State[output_count];
 		ArrayList<Outputvalue> ret_values = new ArrayList<>(truth_tabel);
 		byte[] inputs = new byte[input_states.length];

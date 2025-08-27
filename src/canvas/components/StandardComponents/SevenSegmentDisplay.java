@@ -13,7 +13,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
-import util.ErrorStateExeption;
+import util.ErrorStateException;
 
 public class SevenSegmentDisplay extends FunctionalCanvasComponent{
 
@@ -41,7 +41,7 @@ public class SevenSegmentDisplay extends FunctionalCanvasComponent{
 			for(int i = 0; i<input_count; i++) {
 				number+=(input[i].getStateBoolean()?1:0)*Math.pow(2, i);
 			}
-		}catch(ErrorStateExeption e) {
+		}catch(ErrorStateException e) {
 			e.printStackTrace();
 		}
 		paintImage();

@@ -64,9 +64,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 
-import util.OcupationExeption;
+import util.OcupationException;
 import util.ComponentBox;
-import util.IllegalInputOutputExeption;
+import util.IllegalInputOutputException;
 import util.InputOutputConnectionPair;
 
 public class LogicSubScene extends SubScene {
@@ -255,7 +255,7 @@ public class LogicSubScene extends SubScene {
 					                        moves_focused_y = wy;
 					                        moved = true;
 					                    }
-					                } catch (OcupationExeption e) {
+					                } catch (OcupationException e) {
 					                    e.printStackTrace();
 					                    moved = false;
 					                }
@@ -273,7 +273,7 @@ public class LogicSubScene extends SubScene {
 				            adding_WireDoublet = getWires(pressed_x, pressed_y, wx, wy);
 				            addTry(adding_WireDoublet);
 				        } catch (Exception e) {
-				            System.out.println("Exeption");
+				            System.out.println("Exception");
 				            adding_WireDoublet = null;
 				        }
 				    } else if (!moved) {
@@ -282,7 +282,7 @@ public class LogicSubScene extends SubScene {
 				            addTry(adding_WireDoublet);
 				            System.out.println("Added Wire doublet");
 				        } catch (Exception e) {
-				            System.out.println("Exeption");
+				            System.out.println("Exception");
 				            adding_WireDoublet = null;
 				        }
 				    }
@@ -326,13 +326,13 @@ public class LogicSubScene extends SubScene {
 					removeTry(adding_CanvasComponent);
 					try {
 						add(adding_CanvasComponent);
-					}catch(OcupationExeption e) {
+					}catch(OcupationException e) {
 		                // if drop is invalid, revert to original grid position and try again
 		                adding_CanvasComponent.setXPoint(addingOriginalXPoint);
 		                adding_CanvasComponent.setYPoint(addingOriginalYPoint);
 		                try {
 		                    add(adding_CanvasComponent);
-		                } catch (OcupationExeption e1) {
+		                } catch (OcupationException e1) {
 		                    // last resort: log it; component remains not placed to avoid inconsistent state
 		                    e1.printStackTrace();
 		                }
@@ -348,13 +348,13 @@ public class LogicSubScene extends SubScene {
 		            removeTry(moving_Wire);
 		            try {
 		                add(moving_Wire); // real add() claims occupancy + reconnects
-		            } catch (OcupationExeption e) {
+		            } catch (OcupationException e) {
 		                // revert to original position and try again
 		                moving_Wire.setXPoint(movingWireOriginalXPoint);
 		                moving_Wire.setYPoint(movingWireOriginalYPoint);
 		                try {
 		                    add(moving_Wire);
-		                } catch (OcupationExeption e1) {
+		                } catch (OcupationException e1) {
 		                    e1.printStackTrace(); // last resort, keep it off-canvas
 		                }
 		            } finally {
@@ -401,11 +401,11 @@ public class LogicSubScene extends SubScene {
 									wire.setRotation(!wire.getRotation());
 									try {
 										add(wire);
-									}catch(OcupationExeption e) {
+									}catch(OcupationException e) {
 										wire.setRotation(!wire.getRotation());
 										try {
 											add(wire);
-										} catch (OcupationExeption e1) {
+										} catch (OcupationException e1) {
 											e1.printStackTrace();
 										}
 									}
@@ -435,7 +435,7 @@ public class LogicSubScene extends SubScene {
 
 	}
 	
-	public void add(FunctionalCanvasComponent component) throws OcupationExeption {
+	public void add(FunctionalCanvasComponent component) throws OcupationException {
 		if(component instanceof Input) {
 			inputs.add((Input) component);
 		}else if(component instanceof Output) {
@@ -448,12 +448,12 @@ public class LogicSubScene extends SubScene {
 		for (int x = component.getXPoint() + 1; x < (component.getXPoint() + component.getWidthPoint()); x++) {
 			for (int y = component.getYPoint() + 1; y < (component.getYPoint() + component.getHeightPoint()); y++) {
 				if (used[x][y].HorizontalComponent != null) {
-					throw new OcupationExeption();
+					throw new OcupationException();
 				} else {
 					used[x][y].HorizontalComponent = ComponentBox.occupied;
 				}
 				if (used[x][y].VerticalComponent != null) {
-					throw new OcupationExeption();
+					throw new OcupationException();
 				} else {
 					used[x][y].VerticalComponent = ComponentBox.occupied;
 				}
@@ -473,7 +473,7 @@ public class LogicSubScene extends SubScene {
 		// Adding component to the ID-System
 	}
 
-	public void addTry(WireDoublet doublet) throws OcupationExeption {
+	public void addTry(WireDoublet doublet) throws OcupationException {
 		// Adding each Wire of a WireDoublet
 		if (doublet.getHorizontalWire() != null) {
 			root.getChildren().add(doublet.getHorizontalWire().getImageView());
@@ -496,19 +496,19 @@ public class LogicSubScene extends SubScene {
 	    }
 	}
 	
-	public void add(WireDoublet doublet) throws OcupationExeption {
+	public void add(WireDoublet doublet) throws OcupationException {
 		// Adding each Wire of a WireDoublet
 		add(doublet.getHorizontalWire());
 		add(doublet.getVerticalWire());
 
 	}
 
-	public void add(Dot component) throws OcupationExeption {
+	public void add(Dot component) throws OcupationException {
 		if (component != null) {
 			if (used[component.point_X][component.point_Y].Dot == null) {
 				used[component.point_X][component.point_Y].Dot = component;
 			} else {
-				throw new OcupationExeption();
+				throw new OcupationException();
 			}
 
 			if (used[component.point_X][component.point_Y].VerticalComponent != null && !(used[component.point_X][component.point_Y].VerticalComponent == ComponentBox.occupied)) {
@@ -525,7 +525,7 @@ public class LogicSubScene extends SubScene {
 		}
 	}
 
-	public void add(Wire component) throws OcupationExeption {
+	public void add(Wire component) throws OcupationException {
 		if (component != null) {
 			ComponentBox loc_ID;
 
@@ -551,7 +551,7 @@ public class LogicSubScene extends SubScene {
 						}
 					} else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
 						System.out.println("Error1");
-						throw new OcupationExeption();
+						throw new OcupationException();
 					} else {
 						System.out.println("Another");
 						if (loc_ID.HorizontalComponent.getXPoint() < component.getXPoint()) {
@@ -620,7 +620,7 @@ public class LogicSubScene extends SubScene {
 
 				} else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
 					System.out.println("Error1");
-					throw new OcupationExeption();
+					throw new OcupationException();
 				} else {
 					System.out.println("Another");
 					if (loc_ID.HorizontalComponent.getXPoint() < component.getXPoint()) {
@@ -689,7 +689,7 @@ public class LogicSubScene extends SubScene {
 					System.out.println(component);
 				} else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
 					System.out.println("Error1");
-					throw new OcupationExeption();
+					throw new OcupationException();
 				} else {
 					System.out.println("Another");
 					if (loc_ID.HorizontalComponent.getXPoint() < component.getXPoint()) {
@@ -764,7 +764,7 @@ public class LogicSubScene extends SubScene {
 						}
 
 					} else if (loc_ID.VerticalComponent == ComponentBox.occupied) {
-						throw new OcupationExeption();
+						throw new OcupationException();
 					} else {
 						if (loc_ID.VerticalComponent.getYPoint() < component.getYPoint()) {
 							if (!(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() > component.getYPoint() + component.getWidthPoint())) {
@@ -830,7 +830,7 @@ public class LogicSubScene extends SubScene {
 							loc_ID.Dot.addComponent(component);
 						}
 					} else if (loc_ID.VerticalComponent == ComponentBox.occupied) {
-						throw new OcupationExeption();
+						throw new OcupationException();
 					} else {
 						if (loc_ID.VerticalComponent.getYPoint() < component.getYPoint()) {
 							if (!(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() > component.getYPoint() + component.getWidthPoint())) {
@@ -895,7 +895,7 @@ public class LogicSubScene extends SubScene {
 							loc_ID.Dot.addComponent(component);
 						}
 					} else if (loc_ID.VerticalComponent == ComponentBox.occupied) {
-						throw new OcupationExeption();
+						throw new OcupationException();
 					} else {
 						if (loc_ID.VerticalComponent.getYPoint() < component.getYPoint()) {
 							if (!(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() > component.getYPoint() + component.getWidthPoint())) {
@@ -1085,7 +1085,7 @@ public class LogicSubScene extends SubScene {
 		}
 	}
 
-	public void move(CanvasComponent component, int new_X, int new_Y) throws OcupationExeption {
+	public void move(CanvasComponent component, int new_X, int new_Y) throws OcupationException {
 		if (component instanceof FunctionalCanvasComponent) {
 			move((FunctionalCanvasComponent) component, new_X, new_Y);
 		} else if (component instanceof Dot) {
@@ -1097,7 +1097,7 @@ public class LogicSubScene extends SubScene {
 		}
 	}
 
-	public void move(FunctionalCanvasComponent component, int new_X, int new_Y) throws OcupationExeption {
+	public void move(FunctionalCanvasComponent component, int new_X, int new_Y) throws OcupationException {
 		if (component.point_X_rest + new_X > cross_distance / 2 || component.point_Y_rest + new_Y > cross_distance / 2) {
 			// Removing blockings from used
 			if (component.rotation == CanvasComponent.HORIZONTAL) {
@@ -1146,12 +1146,12 @@ public class LogicSubScene extends SubScene {
 						if(used[x][y].HorizontalComponent == null) {
 							used[x][y].HorizontalComponent = ComponentBox.occupied;
 						}else {
-							throw new OcupationExeption();
+							throw new OcupationException();
 						}
 						if(used[x][y].VerticalComponent == null) {
 							used[x][y].VerticalComponent = ComponentBox.occupied;
 						}else {
-							throw new OcupationExeption();
+							throw new OcupationException();
 						}
 					}
 				}
@@ -1161,12 +1161,12 @@ public class LogicSubScene extends SubScene {
 						if(used[x][y].HorizontalComponent == null) {
 							used[x][y].HorizontalComponent = ComponentBox.occupied;
 						}else {
-							throw new OcupationExeption();
+							throw new OcupationException();
 						}
 						if(used[x][y].VerticalComponent == null) {
 							used[x][y].VerticalComponent = ComponentBox.occupied;
 						}else {
-							throw new OcupationExeption();
+							throw new OcupationException();
 						}
 					}
 				}
@@ -1176,7 +1176,7 @@ public class LogicSubScene extends SubScene {
 
 	}
 
-	public void move(Dot component, int new_X, int new_Y) throws OcupationExeption {
+	public void move(Dot component, int new_X, int new_Y) throws OcupationException {
 		// Removing Dot from used
 		remove(component);
 		component.addX(new_X);
@@ -1185,7 +1185,7 @@ public class LogicSubScene extends SubScene {
 		add(component);
 	}
 
-	public void move(Wire component, int new_X, int new_Y) throws OcupationExeption {
+	public void move(Wire component, int new_X, int new_Y) throws OcupationException {
 		// Removing component from used
 		if (component.rotation == CanvasComponent.HORIZONTAL) {
 			// Removing Horizontal/Vertical ID from used
@@ -1235,7 +1235,7 @@ public class LogicSubScene extends SubScene {
 				wire.setYPoint(jsonwire.getInt("posy"));
 				try {
 					logic_sub_scene.add(wire);
-				} catch (OcupationExeption e) {
+				} catch (OcupationException e) {
 					e.printStackTrace();
 				}
 			}
@@ -1299,7 +1299,7 @@ public class LogicSubScene extends SubScene {
 				component.setYPoint(jsoncomponent.getInt("posy"));
 				try {
 					logic_sub_scene.add(component);
-				} catch (OcupationExeption e) {
+				} catch (OcupationException e) {
 					e.printStackTrace();
 				}
 			}
@@ -1655,9 +1655,9 @@ public class LogicSubScene extends SubScene {
 		return object;
 	}
 	
-	public String getVerilog() throws IllegalInputOutputExeption {
+	public String getVerilog() throws IllegalInputOutputException {
 		if(inputs.size()<1 || outputs.size()<1) {
-			throw new IllegalInputOutputExeption();
+			throw new IllegalInputOutputException();
 		}
 		
 		String verilog_string = "module "+name.replace(' ', '_')+"(\n";
@@ -1758,9 +1758,9 @@ public class LogicSubScene extends SubScene {
 		return verilog_string;
 	}
 	
-	public String getArduino(int input_pins[], int output_pins[]) throws IllegalInputOutputExeption{
+	public String getArduino(int input_pins[], int output_pins[]) throws IllegalInputOutputException{
 		if(inputs.size()<1 || outputs.size()<1) {
-			throw new IllegalInputOutputExeption();
+			throw new IllegalInputOutputException();
 		}
 		
 		LinkedHashSet<FunctionalCanvasComponent> functional_components = new LinkedHashSet<>();
@@ -1909,9 +1909,9 @@ public class LogicSubScene extends SubScene {
 		return arduino_string;
 	}
 	
-	public String getBeighduinoshield() throws IllegalInputOutputExeption {
+	public String getBeighduinoshield() throws IllegalInputOutputException {
 		if(inputs.size()<1 || outputs.size()<1) {
-			throw new IllegalInputOutputExeption();
+			throw new IllegalInputOutputException();
 		}
 		
 		LinkedHashSet<FunctionalCanvasComponent> functional_components = new LinkedHashSet<>();

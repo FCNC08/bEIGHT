@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.stage.FileChooser.ExtensionFilter;
 import net.lingala.zip4j.ZipFile;
-import util.IllegalInputOutputExeption;
+import util.IllegalInputOutputException;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -64,7 +64,7 @@ public class Main extends Application {
 		// Adding different Scenes
 		addStartScene();
 		
-		primaryStage.getIcons().add(new Image("AND.png"));
+		primaryStage.getIcons().add(new Image("Icon.png"));
 		primaryStage.setTitle("bEIGHT");
 		
 		// set Scene and saves Stage
@@ -329,7 +329,7 @@ public class Main extends Application {
 					writer.write(logic_container.logic_subscene.getVerilog());
 				}catch(IOException e) {
 					e.printStackTrace();
-				} catch (IllegalInputOutputExeption e1) {
+				} catch (IllegalInputOutputException e1) {
 					Stage stage = new Stage();
 					Group scene_root = new Group();
 					Scene scene = new Scene(scene_root);

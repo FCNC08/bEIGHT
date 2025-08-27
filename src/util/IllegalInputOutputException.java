@@ -1,5 +1,6 @@
 package util;
 
-public class IllegalComponentExeption extends Exception {
+public class IllegalInputOutputException extends Exception{
 	private static final long serialVersionUID = 1L;
+
 }

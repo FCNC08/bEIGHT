@@ -13,7 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.paint.Color;
-import util.ErrorStateExeption;
+import util.ErrorStateException;
 
 public class NOTGate extends LogicComponent {
 
@@ -112,7 +112,7 @@ public class NOTGate extends LogicComponent {
 		try {
 			boolean bool = input[0].getStateBoolean();
 			outputs[0].setState(State.getState(State.STANDARD_MODE, !bool ? State.ON_ERROR : State.OFF_UNSET));
-		} catch (ErrorStateExeption e) {
+		} catch (ErrorStateException e) {
 			for (Dot o : outputs) {
 				o.setState(State.getState(State.ERROR_MODE, State.ON_ERROR));
 			}

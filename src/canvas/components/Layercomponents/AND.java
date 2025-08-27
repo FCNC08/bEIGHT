@@ -4,7 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import canvas.components.State;
-import util.ErrorStateExeption;
+import util.ErrorStateException;
 
 public class AND extends  LayerGate{
 
@@ -27,7 +27,7 @@ public class AND extends  LayerGate{
 			for (Connection d : outputs) {
 				d.setState(State.getState(State.STANDARD_MODE, output_state ? State.ON_ERROR : State.OFF_UNSET));
 			}
-		} catch (ErrorStateExeption e) {
+		} catch (ErrorStateException e) {
 			for (Connection o : outputs) {
 				o.setState(State.getState(State.ERROR_MODE, State.ON_ERROR));
 			}

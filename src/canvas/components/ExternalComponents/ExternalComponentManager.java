@@ -1,6 +1,6 @@
 package canvas.components.ExternalComponents;
 
-import util.IllegalComponentExeption;
+import util.IllegalComponentException;
 
 public class ExternalComponentManager {
 	@SuppressWarnings("unused")
@@ -16,7 +16,7 @@ public class ExternalComponentManager {
 	private int[] output_x;
 	private int[] output_y;
 
-	public ExternalComponentManager(int temp_width, int temp_height, int[] temp_input_x, int[] temp_input_y, int[] temp_output_x, int[] temp_output_y, int temp_inputs, int temp_outputs) throws IllegalComponentExeption {
+	public ExternalComponentManager(int temp_width, int temp_height, int[] temp_input_x, int[] temp_input_y, int[] temp_output_x, int[] temp_output_y, int temp_inputs, int temp_outputs) throws IllegalComponentException {
 		this.imageUsed = true;
 		this.width = temp_width;
 		this.height = temp_height;

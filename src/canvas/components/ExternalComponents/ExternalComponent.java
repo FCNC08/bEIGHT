@@ -21,7 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import net.lingala.zip4j.ZipFile;
-import util.ErrorStateExeption;
+import util.ErrorStateException;
 
 public class ExternalComponent extends FunctionalCanvasComponent {
 	public static String json_file = "settings.json";
@@ -59,7 +59,7 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 			for(int i = 0; i<output_count; i++) {
 				this.outputs[i].setState(output_states[i]);
 			}
-		} catch (ErrorStateExeption e) {
+		} catch (ErrorStateException e) {
 			for(Dot d : outputs) {
 				d.setState(State.ERROR);
 			}
