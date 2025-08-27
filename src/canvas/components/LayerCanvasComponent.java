@@ -232,7 +232,6 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 		menu.getItems().clear();
 		menu.getItems().add(name_item);
 		menu.getItems().add(new SeparatorMenuItem());
-		menu.getItems().add(turn);
 	}
 	
 	@Override

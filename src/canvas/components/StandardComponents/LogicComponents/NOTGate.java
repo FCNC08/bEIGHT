@@ -162,7 +162,6 @@ public class NOTGate extends LogicComponent {
 		name_item.getStyleClass().add("cm-header-item");
 		menu.getItems().add(name_item);
 		menu.getItems().add(new SeparatorMenuItem());
-		menu.getItems().add(turn);
 	}
 	
 	@Override

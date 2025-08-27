@@ -30,6 +30,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	
 	protected ContextMenu menu = new ContextMenu();
 	protected MenuItem turn;
+	protected MenuItem remove;
 	
 	protected LogicSubScene parent;
 
@@ -84,8 +85,14 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 			}
 			System.out.println("rotated");
 		});
+		remove = new MenuItem("Remove");
+		remove.setOnAction(en->{
+			parent.remove(this);
+		});
 		menu.getStyleClass().add("app-context-menu");
 		createContextMenu();
+		menu.getItems().add(turn);
+		menu.getItems().add(remove);
 	}
 
 	public static FunctionalCanvasComponent initImage(String url, int inputs, int outputs, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {

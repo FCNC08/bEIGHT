@@ -175,7 +175,6 @@ public class HexInput extends FunctionalCanvasComponent{
 		name_item.getStyleClass().add("cm-header-item");
 		menu.getItems().add(name_item);
 		menu.getItems().add(new SeparatorMenuItem());
-		menu.getItems().add(turn);
 	}
 	
 	@Override
