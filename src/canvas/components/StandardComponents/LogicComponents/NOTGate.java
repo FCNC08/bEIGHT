@@ -6,7 +6,6 @@ import canvas.components.State;
 import canvas.components.Layercomponents.NOT;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -113,9 +112,7 @@ public class NOTGate extends LogicComponent {
 			boolean bool = input[0].getStateBoolean();
 			outputs[0].setState(State.getState(State.STANDARD_MODE, !bool ? State.ON_ERROR : State.OFF_UNSET));
 		} catch (ErrorStateException e) {
-			for (Dot o : outputs) {
-				o.setState(State.getState(State.ERROR_MODE, State.ON_ERROR));
-			}
+			setOutputStates(ERROR_ARRAY);
 		}
 
 	}

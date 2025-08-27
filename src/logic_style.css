@@ -1,5 +1,13 @@
 /* application.css — Context Menu Theme (Option 2: direct hover styling) */
 
+.wire-tooltip {
+    -fx-background-color: rgba(20,20,20,0.90);
+    -fx-text-fill: white;
+    -fx-padding: 6 10 6 10;
+    -fx-font-size: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 8, 0.2, 0, 2);
+}
+
 /* === Popup container === */
 .app-context-menu {
     /* Popup look */

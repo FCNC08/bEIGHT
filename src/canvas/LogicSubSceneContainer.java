@@ -52,7 +52,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import net.lingala.zip4j.ZipFile;
 import util.IllegalInputOutputException;
-import util.OcupationException;
+import util.OccupationException;
 
 public class LogicSubSceneContainer extends SubScene {
 
@@ -357,7 +357,7 @@ public class LogicSubSceneContainer extends SubScene {
 
 						try {
 							logic_subscene.add(adding_component);
-						} catch (OcupationException e) {
+						} catch (OccupationException e) {
 							e.printStackTrace();
 						}
 					}

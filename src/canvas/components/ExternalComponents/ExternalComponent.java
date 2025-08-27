@@ -15,7 +15,6 @@ import canvas.components.FunctionalCanvasComponent;
 import canvas.components.State;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -56,13 +55,9 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 	public void simulater() {
 		try {
 			State[] output_states = truth_tabel.getState(getInputStates());
-			for(int i = 0; i<output_count; i++) {
-				this.outputs[i].setState(output_states[i]);
-			}
+			setOutputStates(output_states);
 		} catch (ErrorStateException e) {
-			for(Dot d : outputs) {
-				d.setState(State.ERROR);
-			}
+			setOutputStates(ERROR_ARRAY);
 			e.printStackTrace();
 		}
 	}

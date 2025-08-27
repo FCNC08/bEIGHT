@@ -33,9 +33,17 @@ public class Dot extends SingleCanvasComponent {
 	protected void change() {
 		paintCircle();
 		parent.simulate();
-		for (SingleCanvasComponent connected : connected_Components) {
-			connected.setState(getState());
+		if(getState().isEqual(State.ERROR)) {
+			for (SingleCanvasComponent connected : connected_Components) {
+				connected.setErrorMessage(error_message);
+				connected.setState(getState());
+			}
+		}else {
+			for (SingleCanvasComponent connected : connected_Components) {
+				connected.setState(getState());
+			}
 		}
+
 	}
 	
 	@Override

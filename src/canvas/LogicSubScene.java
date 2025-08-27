@@ -64,9 +64,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
 
-import util.OcupationException;
+import util.OccupationException;
 import util.ComponentBox;
 import util.IllegalInputOutputException;
+import util.IncompatibleWireWidthException;
 import util.InputOutputConnectionPair;
 
 public class LogicSubScene extends SubScene {
@@ -255,7 +256,7 @@ public class LogicSubScene extends SubScene {
 					                        moves_focused_y = wy;
 					                        moved = true;
 					                    }
-					                } catch (OcupationException e) {
+					                } catch (OccupationException e) {
 					                    e.printStackTrace();
 					                    moved = false;
 					                }
@@ -326,13 +327,13 @@ public class LogicSubScene extends SubScene {
 					removeTry(adding_CanvasComponent);
 					try {
 						add(adding_CanvasComponent);
-					}catch(OcupationException e) {
+					}catch(OccupationException e) {
 		                // if drop is invalid, revert to original grid position and try again
 		                adding_CanvasComponent.setXPoint(addingOriginalXPoint);
 		                adding_CanvasComponent.setYPoint(addingOriginalYPoint);
 		                try {
 		                    add(adding_CanvasComponent);
-		                } catch (OcupationException e1) {
+		                } catch (OccupationException e1) {
 		                    // last resort: log it; component remains not placed to avoid inconsistent state
 		                    e1.printStackTrace();
 		                }
@@ -348,13 +349,13 @@ public class LogicSubScene extends SubScene {
 		            removeTry(moving_Wire);
 		            try {
 		                add(moving_Wire); // real add() claims occupancy + reconnects
-		            } catch (OcupationException e) {
+		            } catch (OccupationException e) {
 		                // revert to original position and try again
 		                moving_Wire.setXPoint(movingWireOriginalXPoint);
 		                moving_Wire.setYPoint(movingWireOriginalYPoint);
 		                try {
 		                    add(moving_Wire);
-		                } catch (OcupationException e1) {
+		                } catch (OccupationException e1) {
 		                    e1.printStackTrace(); // last resort, keep it off-canvas
 		                }
 		            } finally {
@@ -401,11 +402,11 @@ public class LogicSubScene extends SubScene {
 									wire.setRotation(!wire.getRotation());
 									try {
 										add(wire);
-									}catch(OcupationException e) {
+									}catch(OccupationException e) {
 										wire.setRotation(!wire.getRotation());
 										try {
 											add(wire);
-										} catch (OcupationException e1) {
+										} catch (OccupationException e1) {
 											e1.printStackTrace();
 										}
 									}
@@ -435,7 +436,7 @@ public class LogicSubScene extends SubScene {
 
 	}
 	
-	public void add(FunctionalCanvasComponent component) throws OcupationException {
+	public void add(FunctionalCanvasComponent component) throws OccupationException {
 		if(component instanceof Input) {
 			inputs.add((Input) component);
 		}else if(component instanceof Output) {
@@ -448,12 +449,12 @@ public class LogicSubScene extends SubScene {
 		for (int x = component.getXPoint() + 1; x < (component.getXPoint() + component.getWidthPoint()); x++) {
 			for (int y = component.getYPoint() + 1; y < (component.getYPoint() + component.getHeightPoint()); y++) {
 				if (used[x][y].HorizontalComponent != null) {
-					throw new OcupationException();
+					throw new OccupationException();
 				} else {
 					used[x][y].HorizontalComponent = ComponentBox.occupied;
 				}
 				if (used[x][y].VerticalComponent != null) {
-					throw new OcupationException();
+					throw new OccupationException();
 				} else {
 					used[x][y].VerticalComponent = ComponentBox.occupied;
 				}
@@ -473,7 +474,7 @@ public class LogicSubScene extends SubScene {
 		// Adding component to the ID-System
 	}
 
-	public void addTry(WireDoublet doublet) throws OcupationException {
+	public void addTry(WireDoublet doublet) throws OccupationException {
 		// Adding each Wire of a WireDoublet
 		if (doublet.getHorizontalWire() != null) {
 			root.getChildren().add(doublet.getHorizontalWire().getImageView());
@@ -496,470 +497,733 @@ public class LogicSubScene extends SubScene {
 	    }
 	}
 	
-	public void add(WireDoublet doublet) throws OcupationException {
+	public void add(WireDoublet doublet) throws OccupationException {
 		// Adding each Wire of a WireDoublet
 		add(doublet.getHorizontalWire());
 		add(doublet.getVerticalWire());
 
 	}
 
-	public void add(Dot component) throws OcupationException {
+	public void add(Dot component) throws OccupationException {
 		if (component != null) {
 			if (used[component.point_X][component.point_Y].Dot == null) {
 				used[component.point_X][component.point_Y].Dot = component;
 			} else {
-				throw new OcupationException();
+				throw new OccupationException();
 			}
-
-			if (used[component.point_X][component.point_Y].VerticalComponent != null && !(used[component.point_X][component.point_Y].VerticalComponent == ComponentBox.occupied)) {
-				component.addComponent(used[component.point_X][component.point_Y].VerticalComponent);
-				used[component.point_X][component.point_Y].VerticalComponent.addComponent(component);
+			try {
+				if (used[component.point_X][component.point_Y].VerticalComponent != null && !(used[component.point_X][component.point_Y].VerticalComponent == ComponentBox.occupied)) {
+					component.addComponent(used[component.point_X][component.point_Y].VerticalComponent);
+					used[component.point_X][component.point_Y].VerticalComponent.addComponent(component);
+				}
+			}catch(IncompatibleWireWidthException e) {
+				component.setState(State.ERROR);
+				component.setErrorMessage("Amount of cables in wire is not compatible");
+				used[component.point_X][component.point_Y].VerticalComponent.setState(State.ERROR);
+				used[component.point_X][component.point_Y].VerticalComponent.setErrorMessage("Amount of cables in wire is not compatible");
 			}
-			if (used[component.point_X][component.point_Y].HorizontalComponent != null && !(used[component.point_X][component.point_Y].HorizontalComponent == ComponentBox.occupied)) {
-				component.addComponent(used[component.point_X][component.point_Y].HorizontalComponent);
-				used[component.point_X][component.point_Y].HorizontalComponent.addComponent(component);
+			try {
+				if (used[component.point_X][component.point_Y].HorizontalComponent != null && !(used[component.point_X][component.point_Y].HorizontalComponent == ComponentBox.occupied)) {
+					component.addComponent(used[component.point_X][component.point_Y].HorizontalComponent);
+					used[component.point_X][component.point_Y].HorizontalComponent.addComponent(component);
+				}
+			}catch(IncompatibleWireWidthException e) {
+				component.setState(State.ERROR);
+				component.setErrorMessage("Amount of cables in wire is not compatible");
+				used[component.point_X][component.point_Y].HorizontalComponent.setState(State.ERROR);
+				used[component.point_X][component.point_Y].HorizontalComponent.setErrorMessage("Amount of cables in wire is not compatible");
 			}
+			
 			root.getChildren().add(component.getImageView());
-			// component.printComponents();
-			// System.out.println("Line: 519");
 		}
 	}
 
-	public void add(Wire component) throws OcupationException {
-		if (component != null) {
-			ComponentBox loc_ID;
-
-			// Checking other elements blocking the Wire/connecting wires together
-			if (component.rotation == CanvasComponent.HORIZONTAL) {
-				// Checking for horizontal and adding the ID to the Horizonzalcomponent in
-				// ComponentBox
-				int x;
-				for (x = component.getXPoint() + 1; x < component.getXPoint() + component.getWidthPoint(); x++) {
-					loc_ID = used[x][component.getYPoint()];
-					if (loc_ID.HorizontalComponent == null) {
-						used[x][component.getYPoint()].HorizontalComponent = component;
-						if (loc_ID.VerticalComponent != null) {
-							if (loc_ID.VerticalComponent.checkEnd(x, component.getYPoint())) {
-								component.addComponent(loc_ID.VerticalComponent);
-								loc_ID.VerticalComponent.addComponent(component);
-							}
-						}
-						if (loc_ID.Dot != null) {
-							component.addComponent(loc_ID.Dot);
-							loc_ID.Dot.addComponent(component);
-							
-						}
-					} else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
-						System.out.println("Error1");
-						throw new OcupationException();
-					} else {
-						System.out.println("Another");
-						if (loc_ID.HorizontalComponent.getXPoint() < component.getXPoint()) {
-							if (!(loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() > component.getXPoint() + component.getWidthPoint())) {
-								Wire wire = new Wire((component.getXPoint() + component.getWidthPoint() - loc_ID.HorizontalComponent.getXPoint()) * cross_distance + wire_height * 3 / 4);
-								wire.setYPoint(component.getYPoint());
-								wire.setXPoint(loc_ID.HorizontalComponent.getXPoint());
-								wire.setRotation(CanvasComponent.HORIZONTAL);
-								wire.setState(component.getState());
-								for (SingleCanvasComponent s : component.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								for (SingleCanvasComponent s : loc_ID.HorizontalComponent.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								remove(loc_ID.HorizontalComponent);
-								remove(component);
-								add(wire);
-								return;
-							} else {
-								System.out.println(loc_ID.HorizontalComponent + " ");
-								remove(component);
-								return;
-							}
-						} else {
-							if (!(component.getXPoint() + component.getWidthPoint() > loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint())) {
-								System.out.println(loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() - component.getXPoint());
-								Wire wire = new Wire((loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() - component.getXPoint()) * cross_distance + wire_height * 3 / 4);
-								wire.setYPoint(component.getYPoint());
-								wire.setXPoint(component.getXPoint());
-								wire.setRotation(CanvasComponent.HORIZONTAL);
-								wire.setState(loc_ID.HorizontalComponent.getState());
-								for (SingleCanvasComponent s : component.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								for (SingleCanvasComponent s : loc_ID.HorizontalComponent.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								remove(loc_ID.HorizontalComponent);
-								remove(component);
-								add(wire);
-								return;
-							} else {
-								used[x][component.getYPoint()].HorizontalComponent = component;
-							}
-						}
-					}
-				}
-				x = component.getXPoint();
-				loc_ID = used[x][component.getYPoint()];
-				if (loc_ID.HorizontalComponent == null) {
-					used[x][component.getYPoint()].HorizontalComponent = component;
-					if (loc_ID.VerticalComponent != null && loc_ID.VerticalComponent != ComponentBox.occupied) {
-						component.addComponent(loc_ID.VerticalComponent);
-						loc_ID.VerticalComponent.addComponent(component);
-						System.out.println("connected");
-					}
-					if (loc_ID.Dot != null && loc_ID.Dot != ComponentBox.occupied) {
-						component.addComponent(loc_ID.Dot);
-						loc_ID.Dot.addComponent(component);
-					}
-
-				} else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
-					System.out.println("Error1");
-					throw new OcupationException();
-				} else {
-					System.out.println("Another");
-					if (loc_ID.HorizontalComponent.getXPoint() < component.getXPoint()) {
-						if (!(loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() > component.getXPoint() + component.getWidthPoint())) {
-							Wire wire = new Wire((component.getXPoint() + component.getWidthPoint() - loc_ID.HorizontalComponent.getXPoint()) * cross_distance + wire_height * 3 / 4);
-							wire.setYPoint(component.getYPoint());
-							wire.setXPoint(loc_ID.HorizontalComponent.getXPoint());
-							wire.setRotation(CanvasComponent.HORIZONTAL);
-							wire.setState(loc_ID.HorizontalComponent.getState());
-							for (SingleCanvasComponent s : component.getConnectedComponents()) {
-								wire.addComponent(s);
-								s.addComponent(wire);
-							}
-							for (SingleCanvasComponent s : loc_ID.HorizontalComponent.getConnectedComponents()) {
-								wire.addComponent(s);
-								s.addComponent(wire);
-							}
-							remove(loc_ID.HorizontalComponent);
-							remove(component);
-							System.out.println(wire + " ");
-							add(wire);
-							return;
-						} else {
-							System.out.println(loc_ID.HorizontalComponent + " ");
-							remove(component);
-							return;
-						}
-					} else {
-						if (!(component.getXPoint() + component.getWidthPoint() > loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint())) {
-							System.out.println(loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() - component.getXPoint());
-							Wire wire = new Wire((loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() - component.getXPoint()) * cross_distance + wire_height * 3 / 4);
-							wire.setYPoint(component.getYPoint());
-							wire.setXPoint(component.getXPoint());
-							wire.setRotation(CanvasComponent.HORIZONTAL);
-							wire.setState(loc_ID.HorizontalComponent.getState());
-							for (SingleCanvasComponent s : component.getConnectedComponents()) {
-								wire.addComponent(s);
-								s.addComponent(wire);
-							}
-							for (SingleCanvasComponent s : loc_ID.HorizontalComponent.getConnectedComponents()) {
-								wire.addComponent(s);
-								s.addComponent(wire);
-							}
-							remove(loc_ID.HorizontalComponent);
-							remove(component);
-							add(wire);
-							return;
-						} else {
-							used[x][component.getYPoint()].HorizontalComponent = component;
-						}
-					}
-				}
-				x = component.getXPoint() + component.getWidthPoint();
-				loc_ID = used[x][component.getYPoint()];
-				if (loc_ID.HorizontalComponent == null) {
-					used[x][component.getYPoint()].HorizontalComponent = component;
-					if (loc_ID.VerticalComponent != null && loc_ID.VerticalComponent != ComponentBox.occupied) {
-						component.addComponent(loc_ID.VerticalComponent);
-						loc_ID.VerticalComponent.addComponent(component);
-					}
-					if (loc_ID.Dot != null && loc_ID.Dot != ComponentBox.occupied) {
-						component.addComponent(loc_ID.Dot);
-						loc_ID.Dot.addComponent(component);
-					}
-
-					System.out.println(component);
-				} else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
-					System.out.println("Error1");
-					throw new OcupationException();
-				} else {
-					System.out.println("Another");
-					if (loc_ID.HorizontalComponent.getXPoint() < component.getXPoint()) {
-						if (!(loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() > component.getXPoint() + component.getWidthPoint())) {
-							Wire wire = new Wire((component.getXPoint() + component.getWidthPoint() - loc_ID.HorizontalComponent.getXPoint()) * cross_distance + wire_height * 3 / 4);
-							wire.setYPoint(component.getYPoint());
-							wire.setXPoint(loc_ID.HorizontalComponent.getXPoint());
-							wire.setRotation(CanvasComponent.HORIZONTAL);
-							wire.setState(loc_ID.HorizontalComponent.getState());
-							for (SingleCanvasComponent s : component.getConnectedComponents()) {
-								wire.addComponent(s);
-								s.addComponent(wire);
-							}
-							for (SingleCanvasComponent s : loc_ID.HorizontalComponent.getConnectedComponents()) {
-								wire.addComponent(s);
-								s.addComponent(wire);
-							}
-							remove(loc_ID.HorizontalComponent);
-							remove(component);
-							System.out.println(wire + " ");
-							add(wire);
-							return;
-						} else {
-							System.out.println(loc_ID.HorizontalComponent + " ");
-							remove(component);
-							return;
-						}
-					} else {
-						if (!(component.getXPoint() + component.getWidthPoint() > loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint())) {
-							System.out.println(loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() - component.getXPoint());
-							Wire wire = new Wire((loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() - component.getXPoint()) * cross_distance + wire_height * 3 / 4);
-							wire.setYPoint(component.getYPoint());
-							wire.setXPoint(component.getXPoint());
-							wire.setRotation(CanvasComponent.HORIZONTAL);
-							wire.setState(loc_ID.HorizontalComponent.getState());
-							for (SingleCanvasComponent s : component.getConnectedComponents()) {
-								wire.addComponent(s);
-								s.addComponent(wire);
-							}
-							for (SingleCanvasComponent s : loc_ID.HorizontalComponent.getConnectedComponents()) {
-								wire.addComponent(s);
-								s.addComponent(wire);
-							}
-							remove(loc_ID.HorizontalComponent);
-							remove(component);
-							add(wire);
-							return;
-						} else {
-							used[x][component.getYPoint()].HorizontalComponent = component;
-						}
-					}
-				}
-
-			} else {
-				// Same as for Horizontal with Vertical
-				int y;
-				for (y = component.getYPoint() + 1; y < component.getYPoint() + component.getWidthPoint(); y++) {
-					loc_ID = used[component.getXPoint()][y];
-					if (loc_ID.VerticalComponent == null) {
-						used[component.getXPoint()][y].VerticalComponent = component;
-						if (loc_ID.HorizontalComponent != null) {
-							if (loc_ID.HorizontalComponent.checkEnd(component.getXPoint(), y)) {
-								component.addComponent(loc_ID.HorizontalComponent);
-								loc_ID.HorizontalComponent.addComponent(component);
-							}
-						}
-						if (loc_ID.Dot != null) {
-							if (loc_ID.Dot.checkEnd(component.getXPoint(), y)) {
-								component.addComponent(loc_ID.Dot);
-								loc_ID.Dot.addComponent(component);
-							}
-						}
-
-					} else if (loc_ID.VerticalComponent == ComponentBox.occupied) {
-						throw new OcupationException();
-					} else {
-						if (loc_ID.VerticalComponent.getYPoint() < component.getYPoint()) {
-							if (!(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() > component.getYPoint() + component.getWidthPoint())) {
-								System.out.println(component.getYPoint() + component.getWidthPoint() - loc_ID.VerticalComponent.getYPoint());
-								Wire wire = new Wire((component.getYPoint() + component.getWidthPoint() - loc_ID.VerticalComponent.getYPoint()) * cross_distance + wire_height * 3 / 4);
-								wire.setXPoint(component.getXPoint());
-								wire.setYPoint(loc_ID.VerticalComponent.getYPoint());
-								wire.setRotation(CanvasComponent.VERTICAL);
-								wire.setState(loc_ID.VerticalComponent.getState());
-								for (SingleCanvasComponent s : component.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								for (SingleCanvasComponent s : loc_ID.VerticalComponent.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								remove(loc_ID.VerticalComponent);
-								remove(component);
-								System.out.println(wire + " ");
-								add(wire);
-								return;
-							} else {
-								remove(component);
-								return;
-							}
-						} else {
-							if (!(component.getYPoint() + component.getWidthPoint() > loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint())) {
-								System.out.println(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() - component.getYPoint());
-								Wire wire = new Wire((loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() - component.getYPoint()) * cross_distance + wire_height * 3 / 4);
-								wire.setXPoint(component.getXPoint());
-								wire.setYPoint(component.getYPoint());
-								wire.setRotation(CanvasComponent.VERTICAL);
-								wire.setState(loc_ID.VerticalComponent.getState());
-								for (SingleCanvasComponent s : component.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								for (SingleCanvasComponent s : loc_ID.VerticalComponent.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								remove(loc_ID.VerticalComponent);
-								remove(component);
-								add(wire);
-								return;
-							} else {
-								used[component.getXPoint()][y].VerticalComponent = component;
-							}
-						}
-					}}
-
-					y = component.getYPoint();
-					loc_ID = used[component.getXPoint()][y];
-					if (loc_ID.VerticalComponent == null) {
-						used[component.getXPoint()][y].VerticalComponent = component;
-						if (loc_ID.HorizontalComponent != null && loc_ID.HorizontalComponent != ComponentBox.occupied) {
-							component.addComponent(loc_ID.HorizontalComponent);
-							loc_ID.HorizontalComponent.addComponent(component);
-						}
-						if (loc_ID.Dot != null && loc_ID.Dot != ComponentBox.occupied) {
-							component.addComponent(loc_ID.Dot);
-							loc_ID.Dot.addComponent(component);
-						}
-					} else if (loc_ID.VerticalComponent == ComponentBox.occupied) {
-						throw new OcupationException();
-					} else {
-						if (loc_ID.VerticalComponent.getYPoint() < component.getYPoint()) {
-							if (!(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() > component.getYPoint() + component.getWidthPoint())) {
-								System.out.println(component.getYPoint() + component.getWidthPoint() - loc_ID.VerticalComponent.getYPoint());
-								Wire wire = new Wire((component.getYPoint() + component.getWidthPoint() - loc_ID.VerticalComponent.getYPoint()) * cross_distance + wire_height * 3 / 4);
-								wire.setXPoint(component.getXPoint());
-								wire.setYPoint(loc_ID.VerticalComponent.getYPoint());
-								wire.setRotation(CanvasComponent.VERTICAL);
-								wire.setState(loc_ID.VerticalComponent.getState());
-								for (SingleCanvasComponent s : component.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								for (SingleCanvasComponent s : loc_ID.VerticalComponent.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								remove(loc_ID.VerticalComponent);
-								remove(component);
-								System.out.println(wire + " ");
-								add(wire);
-								return;
-							} else {
-								remove(component);
-								return;
-							}
-						} else {
-							if (!(component.getYPoint() + component.getWidthPoint() > loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint())) {
-								System.out.println(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() - component.getYPoint());
-								Wire wire = new Wire((loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() - component.getYPoint()) * cross_distance + wire_height * 3 / 4);
-								wire.setXPoint(component.getXPoint());
-								wire.setYPoint(component.getYPoint());
-								wire.setRotation(CanvasComponent.VERTICAL);
-								wire.setState(loc_ID.VerticalComponent.getState());
-								for (SingleCanvasComponent s : component.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								for (SingleCanvasComponent s : loc_ID.VerticalComponent.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								remove(loc_ID.VerticalComponent);
-								remove(component);
-								add(wire);
-								return;
-							} else {
-								used[component.getXPoint()][y].VerticalComponent = component;
-							}
-						}
-					}
-					y = component.getYPoint() + component.getWidthPoint();
-					loc_ID = used[component.getXPoint()][y];
-					if (loc_ID.VerticalComponent == null) {
-						used[component.getXPoint()][y].VerticalComponent = component;
-						if (loc_ID.HorizontalComponent != null && loc_ID.HorizontalComponent != ComponentBox.occupied) {
-							component.addComponent(loc_ID.HorizontalComponent);
-							loc_ID.HorizontalComponent.addComponent(component);
-						}
-						if (loc_ID.Dot != null && loc_ID.Dot != ComponentBox.occupied) {
-							component.addComponent(loc_ID.Dot);
-							loc_ID.Dot.addComponent(component);
-						}
-					} else if (loc_ID.VerticalComponent == ComponentBox.occupied) {
-						throw new OcupationException();
-					} else {
-						if (loc_ID.VerticalComponent.getYPoint() < component.getYPoint()) {
-							if (!(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() > component.getYPoint() + component.getWidthPoint())) {
-								System.out.println(component.getYPoint() + component.getWidthPoint() - loc_ID.VerticalComponent.getYPoint());
-								Wire wire = new Wire((component.getYPoint() + component.getWidthPoint() - loc_ID.VerticalComponent.getYPoint()) * cross_distance + wire_height * 3 / 4);
-								wire.setXPoint(component.getXPoint());
-								wire.setYPoint(loc_ID.VerticalComponent.getYPoint());
-								wire.setRotation(CanvasComponent.VERTICAL);
-								wire.setState(loc_ID.VerticalComponent.getState());
-								for (SingleCanvasComponent s : component.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								for (SingleCanvasComponent s : loc_ID.VerticalComponent.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								remove(loc_ID.VerticalComponent);
-								remove(component);
-								System.out.println(wire + " ");
-								add(wire);
-								return;
-							} else {
-								remove(component);
-								return;
-							}
-						} else {
-							if (!(component.getYPoint() + component.getWidthPoint() > loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint())) {
-								System.out.println(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() - component.getYPoint());
-								Wire wire = new Wire((loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() - component.getYPoint()) * cross_distance + wire_height * 3 / 4);
-								wire.setXPoint(component.getXPoint());
-								wire.setYPoint(component.getYPoint());
-								wire.setRotation(CanvasComponent.VERTICAL);
-								wire.setState(loc_ID.VerticalComponent.getState());
-								for (SingleCanvasComponent s : component.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								for (SingleCanvasComponent s : loc_ID.VerticalComponent.getConnectedComponents()) {
-									wire.addComponent(s);
-									s.addComponent(wire);
-								}
-								remove(loc_ID.VerticalComponent);
-								remove(component);
-								add(wire);
-								return;
-							} else {
-								used[component.getXPoint()][y].VerticalComponent = component;
-							}
-						}
-					}
-				}
-				
-				wires.add(component);
-				System.out.println(component.getX());
-				System.out.println(component.getY());
-				// Adding component to SubSCene
-				root.getChildren().add(component.getImageView());
-				component.printComponents();
-			}
-			
-		
-	}
-
+	public void add(Wire component) throws OccupationException {
+	    if (component != null) {
+	        ComponentBox loc_ID;
+	
+	        // Checking other elements blocking the Wire/connecting wires together
+	        if (component.rotation == CanvasComponent.HORIZONTAL) {
+	            // Checking for horizontal and adding the ID to the HorizontalComponent in ComponentBox
+	            int x;
+	            for (x = component.getXPoint() + 1; x < component.getXPoint() + component.getWidthPoint(); x++) {
+	                loc_ID = used[x][component.getYPoint()];
+	                if (loc_ID.HorizontalComponent == null) {
+	                    used[x][component.getYPoint()].HorizontalComponent = component;
+	                    if (loc_ID.VerticalComponent != null) {
+	                        if (loc_ID.VerticalComponent.checkEnd(x, component.getYPoint())) {
+	                            try {
+	                                component.addComponent(loc_ID.VerticalComponent);
+	                                loc_ID.VerticalComponent.addComponent(component);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                component.setState(State.ERROR);
+	                                component.setErrorMessage("Amount of cables in wire is not compatible");
+	                                loc_ID.VerticalComponent.setState(State.ERROR);
+	                                loc_ID.VerticalComponent.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                    }
+	                    if (loc_ID.Dot != null) {
+	                        try {
+	                            component.addComponent(loc_ID.Dot);
+	                            loc_ID.Dot.addComponent(component);
+	                        } catch (IncompatibleWireWidthException e) {
+	                            component.setState(State.ERROR);
+	                            component.setErrorMessage("Amount of cables in wire is not compatible");
+	                            loc_ID.Dot.setState(State.ERROR);
+	                            loc_ID.Dot.setErrorMessage("Amount of cables in wire is not compatible");
+	                        }
+	
+	                    }
+	                } else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
+	                    System.out.println("Error1");
+	                    throw new OccupationException();
+	                } else {
+	                    System.out.println("Another");
+	                    if (loc_ID.HorizontalComponent.getXPoint() < component.getXPoint()) {
+	                        if (!(loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() > component.getXPoint() + component.getWidthPoint())) {
+	                            Wire wire = new Wire((component.getXPoint() + component.getWidthPoint() - loc_ID.HorizontalComponent.getXPoint()) * cross_distance + wire_height * 3 / 4);
+	                            wire.setYPoint(component.getYPoint());
+	                            wire.setXPoint(loc_ID.HorizontalComponent.getXPoint());
+	                            wire.setRotation(CanvasComponent.HORIZONTAL);
+	                            wire.setState(component.getState());
+	                            for (SingleCanvasComponent s : component.getConnectedComponents()) {
+	                                try {
+	                                    wire.addComponent(s);
+	                                    s.addComponent(wire);
+	                                } catch (IncompatibleWireWidthException e) {
+	                                    wire.setState(State.ERROR);
+	                                    wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                    s.setState(State.ERROR);
+	                                    s.setErrorMessage("Amount of cables in wire is not compatible");
+	                                }
+	                            }
+	                            for (SingleCanvasComponent s : loc_ID.HorizontalComponent.getConnectedComponents()) {
+	                                try {
+	                                    wire.addComponent(s);
+	                                    s.addComponent(wire);
+	                                } catch (IncompatibleWireWidthException e) {
+	                                    wire.setState(State.ERROR);
+	                                    wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                    s.setState(State.ERROR);
+	                                    s.setErrorMessage("Amount of cables in wire is not compatible");
+	                                }
+	                            }
+	                            remove(loc_ID.HorizontalComponent);
+	                            remove(component);
+	                            add(wire);
+	                            return;
+	                        } else {
+	                            System.out.println(loc_ID.HorizontalComponent + " ");
+	                            remove(component);
+	                            return;
+	                        }
+	                    } else {
+	                        if (!(component.getXPoint() + component.getWidthPoint() > loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint())) {
+	                            System.out.println(loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() - component.getXPoint());
+	                            Wire wire = new Wire((loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() - component.getXPoint()) * cross_distance + wire_height * 3 / 4);
+	                            wire.setYPoint(component.getYPoint());
+	                            wire.setXPoint(component.getXPoint());
+	                            wire.setRotation(CanvasComponent.HORIZONTAL);
+	                            wire.setState(loc_ID.HorizontalComponent.getState());
+	                            for (SingleCanvasComponent s : component.getConnectedComponents()) {
+	                                try {
+	                                    wire.addComponent(s);
+	                                    s.addComponent(wire);
+	                                } catch (IncompatibleWireWidthException e) {
+	                                    wire.setState(State.ERROR);
+	                                    wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                    s.setState(State.ERROR);
+	                                    s.setErrorMessage("Amount of cables in wire is not compatible");
+	                                }
+	                            }
+	                            for (SingleCanvasComponent s : loc_ID.HorizontalComponent.getConnectedComponents()) {
+	                                try {
+	                                    wire.addComponent(s);
+	                                    s.addComponent(wire);
+	                                } catch (IncompatibleWireWidthException e) {
+	                                    wire.setState(State.ERROR);
+	                                    wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                    s.setState(State.ERROR);
+	                                    s.setErrorMessage("Amount of cables in wire is not compatible");
+	                                }
+	                            }
+	                            remove(loc_ID.HorizontalComponent);
+	                            remove(component);
+	                            add(wire);
+	                            return;
+	                        } else {
+	                            used[x][component.getYPoint()].HorizontalComponent = component;
+	                        }
+	                    }
+	                }
+	            }
+	            x = component.getXPoint();
+	            loc_ID = used[x][component.getYPoint()];
+	            if (loc_ID.HorizontalComponent == null) {
+	                used[x][component.getYPoint()].HorizontalComponent = component;
+	                if (loc_ID.VerticalComponent != null && loc_ID.VerticalComponent != ComponentBox.occupied) {
+	                    try {
+	                        component.addComponent(loc_ID.VerticalComponent);
+	                        loc_ID.VerticalComponent.addComponent(component);
+	                        System.out.println("connected");
+	                    } catch (IncompatibleWireWidthException e) {
+	                        component.setState(State.ERROR);
+	                        component.setErrorMessage("Amount of cables in wire is not compatible");
+	                        loc_ID.VerticalComponent.setState(State.ERROR);
+	                        loc_ID.VerticalComponent.setErrorMessage("Amount of cables in wire is not compatible");
+	                    }
+	                }
+	                if (loc_ID.Dot != null && loc_ID.Dot != ComponentBox.occupied) {
+	                    try {
+	                        component.addComponent(loc_ID.Dot);
+	                        loc_ID.Dot.addComponent(component);
+	                    } catch (IncompatibleWireWidthException e) {
+	                        component.setState(State.ERROR);
+	                        component.setErrorMessage("Amount of cables in wire is not compatible");
+	                        loc_ID.Dot.setState(State.ERROR);
+	                        loc_ID.Dot.setErrorMessage("Amount of cables in wire is not compatible");
+	                    }
+	                }
+	
+	            } else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
+	                System.out.println("Error1");
+	                throw new OccupationException();
+	            } else {
+	                System.out.println("Another");
+	                if (loc_ID.HorizontalComponent.getXPoint() < component.getXPoint()) {
+	                    if (!(loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() > component.getXPoint() + component.getWidthPoint())) {
+	                        Wire wire = new Wire((component.getXPoint() + component.getWidthPoint() - loc_ID.HorizontalComponent.getXPoint()) * cross_distance + wire_height * 3 / 4);
+	                        wire.setYPoint(component.getYPoint());
+	                        wire.setXPoint(loc_ID.HorizontalComponent.getXPoint());
+	                        wire.setRotation(CanvasComponent.HORIZONTAL);
+	                        wire.setState(loc_ID.HorizontalComponent.getState());
+	                        for (SingleCanvasComponent s : component.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        for (SingleCanvasComponent s : loc_ID.HorizontalComponent.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        remove(loc_ID.HorizontalComponent);
+	                        remove(component);
+	                        System.out.println(wire + " ");
+	                        add(wire);
+	                        return;
+	                    } else {
+	                        System.out.println(loc_ID.HorizontalComponent + " ");
+	                        remove(component);
+	                        return;
+	                    }
+	                } else {
+	                    if (!(component.getXPoint() + component.getWidthPoint() > loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint())) {
+	                        System.out.println(loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() - component.getXPoint());
+	                        Wire wire = new Wire((loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() - component.getXPoint()) * cross_distance + wire_height * 3 / 4);
+	                        wire.setYPoint(component.getYPoint());
+	                        wire.setXPoint(component.getXPoint());
+	                        wire.setRotation(CanvasComponent.HORIZONTAL);
+	                        wire.setState(loc_ID.HorizontalComponent.getState());
+	                        for (SingleCanvasComponent s : component.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        for (SingleCanvasComponent s : loc_ID.HorizontalComponent.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        remove(loc_ID.HorizontalComponent);
+	                        remove(component);
+	                        add(wire);
+	                        return;
+	                    } else {
+	                        used[x][component.getYPoint()].HorizontalComponent = component;
+	                    }
+	                }
+	            }
+	            x = component.getXPoint() + component.getWidthPoint();
+	            loc_ID = used[x][component.getYPoint()];
+	            if (loc_ID.HorizontalComponent == null) {
+	                used[x][component.getYPoint()].HorizontalComponent = component;
+	                if (loc_ID.VerticalComponent != null && loc_ID.VerticalComponent != ComponentBox.occupied) {
+	                    try {
+	                        component.addComponent(loc_ID.VerticalComponent);
+	                        loc_ID.VerticalComponent.addComponent(component);
+	                    } catch (IncompatibleWireWidthException e) {
+	                        component.setState(State.ERROR);
+	                        component.setErrorMessage("Amount of cables in wire is not compatible");
+	                        loc_ID.VerticalComponent.setState(State.ERROR);
+	                        loc_ID.VerticalComponent.setErrorMessage("Amount of cables in wire is not compatible");
+	                    }
+	                }
+	                if (loc_ID.Dot != null && loc_ID.Dot != ComponentBox.occupied) {
+	                    try {
+	                        component.addComponent(loc_ID.Dot);
+	                        loc_ID.Dot.addComponent(component);
+	                    } catch (IncompatibleWireWidthException e) {
+	                        component.setState(State.ERROR);
+	                        component.setErrorMessage("Amount of cables in wire is not compatible");
+	                        loc_ID.Dot.setState(State.ERROR);
+	                        loc_ID.Dot.setErrorMessage("Amount of cables in wire is not compatible");
+	                    }
+	                }
+	
+	                System.out.println(component);
+	            } else if (loc_ID.HorizontalComponent == ComponentBox.occupied) {
+	                System.out.println("Error1");
+	                throw new OccupationException();
+	            } else {
+	                System.out.println("Another");
+	                if (loc_ID.HorizontalComponent.getXPoint() < component.getXPoint()) {
+	                    if (!(loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() > component.getXPoint() + component.getWidthPoint())) {
+	                        Wire wire = new Wire((component.getXPoint() + component.getWidthPoint() - loc_ID.HorizontalComponent.getXPoint()) * cross_distance + wire_height * 3 / 4);
+	                        wire.setYPoint(component.getYPoint());
+	                        wire.setXPoint(loc_ID.HorizontalComponent.getXPoint());
+	                        wire.setRotation(CanvasComponent.HORIZONTAL);
+	                        wire.setState(loc_ID.HorizontalComponent.getState());
+	                        for (SingleCanvasComponent s : component.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        for (SingleCanvasComponent s : loc_ID.HorizontalComponent.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        remove(loc_ID.HorizontalComponent);
+	                        remove(component);
+	                        System.out.println(wire + " ");
+	                        add(wire);
+	                        return;
+	                    } else {
+	                        System.out.println(loc_ID.HorizontalComponent + " ");
+	                        remove(component);
+	                        return;
+	                    }
+	                } else {
+	                    if (!(component.getXPoint() + component.getWidthPoint() > loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint())) {
+	                        System.out.println(loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() - component.getXPoint());
+	                        Wire wire = new Wire((loc_ID.HorizontalComponent.getXPoint() + loc_ID.HorizontalComponent.getWidthPoint() - component.getXPoint()) * cross_distance + wire_height * 3 / 4);
+	                        wire.setYPoint(component.getYPoint());
+	                        wire.setXPoint(component.getXPoint());
+	                        wire.setRotation(CanvasComponent.HORIZONTAL);
+	                        wire.setState(loc_ID.HorizontalComponent.getState());
+	                        for (SingleCanvasComponent s : component.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        for (SingleCanvasComponent s : loc_ID.HorizontalComponent.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        remove(loc_ID.HorizontalComponent);
+	                        remove(component);
+	                        add(wire);
+	                        return;
+	                    } else {
+	                        used[x][component.getYPoint()].HorizontalComponent = component;
+	                    }
+	                }
+	            }
+	
+	        } else {
+	            // Same as for Horizontal with Vertical
+	            int y;
+	            for (y = component.getYPoint() + 1; y < component.getYPoint() + component.getWidthPoint(); y++) {
+	                loc_ID = used[component.getXPoint()][y];
+	                if (loc_ID.VerticalComponent == null) {
+	                    used[component.getXPoint()][y].VerticalComponent = component;
+	                    if (loc_ID.HorizontalComponent != null) {
+	                        if (loc_ID.HorizontalComponent.checkEnd(component.getXPoint(), y)) {
+	                            try {
+	                                component.addComponent(loc_ID.HorizontalComponent);
+	                                loc_ID.HorizontalComponent.addComponent(component);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                component.setState(State.ERROR);
+	                                component.setErrorMessage("Amount of cables in wire is not compatible");
+	                                loc_ID.HorizontalComponent.setState(State.ERROR);
+	                                loc_ID.HorizontalComponent.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                    }
+	                    if (loc_ID.Dot != null) {
+	                        if (loc_ID.Dot.checkEnd(component.getXPoint(), y)) {
+	                            try {
+	                                component.addComponent(loc_ID.Dot);
+	                                loc_ID.Dot.addComponent(component);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                component.setState(State.ERROR);
+	                                component.setErrorMessage("Amount of cables in wire is not compatible");
+	                                loc_ID.Dot.setState(State.ERROR);
+	                                loc_ID.Dot.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                    }
+	
+	                } else if (loc_ID.VerticalComponent == ComponentBox.occupied) {
+	                    throw new OccupationException();
+	                } else {
+	                    if (loc_ID.VerticalComponent.getYPoint() < component.getYPoint()) {
+	                        if (!(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() > component.getYPoint() + component.getWidthPoint())) {
+	                            System.out.println(component.getYPoint() + component.getWidthPoint() - loc_ID.VerticalComponent.getYPoint());
+	                            Wire wire = new Wire((component.getYPoint() + component.getWidthPoint() - loc_ID.VerticalComponent.getYPoint()) * cross_distance + wire_height * 3 / 4);
+	                            wire.setXPoint(component.getXPoint());
+	                            wire.setYPoint(loc_ID.VerticalComponent.getYPoint());
+	                            wire.setRotation(CanvasComponent.VERTICAL);
+	                            wire.setState(loc_ID.VerticalComponent.getState());
+	                            for (SingleCanvasComponent s : component.getConnectedComponents()) {
+	                                try {
+	                                    wire.addComponent(s);
+	                                    s.addComponent(wire);
+	                                } catch (IncompatibleWireWidthException e) {
+	                                    wire.setState(State.ERROR);
+	                                    wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                    s.setState(State.ERROR);
+	                                    s.setErrorMessage("Amount of cables in wire is not compatible");
+	                                }
+	                            }
+	                            for (SingleCanvasComponent s : loc_ID.VerticalComponent.getConnectedComponents()) {
+	                                try {
+	                                    wire.addComponent(s);
+	                                    s.addComponent(wire);
+	                                } catch (IncompatibleWireWidthException e) {
+	                                    wire.setState(State.ERROR);
+	                                    wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                    s.setState(State.ERROR);
+	                                    s.setErrorMessage("Amount of cables in wire is not compatible");
+	                                }
+	                            }
+	                            remove(loc_ID.VerticalComponent);
+	                            remove(component);
+	                            System.out.println(wire + " ");
+	                            add(wire);
+	                            return;
+	                        } else {
+	                            remove(component);
+	                            return;
+	                        }
+	                    } else {
+	                        if (!(component.getYPoint() + component.getWidthPoint() > loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint())) {
+	                            System.out.println(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() - component.getYPoint());
+	                            Wire wire = new Wire((loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() - component.getYPoint()) * cross_distance + wire_height * 3 / 4);
+	                            wire.setXPoint(component.getXPoint());
+	                            wire.setYPoint(component.getYPoint());
+	                            wire.setRotation(CanvasComponent.VERTICAL);
+	                            wire.setState(loc_ID.VerticalComponent.getState());
+	                            for (SingleCanvasComponent s : component.getConnectedComponents()) {
+	                                try {
+	                                    wire.addComponent(s);
+	                                    s.addComponent(wire);
+	                                } catch (IncompatibleWireWidthException e) {
+	                                    wire.setState(State.ERROR);
+	                                    wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                    s.setState(State.ERROR);
+	                                    s.setErrorMessage("Amount of cables in wire is not compatible");
+	                                }
+	                            }
+	                            for (SingleCanvasComponent s : loc_ID.VerticalComponent.getConnectedComponents()) {
+	                                try {
+	                                    wire.addComponent(s);
+	                                    s.addComponent(wire);
+	                                } catch (IncompatibleWireWidthException e) {
+	                                    wire.setState(State.ERROR);
+	                                    wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                    s.setState(State.ERROR);
+	                                    s.setErrorMessage("Amount of cables in wire is not compatible");
+	                                }
+	                            }
+	                            remove(loc_ID.VerticalComponent);
+	                            remove(component);
+	                            add(wire);
+	                            return;
+	                        } else {
+	                            used[component.getXPoint()][y].VerticalComponent = component;
+	                        }
+	                    }
+	                }
+	            }
+	
+	            y = component.getYPoint();
+	            loc_ID = used[component.getXPoint()][y];
+	            if (loc_ID.VerticalComponent == null) {
+	                used[component.getXPoint()][y].VerticalComponent = component;
+	                if (loc_ID.HorizontalComponent != null && loc_ID.HorizontalComponent != ComponentBox.occupied) {
+	                    try {
+	                        component.addComponent(loc_ID.HorizontalComponent);
+	                        loc_ID.HorizontalComponent.addComponent(component);
+	                    } catch (IncompatibleWireWidthException e) {
+	                        component.setState(State.ERROR);
+	                        component.setErrorMessage("Amount of cables in wire is not compatible");
+	                        loc_ID.HorizontalComponent.setState(State.ERROR);
+	                        loc_ID.HorizontalComponent.setErrorMessage("Amount of cables in wire is not compatible");
+	                    }
+	                }
+	                if (loc_ID.Dot != null && loc_ID.Dot != ComponentBox.occupied) {
+	                    try {
+	                        component.addComponent(loc_ID.Dot);
+	                        loc_ID.Dot.addComponent(component);
+	                    } catch (IncompatibleWireWidthException e) {
+	                        component.setState(State.ERROR);
+	                        component.setErrorMessage("Amount of cables in wire is not compatible");
+	                        loc_ID.Dot.setState(State.ERROR);
+	                        loc_ID.Dot.setErrorMessage("Amount of cables in wire is not compatible");
+	                    }
+	                }
+	            } else if (loc_ID.VerticalComponent == ComponentBox.occupied) {
+	                throw new OccupationException();
+	            } else {
+	                if (loc_ID.VerticalComponent.getYPoint() < component.getYPoint()) {
+	                    if (!(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() > component.getYPoint() + component.getWidthPoint())) {
+	                        System.out.println(component.getYPoint() + component.getWidthPoint() - loc_ID.VerticalComponent.getYPoint());
+	                        Wire wire = new Wire((component.getYPoint() + component.getWidthPoint() - loc_ID.VerticalComponent.getYPoint()) * cross_distance + wire_height * 3 / 4);
+	                        wire.setXPoint(component.getXPoint());
+	                        wire.setYPoint(loc_ID.VerticalComponent.getYPoint());
+	                        wire.setRotation(CanvasComponent.VERTICAL);
+	                        wire.setState(loc_ID.VerticalComponent.getState());
+	                        for (SingleCanvasComponent s : component.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        for (SingleCanvasComponent s : loc_ID.VerticalComponent.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        remove(loc_ID.VerticalComponent);
+	                        remove(component);
+	                        System.out.println(wire + " ");
+	                        add(wire);
+	                        return;
+	                    } else {
+	                        remove(component);
+	                        return;
+	                    }
+	                } else {
+	                    if (!(component.getYPoint() + component.getWidthPoint() > loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint())) {
+	                        System.out.println(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() - component.getYPoint());
+	                        Wire wire = new Wire((loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() - component.getYPoint()) * cross_distance + wire_height * 3 / 4);
+	                        wire.setXPoint(component.getXPoint());
+	                        wire.setYPoint(component.getYPoint());
+	                        wire.setRotation(CanvasComponent.VERTICAL);
+	                        wire.setState(loc_ID.VerticalComponent.getState());
+	                        for (SingleCanvasComponent s : component.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        for (SingleCanvasComponent s : loc_ID.VerticalComponent.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        remove(loc_ID.VerticalComponent);
+	                        remove(component);
+	                        add(wire);
+	                        return;
+	                    } else {
+	                        used[component.getXPoint()][y].VerticalComponent = component;
+	                    }
+	                }
+	            }
+	            y = component.getYPoint() + component.getWidthPoint();
+	            loc_ID = used[component.getXPoint()][y];
+	            if (loc_ID.VerticalComponent == null) {
+	                used[component.getXPoint()][y].VerticalComponent = component;
+	                if (loc_ID.HorizontalComponent != null && loc_ID.HorizontalComponent != ComponentBox.occupied) {
+	                    try {
+	                        component.addComponent(loc_ID.HorizontalComponent);
+	                        loc_ID.HorizontalComponent.addComponent(component);
+	                    } catch (IncompatibleWireWidthException e) {
+	                        component.setState(State.ERROR);
+	                        component.setErrorMessage("Amount of cables in wire is not compatible");
+	                        loc_ID.HorizontalComponent.setState(State.ERROR);
+	                        loc_ID.HorizontalComponent.setErrorMessage("Amount of cables in wire is not compatible");
+	                    }
+	                }
+	                if (loc_ID.Dot != null && loc_ID.Dot != ComponentBox.occupied) {
+	                    try {
+	                        component.addComponent(loc_ID.Dot);
+	                        loc_ID.Dot.addComponent(component);
+	                    } catch (IncompatibleWireWidthException e) {
+	                        component.setState(State.ERROR);
+	                        component.setErrorMessage("Amount of cables in wire is not compatible");
+	                        loc_ID.Dot.setState(State.ERROR);
+	                        loc_ID.Dot.setErrorMessage("Amount of cables in wire is not compatible");
+	                    }
+	                }
+	            } else if (loc_ID.VerticalComponent == ComponentBox.occupied) {
+	                throw new OccupationException();
+	            } else {
+	                if (loc_ID.VerticalComponent.getYPoint() < component.getYPoint()) {
+	                    if (!(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() > component.getYPoint() + component.getWidthPoint())) {
+	                        System.out.println(component.getYPoint() + component.getWidthPoint() - loc_ID.VerticalComponent.getYPoint());
+	                        Wire wire = new Wire((component.getYPoint() + component.getWidthPoint() - loc_ID.VerticalComponent.getYPoint()) * cross_distance + wire_height * 3 / 4);
+	                        wire.setXPoint(component.getXPoint());
+	                        wire.setYPoint(loc_ID.VerticalComponent.getYPoint());
+	                        wire.setRotation(CanvasComponent.VERTICAL);
+	                        wire.setState(loc_ID.VerticalComponent.getState());
+	                        for (SingleCanvasComponent s : component.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        for (SingleCanvasComponent s : loc_ID.VerticalComponent.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        remove(loc_ID.VerticalComponent);
+	                        remove(component);
+	                        System.out.println(wire + " ");
+	                        add(wire);
+	                        return;
+	                    } else {
+	                        remove(component);
+	                        return;
+	                    }
+	                } else {
+	                    if (!(component.getYPoint() + component.getWidthPoint() > loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint())) {
+	                        System.out.println(loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() - component.getYPoint());
+	                        Wire wire = new Wire((loc_ID.VerticalComponent.getYPoint() + loc_ID.VerticalComponent.getWidthPoint() - component.getYPoint()) * cross_distance + wire_height * 3 / 4);
+	                        wire.setXPoint(component.getXPoint());
+	                        wire.setYPoint(component.getYPoint());
+	                        wire.setRotation(CanvasComponent.VERTICAL);
+	                        wire.setState(loc_ID.VerticalComponent.getState());
+	                        for (SingleCanvasComponent s : component.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        for (SingleCanvasComponent s : loc_ID.VerticalComponent.getConnectedComponents()) {
+	                            try {
+	                                wire.addComponent(s);
+	                                s.addComponent(wire);
+	                            } catch (IncompatibleWireWidthException e) {
+	                                wire.setState(State.ERROR);
+	                                wire.setErrorMessage("Amount of cables in wire is not compatible");
+	                                s.setState(State.ERROR);
+	                                s.setErrorMessage("Amount of cables in wire is not compatible");
+	                            }
+	                        }
+	                        remove(loc_ID.VerticalComponent);
+	                        remove(component);
+	                        add(wire);
+	                        return;
+	                    } else {
+	                        used[component.getXPoint()][y].VerticalComponent = component;
+	                    }
+	                }
+	            }
+	        }
+	
+	        wires.add(component);
+	        System.out.println(component.getX());
+	        System.out.println(component.getY());
+	        // Adding component to SubSCene
+	        root.getChildren().add(component.getImageView());
+	        root.getChildren().add(component.hover_label);
+	        component.printComponents();
+	    }
+    }
+    
 	public void remove(CanvasComponent component) {
 		if(component instanceof Input) {
 			inputs.remove(component);
@@ -1027,6 +1291,7 @@ public class LogicSubScene extends SubScene {
 	private void removeTry(Wire wire) {
 	    if (wire != null) {
 	        root.getChildren().remove(wire.getImageView());
+	        root.getChildren().remove(wire.hover_label);
 	    }
 	}
 	
@@ -1080,12 +1345,13 @@ public class LogicSubScene extends SubScene {
 				comp.removeComponent(component);
 				component.removeComponent(comp);
 			}
+			component.resetWireSet();
 			wires.remove(component);
 			root.getChildren().remove(component.getImageView());
 		}
 	}
 
-	public void move(CanvasComponent component, int new_X, int new_Y) throws OcupationException {
+	public void move(CanvasComponent component, int new_X, int new_Y) throws OccupationException {
 		if (component instanceof FunctionalCanvasComponent) {
 			move((FunctionalCanvasComponent) component, new_X, new_Y);
 		} else if (component instanceof Dot) {
@@ -1097,7 +1363,7 @@ public class LogicSubScene extends SubScene {
 		}
 	}
 
-	public void move(FunctionalCanvasComponent component, int new_X, int new_Y) throws OcupationException {
+	public void move(FunctionalCanvasComponent component, int new_X, int new_Y) throws OccupationException {
 		if (component.point_X_rest + new_X > cross_distance / 2 || component.point_Y_rest + new_Y > cross_distance / 2) {
 			// Removing blockings from used
 			if (component.rotation == CanvasComponent.HORIZONTAL) {
@@ -1146,12 +1412,12 @@ public class LogicSubScene extends SubScene {
 						if(used[x][y].HorizontalComponent == null) {
 							used[x][y].HorizontalComponent = ComponentBox.occupied;
 						}else {
-							throw new OcupationException();
+							throw new OccupationException();
 						}
 						if(used[x][y].VerticalComponent == null) {
 							used[x][y].VerticalComponent = ComponentBox.occupied;
 						}else {
-							throw new OcupationException();
+							throw new OccupationException();
 						}
 					}
 				}
@@ -1161,12 +1427,12 @@ public class LogicSubScene extends SubScene {
 						if(used[x][y].HorizontalComponent == null) {
 							used[x][y].HorizontalComponent = ComponentBox.occupied;
 						}else {
-							throw new OcupationException();
+							throw new OccupationException();
 						}
 						if(used[x][y].VerticalComponent == null) {
 							used[x][y].VerticalComponent = ComponentBox.occupied;
 						}else {
-							throw new OcupationException();
+							throw new OccupationException();
 						}
 					}
 				}
@@ -1176,7 +1442,7 @@ public class LogicSubScene extends SubScene {
 
 	}
 
-	public void move(Dot component, int new_X, int new_Y) throws OcupationException {
+	public void move(Dot component, int new_X, int new_Y) throws OccupationException {
 		// Removing Dot from used
 		remove(component);
 		component.addX(new_X);
@@ -1185,7 +1451,7 @@ public class LogicSubScene extends SubScene {
 		add(component);
 	}
 
-	public void move(Wire component, int new_X, int new_Y) throws OcupationException {
+	public void move(Wire component, int new_X, int new_Y) throws OccupationException {
 		// Removing component from used
 		if (component.rotation == CanvasComponent.HORIZONTAL) {
 			// Removing Horizontal/Vertical ID from used
@@ -1235,7 +1501,7 @@ public class LogicSubScene extends SubScene {
 				wire.setYPoint(jsonwire.getInt("posy"));
 				try {
 					logic_sub_scene.add(wire);
-				} catch (OcupationException e) {
+				} catch (OccupationException e) {
 					e.printStackTrace();
 				}
 			}
@@ -1299,7 +1565,7 @@ public class LogicSubScene extends SubScene {
 				component.setYPoint(jsoncomponent.getInt("posy"));
 				try {
 					logic_sub_scene.add(component);
-				} catch (OcupationException e) {
+				} catch (OccupationException e) {
 					e.printStackTrace();
 				}
 			}

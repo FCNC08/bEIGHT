@@ -9,30 +9,71 @@ import canvas.LogicSubScene;
 import canvas.components.Layercomponents.Connection;
 import canvas.components.Layercomponents.Output;
 import canvas.components.StandardComponents.Wire;
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import util.ComponentBox;
+import util.IncompatibleWireWidthException;
 
 public abstract class SingleCanvasComponent extends CanvasComponent {
 
 	protected ArrayList<SingleCanvasComponent> connected_Components;
 
-	protected State state = State.OFF;
+	public State state = State.OFF;
+	protected String error_message;
 	
 	protected boolean control_color = false;
 	protected boolean control_type = false;
 
 	public int wires;
+	
+	public Label hover_label = new Label();
 
 	public SingleCanvasComponent(int NewWidth, int NewHeight) {
 		super(NewWidth, NewHeight);
 		connected_Components = new ArrayList<>();
+		
+		/*hover_label.getStyleClass().add("wire-tooltip");
+		hover_label.setMouseTransparent(true);
+		hover_label.setManaged(false);
+		hover_label.setVisible(false);
+		hover_label.setFont(new Font(40));
+		image_view.setOnMouseEntered(e->{
+			if(error_message != null) {
+				hover_label.setText(error_message);
+				hover_label.setVisible(true);
+				hover_label.toFront();
+				System.out.println("Test");
+			}
+		});
+		
+	    // Move label with the cursor; convert coordinates to root space
+	    image_view.setOnMouseMoved(e -> {
+	        Point2D scenePt = image_view.localToScene(e.getX(), e.getY());
+	        Point2D rootPt  = image_view.sceneToLocal(scenePt);
+	        System.out.println(scenePt.getX() + " "+ scenePt.getY());
+	        // small offset so we don't cover the cursor
+	        hover_label.relocate(e.getSceneX() + 12, e.getSceneY() + 12);
+	        hover_label.toFront();
+	    });
+	    
+	    image_view.setOnMouseExited(e->{
+	    	hover_label.setVisible(false);
+	    	System.out.println("Gone");
+	    });	*/
 	}
 
 	public void setState(State newState) {
 		if (!state.isEqual(newState)) {
+			if(!state.isEqual(State.ERROR)) {
+				setErrorMessage(null);
+			}
 			state = newState;
 			change();
 		}
+	}
+	
+	public void setErrorMessage(String message) {
+		this.error_message = message;
 	}
 
 	public State getState() {
@@ -68,10 +109,14 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	}
 
 	// Adding/Removing connectedComponents
-	public void addComponent(SingleCanvasComponent connecting_comp) {
+	public void addComponent(SingleCanvasComponent connecting_comp) throws IncompatibleWireWidthException {
 		if (connecting_comp != null && connecting_comp != ComponentBox.occupied) {
-			connected_Components.add(connecting_comp);
-			setState(connecting_comp.state);
+			if(wires == connecting_comp.wires) {
+				connected_Components.add(connecting_comp);
+				setState(connecting_comp.state);
+			}else {
+				throw new IncompatibleWireWidthException();
+			}
 		}
 	}
 

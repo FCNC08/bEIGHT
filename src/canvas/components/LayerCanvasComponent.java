@@ -17,7 +17,6 @@ import canvas.components.Layercomponents.XNOR;
 import canvas.components.Layercomponents.XOR;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.paint.Color;
 import util.InputOutputConnectionPair;

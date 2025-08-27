@@ -3,10 +3,15 @@ package canvas.components.StandardComponents;
 import canvas.LogicSubScene;
 import canvas.components.CanvasComponent;
 import canvas.components.SingleCanvasComponent;
+import canvas.components.State;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import util.ComponentBox;
+import util.IncompatibleWireWidthException;
 
 public class Wire extends SingleCanvasComponent {
+	
+	private boolean wires_set = false;
 	
 	public Wire(int Startwidth) {
 		// Creating Wire with height and painting it using PaintWire()
@@ -38,8 +43,15 @@ public class Wire extends SingleCanvasComponent {
 
 	public void change() {
 		// Changing the state means changing the state of each connected component
-		for (SingleCanvasComponent i : connected_Components) {
-			i.setState(this.state);
+		if(getState().isEqual(State.ERROR)) {
+			for (SingleCanvasComponent connected : connected_Components) {
+				connected.setErrorMessage(error_message);
+				connected.setState(getState());
+			}
+		}else {
+			for (SingleCanvasComponent connected : connected_Components) {
+				connected.setState(getState());
+			}
 		}
 
 		PaintWire();
@@ -49,6 +61,31 @@ public class Wire extends SingleCanvasComponent {
 	public void setWireWidth(int wires) {
 		this.wires = wires;
 		PaintWire();
+	}
+	
+	public void resetWireSet() {
+		wires = 1;
+		wires_set = false;
+	}
+	
+	
+	// Adding/Removing connectedComponents
+	@Override
+	public void addComponent(SingleCanvasComponent connecting_comp) throws IncompatibleWireWidthException {
+		if (connecting_comp != null && connecting_comp != ComponentBox.occupied) {
+			if(wires == connecting_comp.wires) {
+				connected_Components.add(connecting_comp);
+				setState(connecting_comp.state);
+			}else if(!wires_set){
+				this.wires = connecting_comp.wires;
+				connected_Components.add(connecting_comp);
+				setState(connecting_comp.state);
+				wires_set = true;
+				PaintWire();
+			}else {
+				throw new IncompatibleWireWidthException();
+			}
+		}
 	}
 	
 	@Override

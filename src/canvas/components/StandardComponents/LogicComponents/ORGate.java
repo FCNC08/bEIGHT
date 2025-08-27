@@ -6,7 +6,6 @@ import canvas.components.State;
 import canvas.components.Layercomponents.OR;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -118,13 +117,14 @@ public class ORGate extends LogicComponent {
 			for (boolean b : bool_states) {
 				output_state = output_state || b;
 			}
-			for (Dot d : outputs) {
-				d.setState(State.getState(State.STANDARD_MODE, output_state ? State.ON_ERROR : State.OFF_UNSET));
+			
+			State[] output = new State[output_count];
+			for (int i = 0; i<output_count; i++) {
+				output[i] = State.getState(State.STANDARD_MODE, output_state ? State.ON_ERROR : State.OFF_UNSET);
 			}
+			setOutputStates(output);
 		} catch (ErrorStateException e) {
-			for (Dot o : outputs) {
-				o.setState(State.getState(State.ERROR_MODE, State.ON_ERROR));
-			}
+			setOutputStates(ERROR_ARRAY);
 		}
 	}
 

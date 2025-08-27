@@ -1,6 +1,6 @@
 package util;
 
-public class OcupationException extends Exception {
+public class OccupationException extends Exception {
 	/**
 	 * 
 	 */

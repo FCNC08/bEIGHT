@@ -1,23 +1,23 @@
 package canvas.components;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 
 import canvas.LogicSubScene;
 import canvas.components.Layercomponents.Connection;
 import canvas.components.Layercomponents.LayerGate;
 import canvas.components.Layercomponents.Output;
-import canvas.components.StandardComponents.Wire;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
-import util.OcupationException;
+import util.OccupationException;
 
 public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	public static final String SIZE_BIG = "BIG";
 	public static final String SIZE_MIDDLE = "MIDDLE";
 	public static final String SIZE_SMALL = "SMALL";
+	
+	protected static State[] ERROR_ARRAY = new State[0];
 	
 	public String verilog_string;
 	public String arduino_string;
@@ -75,11 +75,11 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 			setRotation(!getRotation());
 			try {
 				parent.add(this);
-			}catch(OcupationException e) {
+			}catch(OccupationException e) {
 				setRotation(!getRotation());
 				try {
 					parent.add(this);
-				} catch (OcupationException e1) {
+				} catch (OccupationException e1) {
 					e1.printStackTrace();
 				}
 			}
@@ -198,13 +198,24 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 
 	protected void setOutputStates(State[] states) {
 		// Setting all InputStates of each dot
-		if (states.length != outputs.length) {
-			throw new IllegalArgumentException();
-		} else {
-			for (int i = 0; i < states.length; i++) {
-				outputs[i].setState(states[i]);
+		if(states == ERROR_ARRAY) {
+			for (int i = 0; i < outputs.length; i++) {
+				outputs[i].setState(State.ERROR);
+				outputs[i].setErrorMessage("One of the inputs is an unset or has an Error");
+			}
+		}else {
+			if (states.length != outputs.length) {
+				throw new IllegalArgumentException();
+			} else {
+				for (int i = 0; i < states.length; i++) {
+					outputs[i].setState(states[i]);
+					if(states[i].mode == State.ERROR_MODE) {
+						outputs[i].setErrorMessage("One of the inputs is an unset or has an Error");
+					}
+				}
 			}
 		}
+
 	}
 
 	// Setter/Getter for X/Y position
