@@ -23,22 +23,22 @@ public class Wire extends SingleCanvasComponent {
 
 	private void PaintWire() {
 		clearPixels();
-		Color c = getColor();
 		if(wires>1) {
 			for (int x = LogicSubScene.wire_height / 4; x < width; x++) {
 				for (int y = 0; y < getHeight(); y++) {
-					pwriter.setColor(x, y, c);
+					pwriter.setColor(x, y, Color.GREY);
 				}
 			}
 		}else {
+			Color c = getColor();
 			// Painting each pixel with a pixelwriter in the WritableImage
 			for (int x = LogicSubScene.wire_height / 4; x < width; x++) {
 				for (int y = LogicSubScene.wire_height / 4; y < getHeight() - LogicSubScene.wire_height / 4; y++) {
 					pwriter.setColor(x, y, c);
 				}
 			}
+			c = null;
 		}
-		c = null;
 	}
 
 	public void change() {
