@@ -97,4 +97,22 @@ public class State {
 	public boolean isEqual(State s2) {
 		return mode == s2.mode && state == s2.state;
 	}
+	
+	public static boolean isEqual(State[] s1, State[] s2) {
+		if(s1 == null || s2 == null) {
+			return false;
+		}
+		if(s1.length != s2.length) {
+			return false;
+		}
+		for(int i = 0; i<s1.length; i++) {
+			if(s1[i] == null || s2[i] == null) {
+				return false;
+			}
+			if(!s1[i].isEqual(s2[i])) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

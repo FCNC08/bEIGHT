@@ -14,6 +14,10 @@ public class Power extends SingleCanvasComponent{
 		
 	}
 
+	public void changeStates() {
+		
+	}
+	
 	@Override
 	public void setFocus(boolean status) {
 		// TODO Auto-generated method stub

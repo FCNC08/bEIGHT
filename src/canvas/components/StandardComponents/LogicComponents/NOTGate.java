@@ -1,6 +1,5 @@
 package canvas.components.StandardComponents.LogicComponents;
 
-import canvas.components.Dot;
 import canvas.components.LogicComponent;
 import canvas.components.State;
 import canvas.components.Layercomponents.NOT;
@@ -20,6 +19,11 @@ public class NOTGate extends LogicComponent {
 
 	public NOTGate(String size, int width, int height) throws IllegalArgumentException {
 		super(size, width, height, 1);
+		add_visible = false;
+		addDot.setVisible(false);
+		remove_visible = false;
+		removeDot.setVisible(false);
+		changeInput.setVisible(false);
 	}
 
 	public static void setStandardImage(Image standard_image) {

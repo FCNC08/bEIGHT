@@ -24,11 +24,20 @@ public class Wire extends SingleCanvasComponent {
 	private void PaintWire() {
 		clearPixels();
 		if(wires>1) {
-			for (int x = LogicSubScene.wire_height / 4; x < width; x++) {
-				for (int y = 0; y < getHeight(); y++) {
-					pwriter.setColor(x, y, Color.GREY);
+			if(state.isEqual(State.ERROR)) {
+				for (int x = LogicSubScene.wire_height / 4; x < width; x++) {
+					for (int y = 0; y < getHeight(); y++) {
+						pwriter.setColor(x, y, State.ERROR.getColor());
+					}
+				}
+			}else {
+				for (int x = LogicSubScene.wire_height / 4; x < width; x++) {
+					for (int y = 0; y < getHeight(); y++) {
+						pwriter.setColor(x, y, Color.GREY);
+					}
 				}
 			}
+
 		}else {
 			Color c = getColor();
 			// Painting each pixel with a pixelwriter in the WritableImage
@@ -57,10 +66,23 @@ public class Wire extends SingleCanvasComponent {
 		PaintWire();
 	}
 	
+	protected void changeStates() {
+		for(SingleCanvasComponent connected : connected_Components) {
+			connected.setStates(states);
+		}
+	}
+	
 	@Override
 	public void setWireWidth(int wires) {
-		this.wires = wires;
-		PaintWire();
+		if(wires > 1) {
+			this.wires = wires;
+			states = new State[wires];
+			PaintWire();
+		}else {
+			this.wires = wires;
+			states = null;
+			PaintWire();
+		}
 	}
 	
 	public void resetWireSet() {

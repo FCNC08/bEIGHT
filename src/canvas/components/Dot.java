@@ -46,10 +46,22 @@ public class Dot extends SingleCanvasComponent {
 
 	}
 	
+	protected void changeStates() {
+		parent.simulate();
+		for(SingleCanvasComponent connected : connected_Components) {
+			connected.setStates(states);
+		}
+	}
+	
 	@Override
 	public void setWireWidth(int wires) {
-		this.wires = wires;
-		paintCircle();
+		if(wires > 1) {
+			this.wires = wires;
+			states = new State[wires];
+		}else {
+			this.wires = wires;
+			states = null;
+		}
 	}
 
 	public void setFocus(boolean status) {

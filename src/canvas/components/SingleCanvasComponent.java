@@ -9,8 +9,10 @@ import canvas.LogicSubScene;
 import canvas.components.Layercomponents.Connection;
 import canvas.components.Layercomponents.Output;
 import canvas.components.StandardComponents.Wire;
+import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import util.ComponentBox;
 import util.IncompatibleWireWidthException;
 
@@ -19,6 +21,7 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	protected ArrayList<SingleCanvasComponent> connected_Components;
 
 	public State state = State.OFF;
+	public State[] states;
 	protected String error_message;
 	
 	protected boolean control_color = false;
@@ -32,9 +35,8 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 		super(NewWidth, NewHeight);
 		connected_Components = new ArrayList<>();
 		
-		/*hover_label.getStyleClass().add("wire-tooltip");
+		hover_label.getStyleClass().add("wire-tooltip");
 		hover_label.setMouseTransparent(true);
-		hover_label.setManaged(false);
 		hover_label.setVisible(false);
 		hover_label.setFont(new Font(40));
 		image_view.setOnMouseEntered(e->{
@@ -48,18 +50,15 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 		
 	    // Move label with the cursor; convert coordinates to root space
 	    image_view.setOnMouseMoved(e -> {
-	        Point2D scenePt = image_view.localToScene(e.getX(), e.getY());
-	        Point2D rootPt  = image_view.sceneToLocal(scenePt);
-	        System.out.println(scenePt.getX() + " "+ scenePt.getY());
-	        // small offset so we don't cover the cursor
-	        hover_label.relocate(e.getSceneX() + 12, e.getSceneY() + 12);
-	        hover_label.toFront();
+            // Convert from image_view's local space to its parent's space
+            Point2D p = image_view.localToParent(e.getX(), e.getY());
+            hover_label.relocate(p.getX() + 12, p.getY() + 12); // small cursor offset
+            hover_label.toFront();
 	    });
 	    
 	    image_view.setOnMouseExited(e->{
 	    	hover_label.setVisible(false);
-	    	System.out.println("Gone");
-	    });	*/
+	    });	
 	}
 
 	public void setState(State newState) {
@@ -72,12 +71,23 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 		}
 	}
 	
+	
+	public void setStates(State[] newStates) {
+		if(!State.isEqual(states, newStates)) {
+			this.states = newStates;
+			changeStates();
+		}
+	}
 	public void setErrorMessage(String message) {
 		this.error_message = message;
 	}
 
 	public State getState() {
 		return state;
+	}
+	
+	public State[] getStates() {
+		return states;
 	}
 
 	protected Color getColor() {
@@ -95,6 +105,8 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	}
 
 	protected abstract void change();
+	
+	protected abstract void changeStates();
 	
 	public abstract void setWireWidth(int wires);
 

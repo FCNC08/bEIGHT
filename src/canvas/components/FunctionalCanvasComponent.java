@@ -31,6 +31,8 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	protected ContextMenu menu = new ContextMenu();
 	protected MenuItem turn;
 	protected MenuItem remove;
+	protected MenuItem changeInput;
+	protected MenuItem changeOutput;
 	
 	protected LogicSubScene parent;
 
@@ -38,7 +40,11 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	public int output_count;
 
 	public Dot[] inputs;
+	public boolean single_input = false;
+	
 	public Dot[] outputs;
+	public boolean single_output = false;
+	
 	
 	protected long[] times = new long[5];
 	protected int time_pointer = 0;
@@ -89,10 +95,21 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		remove.setOnAction(en->{
 			parent.remove(this);
 		});
+		changeInput = new MenuItem("Change Inputs to single Dot");
+		changeInput.setOnAction(en->{
+			changeInputType();
+		});
+		
+		changeOutput = new MenuItem("Change Outputs to single Dot");
+		changeOutput.setOnAction(en->{
+			changeOutputType();
+		});
 		menu.getStyleClass().add("app-context-menu");
 		createContextMenu();
 		menu.getItems().add(turn);
 		menu.getItems().add(remove);
+		menu.getItems().add(changeInput);
+		menu.getItems().add(changeOutput);
 	}
 
 	public static FunctionalCanvasComponent initImage(String url, int inputs, int outputs, int[] inputs_x, int[] inputs_y, int[] outputs_x, int[] outputs_y) {
@@ -106,6 +123,15 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	}
 
 	public void setStandardDotLocations() {
+		//Remove them from parent if parent is set
+		if(parent != null) {
+			for(Dot i : inputs) {
+				parent.remove(i);
+			}
+			for(Dot o : outputs) {
+				parent.remove(o);
+			}
+		}
 		// creates dot position depending of the width and the dot count
 		int x;
 		int y;
@@ -113,10 +139,10 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		int offset;
 		int border;
 		if(rotation == VERTICAL) {
-			if(input_count != 0) {
-				offset = point_width + 1 - input_count;
-				distance = 1+offset/input_count;
-				border = (point_width - distance*(input_count-1))/2;
+			if(inputs.length != 0) {
+				offset = point_width + 1 - inputs.length;
+				distance = 1+offset/inputs.length;
+				border = (point_width - distance*(inputs.length-1))/2;
 				
 				x = point_X+border;
 				y = point_Y;
@@ -127,10 +153,10 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				}
 			}
 			
-			if(output_count != 0) {
-				offset = point_width + 1 - output_count;
-				distance = 1+offset/output_count;
-				border = (point_width - distance*(output_count-1))/2;
+			if(outputs.length != 0) {
+				offset = point_width + 1 - outputs.length;
+				distance = 1+offset/outputs.length;
+				border = (point_width - distance*(outputs.length-1))/2;
 				
 				x = point_X+border;
 				y = point_Y+point_height;
@@ -141,10 +167,10 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				}
 			}
 		}else {
-			if(input_count != 0) {
-				offset = point_height + 1 - input_count;
-				distance = 1+offset/input_count;
-				border = (point_height - distance*(input_count-1))/2;
+			if(inputs.length != 0) {
+				offset = point_height + 1 - inputs.length;
+				distance = 1+offset/inputs.length;
+				border = (point_height - distance*(inputs.length-1))/2;
 				
 				x = point_X;
 				y = point_Y+border;
@@ -155,10 +181,10 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 				}
 			}
 			
-			if(output_count != 0) {
-				offset = point_height + 1 - output_count;
-				distance = 1+offset/output_count;
-				border = (point_height - distance*(output_count-1))/2;
+			if(outputs.length != 0) {
+				offset = point_height + 1 - outputs.length;
+				distance = 1+offset/outputs.length;
+				border = (point_height - distance*(outputs.length-1))/2;
 				
 				x = point_X+point_width;
 				y = point_Y+border;
@@ -168,6 +194,23 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 					y += distance;
 				}
 			}
+		}
+		if(parent != null) {
+			for(Dot i : inputs) {
+				try {
+					parent.add(i);
+				} catch (OccupationException e) {
+					e.printStackTrace();
+				}
+			}
+			for(Dot o : outputs) {
+				try {
+					parent.add(o);
+				} catch (OccupationException e) {
+					e.printStackTrace();
+				}
+			}
+
 		}
 	}
 
@@ -188,34 +231,47 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	public abstract FunctionalCanvasComponent getClone(String size);
 
 	protected State[] getInputStates() {
-		// Getting all InputStates of each dot
-		State[] states = new State[inputs.length];
-		for (int i = 0; i < inputs.length; i++) {
-			states[i] = inputs[i].getState();
+		if(single_input) {
+			return inputs[0].getStates();
+		}else {
+			// Getting all InputStates of each dot
+			State[] states = new State[inputs.length];
+			for (int i = 0; i < inputs.length; i++) {
+				states[i] = inputs[i].getState();
+			}
+			return states;
 		}
-		return states;
+
 	}
 
 	protected void setOutputStates(State[] states) {
-		// Setting all InputStates of each dot
-		if(states == ERROR_ARRAY) {
-			for (int i = 0; i < outputs.length; i++) {
-				outputs[i].setState(State.ERROR);
-				outputs[i].setErrorMessage("One of the inputs is an unset or has an Error");
+		if(single_output) {
+			if(states == ERROR_ARRAY) {
+				outputs[0].setState(State.ERROR);
+				outputs[0].setErrorMessage("One of the inputs is an unset or has an Error");
+			}else {
+				outputs[0].setStates(states);
 			}
 		}else {
-			if (states.length != outputs.length) {
-				throw new IllegalArgumentException();
-			} else {
-				for (int i = 0; i < states.length; i++) {
-					outputs[i].setState(states[i]);
-					if(states[i].mode == State.ERROR_MODE) {
-						outputs[i].setErrorMessage("One of the inputs is an unset or has an Error");
+			// Setting all InputStates of each dot
+			if(states == ERROR_ARRAY) {
+				for (int i = 0; i < outputs.length; i++) {
+					outputs[i].setState(State.ERROR);
+					outputs[i].setErrorMessage("One of the inputs is an unset or has an Error");
+				}
+			}else {
+				if (states.length != outputs.length) {
+					throw new IllegalArgumentException();
+				} else {
+					for (int i = 0; i < states.length; i++) {
+						outputs[i].setState(states[i]);
+						if(states[i].mode == State.ERROR_MODE) {
+							outputs[i].setErrorMessage("One of the inputs is an unset or has an Error");
+						}
 					}
 				}
 			}
 		}
-
 	}
 
 	// Setter/Getter for X/Y position
@@ -415,6 +471,67 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		}else {
 			image_view.setLayoutY(image_view.getLayoutY() - 0.5 * width + 0.5 * getHeight());
 			image_view.setLayoutX(image_view.getLayoutX() + 0.5 * width - 0.5 * getHeight());			
+		}
+	}
+	
+	public void changeInputType() {
+		if(single_input) {
+			//Remove old Dot
+			parent.remove(inputs[0]);
+			
+			//Create new Dots, set their location and add them to the scene
+			inputs = new Dot[input_count];
+			for(int i = 0; i<input_count; i++) {
+				Dot dot = new Dot(this);
+				inputs[i] = dot;
+			}
+			setStandardDotLocations();
+			changeInput.setText("Change Inputs to single Dot");
+			single_input = false;
+		}else {
+			//Remove old Dots
+			for(Dot i : inputs) {
+				parent.remove(i);
+			}
+			//Create new Dot and add it to the scene
+			inputs = new Dot[1];
+			Dot dot = new Dot(this);
+			dot.setWireWidth(input_count);
+			inputs[0] = dot;
+			setStandardDotLocations();
+			changeInput.setText("Change Inputs to multiple Dots");
+			single_input = true;
+		}
+	}
+	
+	public void changeOutputType() {
+		if(single_output) {
+			//Remove old Dot
+			parent.remove(outputs[0]);
+			
+			//Create new Dots, set their location and add them to the scene
+			outputs = new Dot[output_count];
+			for(int i = 0; i<output_count; i++) {
+				Dot dot = new Dot(this);
+				outputs[i] = dot;
+			}
+			setStandardDotLocations();
+			changeOutput.setText("Change Outputs to single Dot");
+			single_output = false;
+		}else {
+			//Remove old Dots
+			for(Dot o : outputs) {
+				parent.remove(o);
+			}
+			
+			//Create new Dot and add it to the scene
+			outputs = new Dot[1];
+			Dot dot = new Dot(this);
+			dot.setWireWidth(output_count);
+			outputs[0] = dot;
+			setStandardDotLocations();
+			changeOutput.setText("Change Outputs to multiple Dots");
+			single_output = true;
 		}
 	}
 	

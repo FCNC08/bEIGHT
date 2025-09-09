@@ -13,6 +13,10 @@ public class Ground extends SingleCanvasComponent{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	protected void changeStates() {
+		
+	}
 
 	@Override
 	public void setFocus(boolean status) {

@@ -1,6 +1,5 @@
 package canvas.components.StandardComponents.LogicComponents;
 
-import canvas.components.Dot;
 import canvas.components.LogicComponent;
 import canvas.components.State;
 import canvas.components.Layercomponents.XNOR;

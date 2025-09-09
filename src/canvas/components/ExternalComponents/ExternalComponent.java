@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import canvas.LogicSubScene;
-import canvas.components.Dot;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.State;
 import javafx.scene.control.CustomMenuItem;
@@ -193,7 +192,6 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 		name_label.setMouseTransparent(true);
 		CustomMenuItem name_item = new CustomMenuItem(name_label);
 		name_item.getStyleClass().add("cm-header-item");
-		menu.getItems().clear();
 		menu.getItems().add(name_item);
 		menu.getItems().add(new SeparatorMenuItem());
 	}

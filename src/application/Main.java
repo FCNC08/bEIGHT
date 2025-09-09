@@ -14,6 +14,7 @@ import canvas.LogicSubSceneContainer;
 import education.EducationSubSceneContainer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -177,6 +178,7 @@ public class Main extends Application {
 		
 		logic_area.setLayoutX(width/5);
 		logic_area.setLayoutY((height-width/5)/2);
+	    
 		
 		EventHandler<MouseEvent> logic_click = new EventHandler<MouseEvent>() {
 			@Override
