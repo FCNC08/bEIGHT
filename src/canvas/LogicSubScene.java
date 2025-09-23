@@ -442,7 +442,11 @@ public class LogicSubScene extends SubScene {
 		}else if(component instanceof Output) {
 			outputs.add((Output) component);
 		}
-		root.getChildren().add(component.getImageView());
+		try{
+			root.getChildren().add(component.getImageView());
+		}catch(IllegalArgumentException e) {
+			System.out.println("Already added");
+		}
 		component.setStandardDotLocations();
 
 		// doesn't contain the outline to make it possible to connect to the dots

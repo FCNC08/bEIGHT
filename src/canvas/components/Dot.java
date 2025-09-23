@@ -55,6 +55,7 @@ public class Dot extends SingleCanvasComponent {
 	
 	@Override
 	public void setWireWidth(int wires) {
+		this.wires_set = true;
 		if(wires > 1) {
 			this.wires = wires;
 			states = new State[wires];

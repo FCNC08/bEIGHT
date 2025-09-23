@@ -40,7 +40,6 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 		this.name = logicscene.name;
 		inoutput = logicscene.initLayerComponent(outputs);
 		resetStandardImage();
-		createContextMenu();
 	}
 	
 	public LayerCanvasComponent(JSONObject jo, int width, int height, String size, int input_count, int output_count) {

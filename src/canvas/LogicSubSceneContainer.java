@@ -14,6 +14,7 @@ import canvas.components.StandardComponents.HexInput;
 import canvas.components.StandardComponents.Input;
 import canvas.components.StandardComponents.Output;
 import canvas.components.StandardComponents.SevenSegmentDisplay;
+import canvas.components.StandardComponents.Splitter;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import canvas.components.StandardComponents.LogicComponents.NANDGate;
 import canvas.components.StandardComponents.LogicComponents.NORGate;
@@ -102,7 +103,6 @@ public class LogicSubSceneContainer extends SubScene {
 
 		logic_subscene.addY((int) (height * 0.01));
 		
-		
 		root.getChildren().add(logic_subscene);
 
 		addChooser();
@@ -158,6 +158,18 @@ public class LogicSubSceneContainer extends SubScene {
 		
 		addLogicSubScene(logic_subscene, true);
 		
+		Splitter splitter = new Splitter(LogicSubScene.cross_distance*5, LogicSubScene.cross_distance, 4, "Small");
+		
+		splitter.setXPoint(5);
+		splitter.setYPoint(5);
+		
+		try {
+			logic_subscene.add(splitter);
+			System.out.println("Added");
+		} catch (OccupationException e) {
+			e.printStackTrace();
+		}
+		
 		root.getChildren().add(logic_subscene);
 
 		addChooserMaster();
@@ -205,16 +217,17 @@ public class LogicSubSceneContainer extends SubScene {
 		//group_2.add(fulladder);
 		group_2.add(twobitadder);
 		ComponentGroup group_3 = new ComponentGroup();
+		ComponentGroup group_4 = new ComponentGroup();
 		SevenSegmentDisplay ssd = new SevenSegmentDisplay((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5));
 		HexInput hex = new HexInput((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5));
 		//group_3.add(Register.getRegister(LogicComponent.SIZE_MIDDLE, 8));
 		ssd.setNumber(8);
-		group_3.add(ssd);
-		group_3.add(hex);
+		group_4.add(ssd);
+		group_4.add(hex);
 		master_grouping.add(group);
 		master_grouping.add(group_1);
 		master_grouping.add(group_2);
-		master_grouping.add(group_3);
+		master_grouping.add(group_4);
 		
 		//Add all elements to the slave grouping you can choose from on the slave beight. E.g. you cannot use a Hex-Input in a slave beight
 		slave_grouping= new ComponentGroupings();

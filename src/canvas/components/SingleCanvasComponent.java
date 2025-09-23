@@ -27,6 +27,7 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	protected boolean control_color = false;
 	protected boolean control_type = false;
 
+	protected boolean wires_set = false;
 	public int wires;
 	
 	public Label hover_label = new Label();
@@ -123,12 +124,16 @@ public abstract class SingleCanvasComponent extends CanvasComponent {
 	// Adding/Removing connectedComponents
 	public void addComponent(SingleCanvasComponent connecting_comp) throws IncompatibleWireWidthException {
 		if (connecting_comp != null && connecting_comp != ComponentBox.occupied) {
-			if(wires == connecting_comp.wires) {
-				connected_Components.add(connecting_comp);
-				setState(connecting_comp.state);
-			}else {
-				throw new IncompatibleWireWidthException();
-			}
+				if(wires == connecting_comp.wires) {
+					connected_Components.add(connecting_comp);
+					setState(connecting_comp.state);
+				}else if(!wires_set){
+					connected_Components.add(connecting_comp);
+					setState(connecting_comp.state);
+					wires_set = true;
+				}else {
+					throw new IncompatibleWireWidthException();
+				}
 		}
 	}
 

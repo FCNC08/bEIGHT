@@ -11,8 +11,6 @@ import util.IncompatibleWireWidthException;
 
 public class Wire extends SingleCanvasComponent {
 	
-	private boolean wires_set = false;
-	
 	public Wire(int Startwidth) {
 		// Creating Wire with height and painting it using PaintWire()
 		super(Startwidth, LogicSubScene.wire_height);
@@ -107,6 +105,7 @@ public class Wire extends SingleCanvasComponent {
 			}else {
 				throw new IncompatibleWireWidthException();
 			}
+			
 		}
 	}
 	
