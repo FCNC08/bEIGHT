@@ -121,15 +121,15 @@ public class Splitter extends FunctionalCanvasComponent{
 		
 		switch(size) {
 		case SIZE_BIG:
-			height = LogicSubScene.cross_distance*7;
+			height = LogicSubScene.cross_distance*8;
 			width = LogicSubScene.cross_distance*3;
 			break;
 		case SIZE_MIDDLE:
-			height = LogicSubScene.cross_distance*5;
+			height = LogicSubScene.cross_distance*6;
 			width = LogicSubScene.cross_distance*2;
 			break;
 		default:
-			height = LogicSubScene.cross_distance*3;
+			height = LogicSubScene.cross_distance*4;
 			width = LogicSubScene.cross_distance;
 			break;
 		}

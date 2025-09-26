@@ -4,6 +4,8 @@ import canvas.components.FunctionalCanvasComponent;
 import javafx.scene.SubScene;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -33,6 +35,7 @@ public class ComponentChooser extends SubScene {
 		grouping = component_param;
 		scrollPane = root;
 		MainRoot = new Pane();
+		MainRoot.setBackground(new Background(new BackgroundFill(Color.GRAY, null, null)));
 		view_width = (int) (Width / 2);
 		view_height = view_width;
 		reloadDesign();
@@ -49,8 +52,8 @@ public class ComponentChooser extends SubScene {
 		for (ComponentGroup group : grouping) {
 			for (FunctionalCanvasComponent ImageComponent : group) {
 				ImageView view = ImageComponent.getImageView();
+				view.setFitWidth(Math.min(view_width, view_height*(ImageComponent.getWidth()/ImageComponent.getHeight())));
 				view.setFitHeight(view_height);
-				view.setFitWidth(view_width);
 				view.setLayoutX(width * (count % 2) * 0.5);
 				view.setLayoutY(height);
 				height += (count % 2) * view_height;

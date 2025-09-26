@@ -14,7 +14,6 @@ import canvas.LogicSubSceneContainer;
 import education.EducationSubSceneContainer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
