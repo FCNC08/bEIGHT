@@ -53,7 +53,7 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	public FunctionalCanvasComponent(int width, int height, int input_count, int output_count, String size) throws IllegalArgumentException {
 		super(width, height);
 
-		if (point_width < input_count || point_width < output_count) {
+		if (point_height+1 < input_count || point_height+1 < output_count) {
 			throw new IllegalArgumentException("Unable to have that much in/outputs");
 		}
 

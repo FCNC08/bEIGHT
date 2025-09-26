@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
 import canvas.components.ExternalComponents.ExternalComponent;
+import canvas.components.StandardComponents.Combinder;
 import canvas.components.StandardComponents.HexInput;
 import canvas.components.StandardComponents.Input;
 import canvas.components.StandardComponents.Output;
@@ -158,18 +159,6 @@ public class LogicSubSceneContainer extends SubScene {
 		
 		addLogicSubScene(logic_subscene, true);
 		
-		Splitter splitter = new Splitter(LogicSubScene.cross_distance*5, LogicSubScene.cross_distance, 4, "Small");
-		
-		splitter.setXPoint(5);
-		splitter.setYPoint(5);
-		
-		try {
-			logic_subscene.add(splitter);
-			System.out.println("Added");
-		} catch (OccupationException e) {
-			e.printStackTrace();
-		}
-		
 		root.getChildren().add(logic_subscene);
 
 		addChooserMaster();
@@ -206,6 +195,9 @@ public class LogicSubSceneContainer extends SubScene {
 		group_1.add(Input.getInput(FunctionalCanvasComponent.SIZE_BIG));
 		group_1.add(Output.getOutput(FunctionalCanvasComponent.SIZE_BIG));
 		ComponentGroup group_2 = new ComponentGroup();
+		group_2.add(new Combinder(LogicSubScene.cross_distance*2, LogicSubScene.cross_distance*6, 4, ""));
+		group_2.add(new Splitter(LogicSubScene.cross_distance*2, LogicSubScene.cross_distance*6, 4, ""));
+		ComponentGroup group_3 = new ComponentGroup();
 		ZipFile file = new ZipFile("dlatch.cmp");
 		ExternalComponent comp = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE, file);
 		System.out.println("DLatch added");
@@ -213,10 +205,9 @@ public class LogicSubSceneContainer extends SubScene {
 		//System.out.println("FullAdder added");
 		ExternalComponent twobitadder = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE, new ZipFile("testfiles/2BitAdder.cmp"));
 		System.out.println("2BitAdder added");
-		group_2.add(comp);
+		group_3.add(comp);
 		//group_2.add(fulladder);
-		group_2.add(twobitadder);
-		ComponentGroup group_3 = new ComponentGroup();
+		group_3.add(twobitadder);
 		ComponentGroup group_4 = new ComponentGroup();
 		SevenSegmentDisplay ssd = new SevenSegmentDisplay((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5));
 		HexInput hex = new HexInput((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5));
@@ -227,6 +218,7 @@ public class LogicSubSceneContainer extends SubScene {
 		master_grouping.add(group);
 		master_grouping.add(group_1);
 		master_grouping.add(group_2);
+		master_grouping.add(group_3);
 		master_grouping.add(group_4);
 		
 		//Add all elements to the slave grouping you can choose from on the slave beight. E.g. you cannot use a Hex-Input in a slave beight

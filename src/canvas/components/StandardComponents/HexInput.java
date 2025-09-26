@@ -151,12 +151,13 @@ public class HexInput extends FunctionalCanvasComponent{
 		
 		switch(size) {
 		case SIZE_BIG:
-			height = LogicSubScene.cross_distance*18;
-			width = LogicSubScene.cross_distance*12;
+			height = LogicSubScene.cross_distance*14;
+			width = LogicSubScene.cross_distance*9;
 			break;
 		case SIZE_MIDDLE:
 			height = LogicSubScene.cross_distance*14;
 			width = LogicSubScene.cross_distance*9;
+			break;
 		default:
 			height = LogicSubScene.cross_distance*9;
 			width = LogicSubScene.cross_distance*6;
