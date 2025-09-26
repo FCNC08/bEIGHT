@@ -14,6 +14,9 @@ public class Splitter extends FunctionalCanvasComponent{
 			throws IllegalArgumentException {
 		super(width, height, 1, cabels, size);
 		
+		rotation = VERTICAL;
+		changeRotation();
+		
 		this.cabels = cabels;
 		single_input = true;
 		
