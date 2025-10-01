@@ -1,12 +1,10 @@
 package canvas.components.ExternalComponents;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import canvas.LogicSubScene;
@@ -126,24 +124,20 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 
 	}
 	
-	public static ExternalComponent init(String size, ZipFile file) {
+	public static ExternalComponent init(String size, ZipFile file) throws Exception{
 		ExternalComponent component = null;
 		JSONObject jsonobject = null;
-		try {
-			if(file.isEncrypted()) throw new IllegalArgumentException();
-			System.out.println(file.getFileHeaders());
-			InputStream is = file.getInputStream(file.getFileHeader(json_file));
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			byte[] buffer = new byte[4096];
-			int bytesRead;
-			while((bytesRead = is.read(buffer))!=-1) {
-				outputStream.write(buffer, 0, bytesRead);
-			}
-			String jsonString = outputStream.toString(StandardCharsets.UTF_8);
-			jsonobject = new JSONObject(jsonString);
-		}catch(IllegalArgumentException | IOException e) {
-			e.printStackTrace();
+		if(file.isEncrypted()) throw new IllegalArgumentException();
+		System.out.println(file.getFileHeaders());
+		InputStream is = file.getInputStream(file.getFileHeader(json_file));
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		byte[] buffer = new byte[4096];
+		int bytesRead;
+		while((bytesRead = is.read(buffer))!=-1) {
+			outputStream.write(buffer, 0, bytesRead);
 		}
+		String jsonString = outputStream.toString(StandardCharsets.UTF_8);
+		jsonobject = new JSONObject(jsonString);
 		String name = jsonobject.getString("name");
 		int input_count = jsonobject.getInt("input_count");
 		int output_count = jsonobject.getInt("output_count");
@@ -169,17 +163,9 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 		height = width;
 		JSONArray truth = jsonobject.getJSONArray("truth_table");
 		if(jsonobject.getBoolean("image_used")) {
-			try {
-				component = new ExternalComponent(size, width, height, input_count, output_count, new Truthtabel(truth), name, new Image(file.getInputStream(file.getFileHeader(jsonobject.getString("image")))));
-			}catch(IllegalAccessException | JSONException | IOException e) {
-				e.printStackTrace();
-			}
+			component = new ExternalComponent(size, width, height, input_count, output_count, new Truthtabel(truth), name, new Image(file.getInputStream(file.getFileHeader(jsonobject.getString("image")))));
 		}else {
-			try {
-				component = new ExternalComponent(size, width, height, input_count, output_count, new Truthtabel(truth), name);
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			}
+			component = new ExternalComponent(size, width, height, input_count, output_count, new Truthtabel(truth), name);
 		}
 		
 		return component;

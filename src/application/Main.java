@@ -299,9 +299,14 @@ public class Main extends Application {
 			fc.getExtensionFilters().add(extFilter);
 			var selected_file = fc.showOpenDialog(new Stage());
 			if(selected_file != null) {
-				logic_container.open(selected_file);
+				logic_container.openBeight(selected_file);
 			}
 			fc = null;
+		});
+		
+		MenuItem addExternal = new MenuItem("Add External Component");
+		addExternal.setOnAction(me->{
+			logic_container.addExternal();
 		});
 		
 		MenuItem save = new MenuItem("Save");
@@ -372,6 +377,7 @@ public class Main extends Application {
 		
 		file.getItems().add(savingpdf);
 		file.getItems().add(open);
+		file.getItems().add(addExternal);
 		file.getItems().add(save);
 		file.getItems().add(saveas);
 		file.getItems().add(saveverilog);

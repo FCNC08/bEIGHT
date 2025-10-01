@@ -5,7 +5,19 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
@@ -53,6 +65,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.model.FileHeader;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.model.enums.CompressionLevel;
+import net.lingala.zip4j.model.enums.CompressionMethod;
 import util.IllegalInputOutputException;
 import util.OccupationException;
 
@@ -62,9 +78,15 @@ public class LogicSubSceneContainer extends SubScene {
 	public static boolean WHITE = true;
 	
 	protected static ComponentGroupings master_grouping;
+	protected static ComponentGroup external_group;
 	protected static ComponentGroupings slave_grouping;
 	
-	protected File location;
+	protected static ArrayList<File> external_files = new ArrayList<>();
+	
+	protected ZipFile file;
+	public static ZipParameters parameter;
+	
+	
 	protected boolean color = BLACK;
 	
 	protected int width;
@@ -199,8 +221,8 @@ public class LogicSubSceneContainer extends SubScene {
 		ComponentGroup group_2 = new ComponentGroup();
 		group_2.add(new Combinder(LogicSubScene.cross_distance*2, LogicSubScene.cross_distance*6, 4, ""));
 		group_2.add(new Splitter(LogicSubScene.cross_distance*2, LogicSubScene.cross_distance*6, 4, ""));
-		ComponentGroup group_3 = new ComponentGroup();
-		ZipFile file = new ZipFile("dlatch.cmp");
+		external_group = new ComponentGroup();
+		/*ZipFile file = new ZipFile("dlatch.cmp");
 		ExternalComponent comp = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE, file);
 		System.out.println("DLatch added");
 		//ExternalComponent fulladder = ExternalComponent.init(ExternalComponent.SIZE_MIDDLE, new ZipFile("testfiles/FullAdder.cmp"));
@@ -209,7 +231,7 @@ public class LogicSubSceneContainer extends SubScene {
 		System.out.println("2BitAdder added");
 		group_3.add(comp);
 		//group_2.add(fulladder);
-		group_3.add(twobitadder);
+		group_3.add(twobitadder);*/
 		ComponentGroup group_4 = new ComponentGroup();
 		SevenSegmentDisplay ssd = new SevenSegmentDisplay((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5));
 		HexInput hex = new HexInput((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5));
@@ -220,8 +242,8 @@ public class LogicSubSceneContainer extends SubScene {
 		master_grouping.add(group);
 		master_grouping.add(group_1);
 		master_grouping.add(group_2);
-		master_grouping.add(group_3);
 		master_grouping.add(group_4);
+		master_grouping.add(external_group);
 		
 		//Add all elements to the slave grouping you can choose from on the slave beight. E.g. you cannot use a Hex-Input in a slave beight
 		slave_grouping= new ComponentGroupings();
@@ -472,31 +494,95 @@ public class LogicSubSceneContainer extends SubScene {
         fc.getExtensionFilters().add(extFilter);
 		var selected_file = fc.showSaveDialog(new Stage());
 		if(selected_file != null) {
-	        if(location == null) {
-				location = selected_file;
+	        if(file == null) {
+				file = new ZipFile(selected_file);
 				save();
 			}else {
-				try(FileWriter writer = new FileWriter(selected_file)){
+				/*try(FileWriter writer = new FileWriter(selected_file)){
 					writer.write(logic_subscene.getJSON().toString(4));
 				}catch(IOException e) {
 					e.printStackTrace();
-				}
+				}*/
 			}
         }
 		
 	}
 	public void save() {
-		if(location == null) {
-			saveas();
-		}else {
-			try(FileWriter writer = new FileWriter(location)){
-				writer.write(logic_subscene.getJSON().toString(4));
-			}catch(IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
+	    if (file == null) {
+	        saveas();
+	        return;
+	    }
+
+	    if (parameter == null) {
+	        parameter = new ZipParameters();
+	        parameter.setCompressionLevel(CompressionLevel.NORMAL);
+	        parameter.setCompressionMethod(CompressionMethod.DEFLATE);
+	    }
+
+	    Path base;
+	    try {
+	        base = ensureTempLayout();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return;
+	    }
+
+	    Path logicsDir = base.resolve("logics");
+	    Path externalsDir = base.resolve("externals");
+	    Path settingsPath = base.resolve("settings.json");
+
+	    try {
+	        // 1) write each subscene JSON
+	        JSONArray logic_areas = new JSONArray();
+	        for (int i = 0; i < logic_subscenes.size(); i++) {
+	            Path logicFile = logicsDir.resolve("subscene" + i + ".json");
+	            JSONObject json = logic_subscenes.get(i).getJSON();
+	            Files.writeString(logicFile, json.toString(4), StandardCharsets.UTF_8);
+	            logic_areas.put(logicFile.getFileName().toString());
+	        }
+
+	        // 2) copy external components into temp folder
+	        JSONArray externals = new JSONArray();
+	        for (File f : external_files) {
+	            if (f != null && f.exists()) {
+	                Path target = externalsDir.resolve(f.getName());
+	                Files.copy(f.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
+	                externals.put(f.getName());
+	            }
+	        }
+
+	        // 3) write settings.json
+	        JSONObject settings = new JSONObject();
+	        settings.put("logic_areas", logic_areas);
+	        settings.put("external_components", externals);
+	        Files.writeString(settingsPath, settings.toString(4), StandardCharsets.UTF_8);
+
+	        // 4) add settings file + folders to the zip
+	        file.addFile(settingsPath.toFile(), parameter);
+	        // IMPORTANT: add folders with addFolder, not addFile
+	        file.addFolder(externalsDir.toFile(), parameter);
+	        file.addFolder(logicsDir.toFile(), parameter);
+
+	    } catch (IOException | JSONException e) {
+	        e.printStackTrace();
+	    } finally {
+	        // 5) cleanup temp folder
+	        try {
+	            FileUtils.deleteDirectory(base.toFile());
+	        } catch (IOException ignore) {}
+	    }
 	}
+	
+	private Path ensureTempLayout() throws IOException {
+	    // Use OS temp dir -> .../beight/<random>  (avoids relative path issues)
+	    Path base = Paths.get(System.getProperty("java.io.tmpdir"), "beight", UUID.randomUUID().toString());
+	    Path logics = base.resolve("logics");
+	    Path externals = base.resolve("externals");
+	    Files.createDirectories(logics);
+	    Files.createDirectories(externals);
+	    return base;
+	}
+	
 	public void open(File file) {
 		save();
 		root.getChildren().remove(logic_subscene);
@@ -513,10 +599,239 @@ public class LogicSubSceneContainer extends SubScene {
 		addLogicSubScene(logic_subscene, false);
 		
 		root.getChildren().add(logic_subscene);
-		location = file;
+		this.file = new ZipFile(file);
 		addChooser();
 		addListener();
 		System.gc();
+	}
+	
+	// helper: unique temp dir for opening projects
+	private Path createOpenTempDir() throws IOException {
+	    Path base = Paths.get(
+	            System.getProperty("java.io.tmpdir"),
+	            "beight-open",
+	            UUID.randomUUID().toString()
+	    );
+	    Files.createDirectories(base);
+	    return base;
+	}
+
+	/**
+	 * Opens a .beight project:
+	 * - Extracts the zip safely (entry by entry, ensuring parent dirs exist)
+	 * - Reads settings.json
+	 * - Rebuilds subscenes from /logics/*.json
+	 * - Loads external components from /externals/*.cmp
+	 * - Refreshes the UI (chooser + listeners)
+	 *
+	 * Notes:
+	 * - No implicit save() (opening should not mutate the current project silently)
+	 * - Leaves extracted temp dir alive so externals are accessible
+	 */
+	public void openBeight(File beightFile) {
+	    if (beightFile == null) return;
+
+	    // keep reference for future save()
+	    this.file = new ZipFile(beightFile);
+
+	    // 1) Extract safely to a unique temp dir
+	    Path tempDir;
+	    try {
+	        tempDir = createOpenTempDir();
+
+	        @SuppressWarnings("unchecked")
+	       List<FileHeader> headers = this.file.getFileHeaders();
+
+	        for (FileHeader h : headers) {
+	            // Normalize slashes from zip entry names
+	            String rel = h.getFileName().replace("\\", "/");
+	            Path outPath = tempDir.resolve(rel);
+
+	            // Treat as directory if header marks it OR name ends with "/"
+	            boolean looksLikeDirectory = h.isDirectory() || rel.endsWith("/");
+
+	            if (looksLikeDirectory) {
+	                // ensure directory exists
+	                Files.createDirectories(outPath);
+	                continue;
+	            }
+
+	            // for files: create parent, handle possible collisions
+	            Path parent = outPath.getParent();
+	            if (parent != null) {
+	                Files.createDirectories(parent);
+	            }
+
+	            // If a directory exists with same name, skip (avoid "Zugriff verweigert")
+	            if (Files.exists(outPath) && Files.isDirectory(outPath)) {
+	                continue;
+	            }
+
+	            // Extract into the parent directory; zip4j writes file by its entry name
+	            this.file.extractFile(h, (parent == null ? tempDir : parent).toString());
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return;
+	    }
+
+	    // 2) Resolve extracted layout
+	    Path settingsPath = tempDir.resolve("settings.json");
+	    Path logicsDir    = tempDir.resolve("logics");
+	    Path externalsDir = tempDir.resolve("externals");
+
+	    // 3) If settings.json missing, fall back to legacy open (single file format)
+	    if (!Files.exists(settingsPath)) {
+	        try {
+	            // clear current UI
+	            if (logic_subscene != null) {
+	                root.getChildren().remove(logic_subscene);
+	            }
+	            for (int i = logic_subscenes.size() - 1; i >= 0; i--) {
+	                removeLogicSubScene(i);
+	            }
+
+	            // legacy initializer
+	            logic_subscene = LogicSubScene.init(
+	                    beightFile,
+	                    LogicSubScene.getNearesDot((int) (width * 0.7)),
+	                    LogicSubScene.getNearesDot((int) (height * 0.9))
+	            );
+	            logic_subscene.setFill(color == WHITE ? LogicSubScene.white_grey : LogicSubScene.black_grey);
+	            logic_subscene.setName("Main bEIGHT");
+	            logic_subscene.addX((int) (width * 0.1));
+	            logic_subscene.addY((int) (height * 0.01));
+
+	            addLogicSubScene(logic_subscene, false);
+	            root.getChildren().add(logic_subscene);
+	            addChooser();
+	            addListener();
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	        }
+	        return;
+	    }
+
+	    // 4) Parse settings.json
+	    JSONObject settings;
+	    try {
+	        String jsonText = Files.readString(settingsPath, StandardCharsets.UTF_8);
+	        settings = new JSONObject(jsonText);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return;
+	    }
+
+	    // 5) Clear current scenes & labels
+	    if (logic_subscene != null) {
+	        root.getChildren().remove(logic_subscene);
+	    }
+	    for (int i = logic_subscenes.size() - 1; i >= 0; i--) {
+	        removeLogicSubScene(i);
+	    }
+
+	    // 6) Load subscenes from /logics
+	    try {
+	        JSONArray areas = settings.optJSONArray("logic_areas");
+
+	        if (areas == null || areas.isEmpty() || !Files.exists(logicsDir)) {
+	            // Nothing found -> create an empty main scene to avoid NPEs
+	            logic_subscene = LogicSubScene.init(
+	                    LogicSubScene.getNearesDot((int) (width * 0.70)),
+	                    LogicSubScene.getNearesDot((int) (height * 0.9)),
+	                    4 /* default multiplier */
+	            );
+	            logic_subscene.setFill(color == WHITE ? LogicSubScene.white_grey : LogicSubScene.black_grey);
+	            logic_subscene.setName("Main bEIGHT");
+	            logic_subscene.addX((int) (width * 0.1));
+	            logic_subscene.addY((int) (height * 0.01));
+	            addLogicSubScene(logic_subscene, false);
+	        } else {
+	            for (int i = 0; i < areas.length(); i++) {
+	                String fileName = areas.getString(i);
+	                Path logicPath = logicsDir.resolve(fileName);
+
+	                // If the logic file is missing, skip gracefully
+	                if (!Files.exists(logicPath)) continue;
+
+	                // Use existing File-based initializer
+	                LogicSubScene scene = LogicSubScene.init(
+	                        logicPath.toFile(),
+	                        LogicSubScene.getNearesDot((int) (width * 0.70)),
+	                        LogicSubScene.getNearesDot((int) (height * 0.9))
+	                );
+	                scene.setFill(color == WHITE ? LogicSubScene.white_grey : LogicSubScene.black_grey);
+
+	                if (i == 0) {
+	                    scene.setName("Main bEIGHT");
+	                    scene.addX((int) (width * 0.1));
+	                    scene.addY((int) (height * 0.01));
+	                    logic_subscene = scene;
+	                } else {
+	                    scene.setName("bEIGHT " + i);
+	                }
+	                addLogicSubScene(scene, false);
+	            }
+	        }
+
+	        // ensure active scene is on the root
+	        if (logic_subscene != null && !root.getChildren().contains(logic_subscene)) {
+	            root.getChildren().add(logic_subscene);
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return;
+	    }
+
+	    // 7) Load external components from /externals
+	    try {
+	        external_files.clear();
+	        if (Files.exists(externalsDir)) {
+	            JSONArray exts = settings.optJSONArray("external_components");
+	            if (exts != null) {
+	                for (int i = 0; i < exts.length(); i++) {
+	                    String name = exts.getString(i);
+	                    Path cmpPath = externalsDir.resolve(name);
+	                    if (!Files.exists(cmpPath)) continue;
+
+	                    try {
+	                        ExternalComponent component = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE,new ZipFile(cmpPath.toFile()));
+	                        external_group.add(component);
+	                        external_files.add(cmpPath.toFile());
+	                    } catch (Exception compEx) {
+	                        compEx.printStackTrace(); // continue loading others
+	                    }
+	                }
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    // 8) Refresh chooser & mouse listeners
+	    addChooser();   // or addChooserMaster() if you want master palette after open
+	    addListener();
+
+	    // (optional) System.gc();  // only if you found it necessary elsewhere
+	}
+
+	
+	public void addExternal() {
+		FileChooser fc = new FileChooser();
+		fc.setTitle("Add ExternalComponent");
+		ExtensionFilter extFilter = new ExtensionFilter(".cmp files (*.cmp)", "*.cmp");
+        fc.getExtensionFilters().add(extFilter);
+		var selected_file = fc.showOpenDialog(new Stage());
+		if(selected_file != null) {
+			try {
+				ExternalComponent component = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE, new ZipFile(selected_file));
+				external_group.add(component);
+				addChooserMaster();
+				external_files.add(selected_file);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+        }
 	}
 	
 	public void saveArduino(File file) {
