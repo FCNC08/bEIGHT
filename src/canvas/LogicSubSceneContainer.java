@@ -122,7 +122,8 @@ public class LogicSubSceneContainer extends SubScene {
 		
 		chooser_root = new VBox();
 		chooser_root.setBackground(new Background(new BackgroundFill(LogicSubScene.black_grey, null, null)));
-		bEIGHT_chooser= new SubScene(chooser_root, width*0.0975, height);
+		bEIGHT_chooser= new SubScene(chooser_root, width*0.0975, height*0.95);
+		bEIGHT_chooser.setLayoutY(height*0.01);
 		Label addnew = new Label("+ Add new bEIGHT");
 		addnew.setFont(new Font(height*0.02));
 		addnew.setTextFill(Color.WHITE);
@@ -138,9 +139,10 @@ public class LogicSubSceneContainer extends SubScene {
 			}
 		};
 		addnew.addEventFilter(MouseEvent.MOUSE_CLICKED, create_new_bEIGHT);
-		Rectangle border_1 = new Rectangle(width*0.0025, height);
+		Rectangle border_1 = new Rectangle(width*0.0025, height*0.95);
 		border_1.setFill(Color.BLACK);
 		border_1.setLayoutX(width*0.0975);
+		border_1.setLayoutY(height*0.01);
 		Rectangle border_2 = new Rectangle(width*0.0975, height*0.009);
 		border_2.setFill(Color.BLACK);
 		chooser_root.getChildren().add(addnew);
