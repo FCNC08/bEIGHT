@@ -91,6 +91,7 @@ public class LogicSubSceneContainer extends SubScene {
 	
 	protected int width;
 	protected int height;
+	protected int multiplier;
 	
 	protected ComponentGroupings grouping;
 	
@@ -116,6 +117,7 @@ public class LogicSubSceneContainer extends SubScene {
 		this.root = Mainroot;
 		this.width = width;
 		this.height = height;
+		this.multiplier = multiplier;
 		this.grouping = groupings;
 		// Adding LogicScene
 		logic_subscene = LogicSubScene.init(LogicSubScene.getNearesDot((int) (width * 0.80)), LogicSubScene.getNearesDot((int) (height * 0.9)), multiplier);
@@ -137,40 +139,14 @@ public class LogicSubSceneContainer extends SubScene {
 		this.root = Mainroot;
 		this.width = width;
 		this.height = height;
+		this.multiplier = multiplier;
 		
 		if(master_grouping == null) {
 			addGroupings();
 		}
 		
-		chooser_root = new VBox();
-		chooser_root.setBackground(new Background(new BackgroundFill(LogicSubScene.black_grey, null, null)));
-		bEIGHT_chooser= new SubScene(chooser_root, width*0.0975, height*0.95);
-		bEIGHT_chooser.setLayoutY(height*0.01);
-		Label addnew = new Label("+ Add new bEIGHT");
-		addnew.setFont(new Font(height*0.02));
-		addnew.setTextFill(Color.WHITE);
-		addnew.backgroundProperty().set(new Background(new BackgroundFill(LogicSubScene.black_grey, null, null)));
-		EventHandler<MouseEvent> create_new_bEIGHT = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				LogicSubScene scene = LogicSubScene.init(LogicSubScene.getNearesDot((int) (width * 0.70)), LogicSubScene.getNearesDot((int) (height * 0.9)), multiplier);
-				scene.setFill(LogicSubScene.black_grey);
-				scene.addX((int)(width*0.1));
-				scene.addY((int) (height*0.01));
-				addLogicSubScene(scene, false);
-			}
-		};
-		addnew.addEventFilter(MouseEvent.MOUSE_CLICKED, create_new_bEIGHT);
-		Rectangle border_1 = new Rectangle(width*0.0025, height*0.95);
-		border_1.setFill(Color.BLACK);
-		border_1.setLayoutX(width*0.0975);
-		border_1.setLayoutY(height*0.01);
-		Rectangle border_2 = new Rectangle(width*0.0975, height*0.009);
-		border_2.setFill(Color.BLACK);
-		chooser_root.getChildren().add(addnew);
-		chooser_root.getChildren().remove(border_2);
-		root.getChildren().add(bEIGHT_chooser);
-		root.getChildren().add(border_1);
+		addBeightChooser();
+		
 		// Adding LogicScene
 		logic_subscene = LogicSubScene.init(LogicSubScene.getNearesDot((int) (width * 0.70)), LogicSubScene.getNearesDot((int) (height * 0.9)), multiplier);
 
@@ -401,6 +377,38 @@ public class LogicSubSceneContainer extends SubScene {
 		addEventFilter(MouseEvent.MOUSE_DRAGGED, moveNewLogicComponent);
 	}
 	
+	public void addBeightChooser() {
+		chooser_root = new VBox();
+		chooser_root.setBackground(new Background(new BackgroundFill(LogicSubScene.black_grey, null, null)));
+		bEIGHT_chooser= new SubScene(chooser_root, width*0.0975, height*0.95);
+		bEIGHT_chooser.setLayoutY(height*0.01);
+		Label addnew = new Label("+ Add new bEIGHT");
+		addnew.setFont(new Font(height*0.02));
+		addnew.setTextFill(Color.WHITE);
+		addnew.backgroundProperty().set(new Background(new BackgroundFill(LogicSubScene.black_grey, null, null)));
+		EventHandler<MouseEvent> create_new_bEIGHT = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				LogicSubScene scene = LogicSubScene.init(LogicSubScene.getNearesDot((int) (width * 0.70)), LogicSubScene.getNearesDot((int) (height * 0.9)), multiplier);
+				scene.setFill(LogicSubScene.black_grey);
+				scene.addX((int)(width*0.1));
+				scene.addY((int) (height*0.01));
+				addLogicSubScene(scene, false);
+			}
+		};
+		addnew.addEventFilter(MouseEvent.MOUSE_CLICKED, create_new_bEIGHT);
+		Rectangle border_1 = new Rectangle(width*0.0025, height*0.95);
+		border_1.setFill(Color.BLACK);
+		border_1.setLayoutX(width*0.0975);
+		border_1.setLayoutY(height*0.01);
+		Rectangle border_2 = new Rectangle(width*0.0975, height*0.009);
+		border_2.setFill(Color.BLACK);
+		chooser_root.getChildren().add(addnew);
+		chooser_root.getChildren().remove(border_2);
+		root.getChildren().add(bEIGHT_chooser);
+		root.getChildren().add(border_1);
+	}
+	
 	public void addLogicSubScene(LogicSubScene scene, boolean ismaster) {
 		logic_subscenes.add(scene);
 		TextField label = new TextField(scene.getName());
@@ -612,6 +620,7 @@ public class LogicSubSceneContainer extends SubScene {
 	            "beight-open",
 	            UUID.randomUUID().toString()
 	    );
+	    System.out.println(base.toString());
 	    Files.createDirectories(base);
 	    return base;
 	}
@@ -641,6 +650,7 @@ public class LogicSubSceneContainer extends SubScene {
 
 	        @SuppressWarnings("unchecked")
 	       List<FileHeader> headers = this.file.getFileHeaders();
+	        System.out.println(headers.toString());
 
 	        for (FileHeader h : headers) {
 	            // Normalize slashes from zip entry names
@@ -668,7 +678,8 @@ public class LogicSubSceneContainer extends SubScene {
 	            }
 
 	            // Extract into the parent directory; zip4j writes file by its entry name
-	            this.file.extractFile(h, (parent == null ? tempDir : parent).toString());
+	            //this.file.extractFile(h, (parent == null ? tempDir : parent).toString());
+	            this.file.extractFile(h, tempDir.toString());
 	        }
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -706,6 +717,7 @@ public class LogicSubSceneContainer extends SubScene {
 	            root.getChildren().add(logic_subscene);
 	            addChooser();
 	            addListener();
+	            addBeightChooser();
 	        } catch (Exception ex) {
 	            ex.printStackTrace();
 	        }
@@ -729,12 +741,15 @@ public class LogicSubSceneContainer extends SubScene {
 	    for (int i = logic_subscenes.size() - 1; i >= 0; i--) {
 	        removeLogicSubScene(i);
 	    }
+	    
+	    addBeightChooser();
 
 	    // 6) Load subscenes from /logics
 	    try {
 	        JSONArray areas = settings.optJSONArray("logic_areas");
 
 	        if (areas == null || areas.isEmpty() || !Files.exists(logicsDir)) {
+	        	System.out.println("Test 1");
 	            // Nothing found -> create an empty main scene to avoid NPEs
 	            logic_subscene = LogicSubScene.init(
 	                    LogicSubScene.getNearesDot((int) (width * 0.70)),
@@ -748,6 +763,7 @@ public class LogicSubSceneContainer extends SubScene {
 	            addLogicSubScene(logic_subscene, false);
 	        } else {
 	            for (int i = 0; i < areas.length(); i++) {
+	            	System.out.println("Test 2");
 	                String fileName = areas.getString(i);
 	                Path logicPath = logicsDir.resolve(fileName);
 
@@ -760,6 +776,7 @@ public class LogicSubSceneContainer extends SubScene {
 	                        LogicSubScene.getNearesDot((int) (width * 0.70)),
 	                        LogicSubScene.getNearesDot((int) (height * 0.9))
 	                );
+	                System.out.println("TEst 5");
 	                scene.setFill(color == WHITE ? LogicSubScene.white_grey : LogicSubScene.black_grey);
 
 	                if (i == 0) {
@@ -791,13 +808,17 @@ public class LogicSubSceneContainer extends SubScene {
 	            if (exts != null) {
 	                for (int i = 0; i < exts.length(); i++) {
 	                    String name = exts.getString(i);
+	                    System.out.println(name);
 	                    Path cmpPath = externalsDir.resolve(name);
 	                    if (!Files.exists(cmpPath)) continue;
 
 	                    try {
-	                        ExternalComponent component = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE,new ZipFile(cmpPath.toFile()));
+	                        File ext_file = new File("temporary/externals/"+cmpPath.getFileName());
+	                        new File("temporary/externals").mkdir();
+	                        Files.copy(cmpPath, ext_file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+	                        ExternalComponent component = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE,new ZipFile(ext_file));
 	                        external_group.add(component);
-	                        external_files.add(cmpPath.toFile());
+	                        external_files.add(ext_file);
 	                    } catch (Exception compEx) {
 	                        compEx.printStackTrace(); // continue loading others
 	                    }
@@ -807,9 +828,15 @@ public class LogicSubSceneContainer extends SubScene {
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
+	    
+	    try {
+			FileUtils.cleanDirectory(tempDir.getParent().toFile());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 	    // 8) Refresh chooser & mouse listeners
-	    addChooser();   // or addChooserMaster() if you want master palette after open
+	    addChooserMaster();   // or addChooserMaster() if you want master palette after open
 	    addListener();
 
 	    // (optional) System.gc();  // only if you found it necessary elsewhere
