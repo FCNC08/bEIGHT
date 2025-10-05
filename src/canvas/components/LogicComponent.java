@@ -57,6 +57,17 @@ public abstract class LogicComponent extends FunctionalCanvasComponent {
 		}
 	}
 	
+	public void setInputCount(int new_input_count) {
+		if(new_input_count == input_count) return;
+		ArrayList<Dot> new_dots = new ArrayList<>(Arrays.asList(inputs));
+		for(int i = input_count; i<new_input_count; i++) {
+			new_dots.add(new Dot(this));
+		}
+		input_count = new_input_count;
+		inputs = (Dot[]) new_dots.toArray(new Dot[0]);
+		setStandardDotLocations();
+	}
+	
 	protected void removeInput() {
 		if(input_count > 2 ) {
 			ArrayList<Dot> new_dots = new ArrayList<>(Arrays.asList(inputs));

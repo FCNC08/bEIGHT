@@ -47,7 +47,10 @@ public class SevenSegmentDisplay extends FunctionalCanvasComponent{
 
 	@Override
 	public FunctionalCanvasComponent getClone(String size) {
-		// Creating a ANDGate with standard sizes
+		return getSevenSegmentDisplay(size);
+	}
+	
+	public static SevenSegmentDisplay getSevenSegmentDisplay(String size) {
 		int height;
 		int width;
 		switch (size) {
@@ -55,6 +58,9 @@ public class SevenSegmentDisplay extends FunctionalCanvasComponent{
 			width = LogicSubScene.cross_distance*10;
 			height = LogicSubScene.cross_distance*18;
 			break;
+		case SIZE_MIDDLE:
+			width = LogicSubScene.cross_distance*9;
+			height = LogicSubScene.cross_distance*14;
 		default:
 			width = LogicSubScene.cross_distance*5;
 			height = LogicSubScene.cross_distance*9;

@@ -12,6 +12,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -31,8 +32,12 @@ import canvas.components.SingleCanvasComponent;
 import canvas.components.State;
 import canvas.components.ExternalComponents.ExternalComponent;
 import canvas.components.Layercomponents.Connection;
+import canvas.components.StandardComponents.Combinder;
+import canvas.components.StandardComponents.HexInput;
 import canvas.components.StandardComponents.Input;
 import canvas.components.StandardComponents.Output;
+import canvas.components.StandardComponents.SevenSegmentDisplay;
+import canvas.components.StandardComponents.Splitter;
 import canvas.components.StandardComponents.Wire;
 import canvas.components.StandardComponents.WireDoublet;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
@@ -63,7 +68,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Translate;
-
+import net.lingala.zip4j.ZipFile;
 import util.OccupationException;
 import util.ComponentBox;
 import util.IllegalInputOutputException;
@@ -1495,21 +1500,6 @@ public class LogicSubScene extends SubScene {
 		int real_height = json_object.getInt("height")*cross_distance;
 		System.out.println(real_width+" "+json_object.getInt("height")*cross_distance);
 		LogicSubScene logic_sub_scene = new LogicSubScene(new Group(), width, height, Math.max((double)real_width/width,(double)real_height/height));
-		JSONArray wires = json_object.getJSONArray("wires");
-		for(Object component : wires) {
-			if(component instanceof JSONObject) {
-				JSONObject jsonwire = (JSONObject) component;
-				Wire wire = new Wire(jsonwire.getInt("lenght")*cross_distance+ wire_height*3/4);
-				wire.setRotation(jsonwire.getString("orientation").matches("HORIZONTAL")?CanvasComponent.HORIZONTAL:CanvasComponent.VERTICAL);
-				wire.setXPoint(jsonwire.getInt("posx"));
-				wire.setYPoint(jsonwire.getInt("posy"));
-				try {
-					logic_sub_scene.add(wire);
-				} catch (OccupationException e) {
-					e.printStackTrace();
-				}
-			}
-		}
 		JSONArray components = json_object.getJSONArray("components");
 		for(Object object : components) {
 			if(object instanceof JSONObject) {
@@ -1552,6 +1542,31 @@ public class LogicSubScene extends SubScene {
 					component = Output.getOutput(jsoncomponent.getString("size"));
 					break;
 				}
+				case("SevenSegmentDisplay"):{
+					component = SevenSegmentDisplay.getSevenSegmentDisplay(jsoncomponent.getString("size"));
+					break;
+				}
+				case("HexInput"):{
+					component = HexInput.getHexInput(jsoncomponent.getString("size"));
+					break;
+				}
+				case("Splitter"):{
+					component = Splitter.getSplittet(jsoncomponent.getString("size"));
+					break;
+				}
+				case("Combinder"):{
+					component = Combinder.getCombinder(jsoncomponent.getString("size"));
+					break;
+				}
+				case("External"):{
+					try {
+						//System.out.println(new File("temporary/externals/")+jsoncomponent.getString("name")+".cmp"+);
+						component = ExternalComponent.init(jsoncomponent.getString("size"), new ZipFile(new File("temporary/externals/"+jsoncomponent.getString("name")+".cmp")));
+					}catch (Exception e) {
+						e.printStackTrace();
+					}
+					break;
+				}
 				case("LayerComponent"):{
 					String size;
 					if(FunctionalCanvasComponent.SIZE_SMALL.startsWith(jsoncomponent.getString("size"))) {
@@ -1567,8 +1582,31 @@ public class LogicSubScene extends SubScene {
 				}
 				component.setXPoint(jsoncomponent.getInt("posx"));
 				component.setYPoint(jsoncomponent.getInt("posy"));
+				if(jsoncomponent.getBoolean("output_combined")) {
+					component.changeOutputType();
+				}
+				if(jsoncomponent.getBoolean("input_combined")) {
+					component.changeInputType();
+				}
 				try {
 					logic_sub_scene.add(component);
+				} catch (OccupationException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		JSONArray wires = json_object.getJSONArray("wires");
+		for(Object component : wires) {
+			if(component instanceof JSONObject) {
+				JSONObject jsonwire = (JSONObject) component;
+				Wire wire = new Wire(jsonwire.getInt("lenght")*cross_distance+ wire_height*3/4);
+				wire.setWireWidth(jsonwire.getInt("wires"));
+				wire.setXPoint(jsonwire.getInt("posx"));
+				wire.setYPoint(jsonwire.getInt("posy"));
+				wire.setRotation(jsonwire.getString("orientation").matches("HORIZONTAL")?CanvasComponent.HORIZONTAL:CanvasComponent.VERTICAL);
+				try {
+					logic_sub_scene.add(wire);
 				} catch (OccupationException e) {
 					e.printStackTrace();
 				}
@@ -1878,6 +1916,7 @@ public class LogicSubScene extends SubScene {
 			wireobject.put("posx", wire.point_X);
 			wireobject.put("posy", wire.point_Y);
 			wireobject.put("lenght", wire.point_width);
+			wireobject.put("wires", wire.wires);
 			wireoutput.put(wireobject);
 		}
 		object.put("wires", wireoutput);
@@ -1908,6 +1947,17 @@ public class LogicSubScene extends SubScene {
 				name = "Input";
 			}else if(component instanceof Output) {
 				name = "Output";
+			}else if(component instanceof SevenSegmentDisplay) {
+				name = "SevenSegmentDisplay";
+			}else if(component instanceof HexInput) {
+				name = "HexInput";
+			}else if(component instanceof Splitter) {
+				name = "Splitter";
+			}else if(component instanceof Combinder) {
+				name = "Combinder";
+			}else if(component instanceof ExternalComponent) {
+				name = "External";
+				componentobject.put("name", ((ExternalComponent) component).getName());
 			}else if(component instanceof LayerCanvasComponent) {
 				name = "LayerComponent";
 				JSONObject layersystem = ((LayerCanvasComponent) component).getJSONObject();
@@ -1919,6 +1969,8 @@ public class LogicSubScene extends SubScene {
 			componentobject.put("size", component.size);
 			componentobject.put("inputs", component.input_count);
 			componentobject.put("outputs", component.output_count);
+			componentobject.put("input_combined", component.single_input);
+			componentobject.put("output_combined", component.single_output);
 			componentoutput.put(componentobject);
 		}
 		object.put("components", componentoutput);

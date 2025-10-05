@@ -198,16 +198,6 @@ public class LogicSubSceneContainer extends SubScene {
 		group_2.add(new Combinder(LogicSubScene.cross_distance*2, LogicSubScene.cross_distance*6, 4, ""));
 		group_2.add(new Splitter(LogicSubScene.cross_distance*2, LogicSubScene.cross_distance*6, 4, ""));
 		external_group = new ComponentGroup();
-		/*ZipFile file = new ZipFile("dlatch.cmp");
-		ExternalComponent comp = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE, file);
-		System.out.println("DLatch added");
-		//ExternalComponent fulladder = ExternalComponent.init(ExternalComponent.SIZE_MIDDLE, new ZipFile("testfiles/FullAdder.cmp"));
-		//System.out.println("FullAdder added");
-		ExternalComponent twobitadder = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE, new ZipFile("testfiles/2BitAdder.cmp"));
-		System.out.println("2BitAdder added");
-		group_3.add(comp);
-		//group_2.add(fulladder);
-		group_3.add(twobitadder);*/
 		ComponentGroup group_4 = new ComponentGroup();
 		SevenSegmentDisplay ssd = new SevenSegmentDisplay((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5));
 		HexInput hex = new HexInput((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5));
@@ -551,11 +541,12 @@ public class LogicSubSceneContainer extends SubScene {
 
 	        // 2) copy external components into temp folder
 	        JSONArray externals = new JSONArray();
-	        for (File f : external_files) {
+	        for(int i = 0; i<external_files.size();i++) {
+	        	File f = external_files.get(i);
 	            if (f != null && f.exists()) {
-	                Path target = externalsDir.resolve(f.getName());
+	                Path target = externalsDir.resolve(((ExternalComponent)external_group.get(i)).getName()+".cmp");
 	                Files.copy(f.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
-	                externals.put(f.getName());
+	                externals.put(target.getFileName());
 	            }
 	        }
 
@@ -589,28 +580,6 @@ public class LogicSubSceneContainer extends SubScene {
 	    Files.createDirectories(logics);
 	    Files.createDirectories(externals);
 	    return base;
-	}
-	
-	public void open(File file) {
-		save();
-		root.getChildren().remove(logic_subscene);
-		for(int i = logic_subscenes.size()-1; i>=0; i--) {
-			removeLogicSubScene(i);
-		}
-		logic_subscene = LogicSubScene.init(file, LogicSubScene.getNearesDot((int) (width * 0.7)), LogicSubScene.getNearesDot((int) (height * 0.9)));
-		logic_subscene.setFill(color==WHITE?LogicSubScene.white_grey:LogicSubScene.black_grey);
-		logic_subscene.setName("Main bEIGHT");
-
-		logic_subscene.addX((int) (width * 0.1));
-		logic_subscene.addY((int) (height * 0.01));
-		
-		addLogicSubScene(logic_subscene, false);
-		
-		root.getChildren().add(logic_subscene);
-		this.file = new ZipFile(file);
-		addChooser();
-		addListener();
-		System.gc();
 	}
 	
 	// helper: unique temp dir for opening projects
@@ -760,12 +729,32 @@ public class LogicSubSceneContainer extends SubScene {
 	            logic_subscene.setName("Main bEIGHT");
 	            logic_subscene.addX((int) (width * 0.1));
 	            logic_subscene.addY((int) (height * 0.01));
-	            addLogicSubScene(logic_subscene, false);
+	            addLogicSubScene(logic_subscene, true);
 	        } else {
-	            for (int i = 0; i < areas.length(); i++) {
-	            	System.out.println("Test 2");
-	                String fileName = areas.getString(i);
-	                Path logicPath = logicsDir.resolve(fileName);
+                String fileName = areas.getString(0);
+                Path logicPath = logicsDir.resolve(fileName);
+
+                // If the logic file is missing, skip gracefully
+                if (Files.exists(logicPath)) {
+
+	                // Use existing File-based initializer
+	                LogicSubScene scene = LogicSubScene.init(
+	                        logicPath.toFile(),
+	                        LogicSubScene.getNearesDot((int) (width * 0.70)),
+	                        LogicSubScene.getNearesDot((int) (height * 0.9))
+	                );
+	                scene.setFill(color == WHITE ? LogicSubScene.white_grey : LogicSubScene.black_grey);
+	
+	                scene.setName("Main bEIGHT");
+	                scene.addX((int) (width * 0.1));
+	                scene.addY((int) (height * 0.01));
+	                logic_subscene = scene;
+	                addLogicSubScene(scene, true);
+                }
+                
+	            for (int i = 1; i < areas.length(); i++) {
+	                fileName = areas.getString(i);
+	                logicPath = logicsDir.resolve(fileName);
 
 	                // If the logic file is missing, skip gracefully
 	                if (!Files.exists(logicPath)) continue;
@@ -776,17 +765,8 @@ public class LogicSubSceneContainer extends SubScene {
 	                        LogicSubScene.getNearesDot((int) (width * 0.70)),
 	                        LogicSubScene.getNearesDot((int) (height * 0.9))
 	                );
-	                System.out.println("TEst 5");
 	                scene.setFill(color == WHITE ? LogicSubScene.white_grey : LogicSubScene.black_grey);
-
-	                if (i == 0) {
-	                    scene.setName("Main bEIGHT");
-	                    scene.addX((int) (width * 0.1));
-	                    scene.addY((int) (height * 0.01));
-	                    logic_subscene = scene;
-	                } else {
-	                    scene.setName("bEIGHT " + i);
-	                }
+	                scene.setName("bEIGHT " + i);
 	                addLogicSubScene(scene, false);
 	            }
 	        }

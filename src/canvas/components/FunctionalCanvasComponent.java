@@ -65,11 +65,9 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 		outputs = new Dot[output_count];
 		for (int i = 0; i < input_count; i++) {
 			inputs[i] = new Dot(this);
-			inputs[i].setParent(this);
 		}
 		for (int i = 0; i < output_count; i++) {
 			outputs[i] = new Dot(this);
-			outputs[i].setParent(this);
 		}
 		
 		this.size = size;
@@ -476,8 +474,10 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	
 	public void changeInputType() {
 		if(single_input) {
-			//Remove old Dot
-			parent.remove(inputs[0]);
+			if(parent!=null) {
+				//Remove old Dot
+				parent.remove(inputs[0]);
+			}
 			
 			//Create new Dots, set their location and add them to the scene
 			inputs = new Dot[input_count];
@@ -489,9 +489,11 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 			changeInput.setText("Change Inputs to single Dot");
 			single_input = false;
 		}else {
-			//Remove old Dots
-			for(Dot i : inputs) {
-				parent.remove(i);
+			if(parent!=null) {
+				//Remove old Dots
+				for(Dot i : inputs) {
+					parent.remove(i);
+				}
 			}
 			//Create new Dot and add it to the scene
 			inputs = new Dot[1];
@@ -506,8 +508,10 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 	
 	public void changeOutputType() {
 		if(single_output) {
-			//Remove old Dot
-			parent.remove(outputs[0]);
+			if(parent != null) {
+				//Remove old Dot
+				parent.remove(outputs[0]);
+			}
 			
 			//Create new Dots, set their location and add them to the scene
 			outputs = new Dot[output_count];
@@ -519,9 +523,11 @@ public abstract class FunctionalCanvasComponent extends CanvasComponent {
 			changeOutput.setText("Change Outputs to single Dot");
 			single_output = false;
 		}else {
-			//Remove old Dots
-			for(Dot o : outputs) {
-				parent.remove(o);
+			if(parent != null) {
+				//Remove old Dots
+				for(Dot o : outputs) {
+					parent.remove(o);
+				}
 			}
 			
 			//Create new Dot and add it to the scene

@@ -146,21 +146,24 @@ public class HexInput extends FunctionalCanvasComponent{
 
 	@Override
 	public FunctionalCanvasComponent getClone(String size) {
+		return getHexInput(size);
+	}
+	
+	public static HexInput getHexInput(String size) {
 		int height;
 		int width;
 		
 		switch(size) {
 		case SIZE_BIG:
-			height = LogicSubScene.cross_distance*14;
-			width = LogicSubScene.cross_distance*9;
+			width = LogicSubScene.cross_distance*10;
+			height = LogicSubScene.cross_distance*18;
 			break;
 		case SIZE_MIDDLE:
-			height = LogicSubScene.cross_distance*14;
 			width = LogicSubScene.cross_distance*9;
-			break;
+			height = LogicSubScene.cross_distance*14;
 		default:
+			width = LogicSubScene.cross_distance*5;
 			height = LogicSubScene.cross_distance*9;
-			width = LogicSubScene.cross_distance*6;
 			break;
 		}
 		return new HexInput(width, height, size);

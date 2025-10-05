@@ -47,6 +47,11 @@ public class Splitter extends FunctionalCanvasComponent{
 		menu.getItems().addAll(addDot, removeDot);
 	}
 	
+	@Override
+	public void changeInputType() {
+		return;
+	}
+	
 	protected void addOutput() {
 		if(point_height >= input_count) {
 			System.out.println("Test");
@@ -116,6 +121,10 @@ public class Splitter extends FunctionalCanvasComponent{
 
 	@Override
 	public FunctionalCanvasComponent getClone(String size) {
+		return getSplittet(size);
+	}
+	
+	public static Splitter getSplittet(String size) {
 		int height;
 		int width;
 		

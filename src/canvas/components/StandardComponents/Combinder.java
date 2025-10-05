@@ -48,6 +48,11 @@ public class Combinder extends FunctionalCanvasComponent{
 		menu.getItems().addAll(addDot, removeDot);
 		
 	}
+	
+	@Override
+	public void changeOutputType() {
+		return;
+	}
 
 	protected void addInput() {
 		if(point_height >= input_count) {
@@ -118,6 +123,10 @@ public class Combinder extends FunctionalCanvasComponent{
 
 	@Override
 	public FunctionalCanvasComponent getClone(String size) {
+		return getCombinder(size);
+	}
+	
+	public static Combinder getCombinder(String size) {
 		int height;
 		int width;
 		

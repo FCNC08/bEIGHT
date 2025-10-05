@@ -93,7 +93,10 @@ public class ExternalComponent extends FunctionalCanvasComponent {
 		}
 		return component;
 	}
-
+	
+	public String getName() {
+		return name;
+	}
 
 	@Override
 	protected void setVerilogString(short[] comp_count) {
