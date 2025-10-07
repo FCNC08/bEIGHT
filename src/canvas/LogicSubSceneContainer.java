@@ -294,13 +294,10 @@ public class LogicSubSceneContainer extends SubScene {
 							if (view.getImage() instanceof FunctionalCanvasComponent) {
 								FunctionalCanvasComponent component = (FunctionalCanvasComponent) view.getImage();
 								if (me.getButton() == MouseButton.PRIMARY) {
-									System.out.println("Middle");
 									adding_component = component.getClone(FunctionalCanvasComponent.SIZE_MIDDLE);
 								} else if (me.getButton() == MouseButton.SECONDARY) {
-									System.out.println("Small");
 									adding_component = component.getClone(FunctionalCanvasComponent.SIZE_SMALL);
 								} else {
-									System.out.println("Big");
 									adding_component = component.getClone(FunctionalCanvasComponent.SIZE_BIG);
 								}
 								adding_component.setX((int) me.getX());
@@ -410,13 +407,10 @@ public class LogicSubSceneContainer extends SubScene {
 			public void handle(MouseEvent me) {
 				if(scene.getInputs().size()>0&&scene.getOutputs().size()>0&&!ismaster) {
 					if (me.getButton() == MouseButton.PRIMARY) {
-						System.out.println("Middle");
 						adding_component = scene.getLayerCanvasComponent(FunctionalCanvasComponent.SIZE_MIDDLE);
 					} else if (me.getButton() == MouseButton.SECONDARY) {
-						System.out.println("Small");
 						adding_component = scene.getLayerCanvasComponent(FunctionalCanvasComponent.SIZE_SMALL);
 					} else {
-						System.out.println("Big");
 						adding_component = scene.getLayerCanvasComponent(FunctionalCanvasComponent.SIZE_BIG);
 					}
 					adding_component.setX((int) (me.getX()));
@@ -718,7 +712,6 @@ public class LogicSubSceneContainer extends SubScene {
 	        JSONArray areas = settings.optJSONArray("logic_areas");
 
 	        if (areas == null || areas.isEmpty() || !Files.exists(logicsDir)) {
-	        	System.out.println("Test 1");
 	            // Nothing found -> create an empty main scene to avoid NPEs
 	            logic_subscene = LogicSubScene.init(
 	                    LogicSubScene.getNearesDot((int) (width * 0.70)),
@@ -793,8 +786,12 @@ public class LogicSubSceneContainer extends SubScene {
 	                    if (!Files.exists(cmpPath)) continue;
 
 	                    try {
-	                        File ext_file = new File("temporary/externals/"+cmpPath.getFileName());
-	                        new File("temporary/externals").mkdir();
+	                        File ext_file = new File("temporary/scene/externals/"+cmpPath.getFileName());
+
+	                        Path extDir = Paths.get("temporary", "scene", "externals");
+	                        Files.createDirectories(extDir);
+
+	                        ext_file.createNewFile();
 	                        Files.copy(cmpPath, ext_file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 	                        ExternalComponent component = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE,new ZipFile(ext_file));
 	                        external_group.add(component);

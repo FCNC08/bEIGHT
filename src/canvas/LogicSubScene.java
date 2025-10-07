@@ -154,8 +154,6 @@ public class LogicSubScene extends SubScene {
 		super(Mainroot, StartWidth, StartHeight);
 
 		max_zoom = (int) ((StartWidth * -1* multiplier) + (cross_distance))/StartWidth;
-		System.out.println(max_zoom);
-		System.out.println(multiplier);
 
 		this.Start_Width = StartWidth;
 		this.Start_Height = StartHeight;
