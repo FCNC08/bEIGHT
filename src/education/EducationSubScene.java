@@ -48,7 +48,7 @@ public class EducationSubScene extends SubScene{
 	public EducationSubScene(double width, double height, ZipFile questions, EducationSubSceneContainer essc) throws ZipException {
 		super(new Group(), width, height);
 		this.root = (Group) getRoot();
-		
+		root.getStyleClass().add("education-scene");
 		this.container = essc;
 		
 		JSONObject jsonobject = null;

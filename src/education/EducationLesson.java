@@ -26,6 +26,7 @@ public class EducationLesson extends ScrollPane{
 	protected VBox vbox = new VBox(20);
 	public EducationLesson(double width, double height, ZipFile file, EducationSubScene scene) {
 		super();
+		getStyleClass().add("education-lesson");
 		vbox.setAlignment(Pos.CENTER);
 		setContent(vbox);
 		setMaxHeight(height-50);

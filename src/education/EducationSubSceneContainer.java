@@ -30,6 +30,7 @@ public class EducationSubSceneContainer extends SubScene{
 		
 		fpane = new FlowPane();
 		fpane.setPrefWrapLength(width*0.9);
+		fpane.getStyleClass().add("education-container");
 		
 		main_scene_root.getChildren().addAll(fpane);
 		sections.add(main_scene);

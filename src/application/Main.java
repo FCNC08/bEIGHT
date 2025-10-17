@@ -474,7 +474,7 @@ public class Main extends Application {
 		vbox.getChildren().add(MainScene);
 
 		Scene scene = new Scene(vbox);
-		//scene.getStylesheets().add("education_style.css");
+		scene.getStylesheets().add("education_style.css");
 
 		// Adding Runnable to maximize and resize
 		Runnables[2] = new Runnable() {
