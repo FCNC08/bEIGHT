@@ -1,13 +1,58 @@
-.education-container{
-	
+/*EducationSubSceneContainer*/
+.education-icon-container{
+	-fx-hgap: 5px;
+	-fx-vgap: 5px;
+	-fx-padding: 10px;
+}
+.education-icon{
+	-fx-border-radius: 10px;
+	-fx-border-width: 2px;
+	-fx-background-radius: 10px;
+	-fx-background-color: white;
+	-fx-border-color: black;
+	-fx-alignment: center;
+	-fx-padding: 40px,2px,40px,2px;
 }
 
+/*EducationSubScene */
 .education-scene{
-	-display: flex;
-	-align-items: center;
-	-justify-content: center;
+    -fx-background-color: transparent;
+    -fx-background-radius: 16;
+    -fx-padding: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 16, 0.2, 0, 6);
+    -fx-border-color: rgba(0,0,0,0.06);
+    -fx-border-width: 1;
+	-fx-background-color: #999999;
 }
 
-.education-lesson{
-	
+/*Lessons */
+.lesson-scroll{
+	-fx-background-color: transparent;
+	-fx-background-radius: 16;
+}
+.education-lesson >*{
+	-fx-background-color: #dddddd;
+    -fx-alignment: center;
+    -fx-background-radius: 16;
+}
+
+/*Questions */
+.question-scroll{
+	-fx-background-color: transparent;
+	-fx-background-radius: 16;
+}
+.education-question >*{
+	-fx-background-color: #dddddd;
+    -fx-alignment: center;
+    -fx-background-radius: 16;	
+}
+.question-question{
+	-fx-font-size: 25;
+}
+.question-option{
+	-fx-font-size: 25;
+	-fx-border-color: #000000;
+	-fx-border-width: 3px;
+	-fx-border-radius: 10px;
+	-fx-padding: 5px;
 }

@@ -11,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
 import javafx.scene.control.Button;
@@ -23,6 +24,8 @@ import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -38,17 +41,19 @@ public class EducationSubScene extends SubScene{
 	
 	protected EducationSubSceneContainer container;
 	
-	protected Group root;
-	protected ArrayList<ScrollPane> order;
+	protected StackPane root;
+	protected ArrayList<Region> order;
 	int position = 0;
 	
-	protected Pane icon = new Pane();
+	protected StackPane icon = new StackPane();
 	protected Text text;
 	
 	public EducationSubScene(double width, double height, ZipFile questions, EducationSubSceneContainer essc) throws ZipException {
-		super(new Group(), width, height);
-		this.root = (Group) getRoot();
-		root.getStyleClass().add("education-scene");
+		super(new StackPane(), width, height);
+		this.root = (StackPane) getRoot();
+		this.root.getStyleClass().add("education-scene");
+		this.root.setPickOnBounds(true);
+		this.root.setAlignment(Pos.CENTER);
 		this.container = essc;
 		
 		JSONObject jsonobject = null;
@@ -175,12 +180,8 @@ public class EducationSubScene extends SubScene{
 		
 		text = new Text(headline_text);
 		text.setFont(new Font(width*0.01));
-		text.setLayoutY(width*0.05);
-		text.setLayoutX((width*0.1-text.getBoundsInParent().getWidth())*0.5);
-		icon.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
 		icon.getChildren().addAll(text);
-		icon.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.MEDIUM)));
-	
+		icon.getStyleClass().add("education-icon");
 	}
 	public void setNext() {
 		System.out.println(position);

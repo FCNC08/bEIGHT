@@ -46,7 +46,7 @@ public class LogicSubSceneTest extends ScrollPane{
 		setPrefHeight(height-75);
 		setPrefWidth(width);
 		vbox.setAlignment(Pos.CENTER);
-		vbox.setPadding(Insets.EMPTY);
+		vbox.setPadding(new Insets(0,0,50,0));
 		
 		JSONObject jsonobject = null;
 		final ComponentGroupings groupings;

@@ -9,12 +9,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -23,14 +25,30 @@ import net.lingala.zip4j.ZipFile;
 
 public class EducationLesson extends ScrollPane{
 	
+	protected BorderPane pane = new BorderPane();
 	protected VBox vbox = new VBox(20);
+	
 	public EducationLesson(double width, double height, ZipFile file, EducationSubScene scene) {
 		super();
-		getStyleClass().add("education-lesson");
+		//Setting values to ScrollPane(To be able to scroll through long lessons
+		getStyleClass().add("lesson-scroll");
+        setFitToWidth(true);                 
+        setPannable(true);
+        setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        
+        //Setting values to the BorderPane(To center it properly)
+		pane.getStyleClass().add("education-lesson");
+		pane.setCenter(vbox);
+		pane.setMaxHeight(height);
+		pane.setMaxWidth(width);
+		
+		//Setting values for the VBox(the content)
 		vbox.setAlignment(Pos.CENTER);
-		setContent(vbox);
-		setMaxHeight(height-50);
-		setMaxWidth(width);
+		vbox.setFillWidth(true);
+		vbox.setPadding(new Insets(24));
+		
+		//Reading the file and adding content to vbox
 		JSONObject jsonobjekt = null;
 		try {
 			if(file.isEncrypted()) {
@@ -105,6 +123,7 @@ public class EducationLesson extends ScrollPane{
 		button_box.getChildren().addAll(button_back, button_next);
 		vbox.getChildren().add(button_box);
 		vbox.requestLayout();
+		setContent(pane);
 		scene.root.requestLayout();
 	}
 }

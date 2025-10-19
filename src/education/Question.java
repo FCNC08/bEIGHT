@@ -9,12 +9,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -27,15 +30,29 @@ public class Question extends ScrollPane{
 	private int jumpto;
 	protected EducationSubScene subscene;
 	
+	protected BorderPane pane = new BorderPane();
+	
 	protected VBox vbox = new VBox(20);
 	
 	public Question(double width, double height, ZipFile file, EducationSubScene scene) {
 		super();
 		subscene = scene;
-		setContent(vbox);
-		setMaxHeight(height);
-		setMaxWidth(width);
+		getStyleClass().add("question-scroll");
+        setFitToWidth(true);                 
+        setPannable(true);
+        setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        
+        //Setting values to the BorderPane(To center it properly)
+		pane.getStyleClass().add("education-question");
+		pane.setCenter(vbox);
+		pane.setMaxHeight(height);
+		pane.setMaxWidth(width);
+		
 		vbox.setAlignment(Pos.CENTER);
+		vbox.setFillWidth(true);
+		vbox.setPadding(new Insets(24));
+		
 		JSONObject jsonobject = null;
 		try {
 			if(file.isEncrypted()) {
@@ -86,7 +103,7 @@ public class Question extends ScrollPane{
 			}
 			case('q'):{
 				Text text = new Text(jsonobject.getString("question"));
-				text.setFont(new Font(25));
+				text.getStyleClass().add("question-question");
 				vbox.getChildren().add(text);
 				break;
 			}
@@ -104,8 +121,8 @@ public class Question extends ScrollPane{
 							box.getChildren().add(space);
 						}
 						String option = (String) c;
-						Text text = new Text(option);
-						text.setFont(new Font(25));
+						Label text = new Label(option);
+						text.getStyleClass().add("question-option");
 						final int nummer = number;
 						text.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 							@Override
@@ -132,6 +149,9 @@ public class Question extends ScrollPane{
 			}
 		});
 		vbox.getChildren().add(button_back);
+		vbox.requestLayout();
+		setContent(pane);
+		scene.root.requestLayout();
 	}
 	
 	public void submitAnswer(int answer) {

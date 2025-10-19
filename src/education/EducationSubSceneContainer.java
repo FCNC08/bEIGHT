@@ -3,6 +3,7 @@ package education;
 import java.util.ArrayList;
 
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.SubScene;
 import javafx.scene.input.MouseEvent;
@@ -30,7 +31,7 @@ public class EducationSubSceneContainer extends SubScene{
 		
 		fpane = new FlowPane();
 		fpane.setPrefWrapLength(width*0.9);
-		fpane.getStyleClass().add("education-container");
+		fpane.getStyleClass().add("education-icon-container");
 		
 		main_scene_root.getChildren().addAll(fpane);
 		sections.add(main_scene);
