@@ -20,9 +20,9 @@ public class SevenSegmentDisplay extends FunctionalCanvasComponent{
 	
 	protected int number = 0;
 	
-	public SevenSegmentDisplay(int width, int height, String size)
-			throws IllegalArgumentException {
+	public SevenSegmentDisplay(int width, int height, String size) throws IllegalArgumentException {
 		super(width, height, 4, 0, size);
+		changeOutput.setVisible(false);
 		paintImage();
 	}
 	public SevenSegmentDisplay(int width, int height) {
