@@ -55,6 +55,15 @@ public class Main extends Application {
 	@Override
 	public void start(@SuppressWarnings("exports") Stage primaryStage) {
 		main = this;
+		if(new File("temporary/").exists()) {
+			try {
+				FileUtils.cleanDirectory(new File("temporary/"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else {
+			System.out.println("No temp.");
+		}
 		System.out.println("Hallo Welt dies ist ein Test vom Laptop");
 		// Adding different Scenes
 		addStartScene();

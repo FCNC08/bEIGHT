@@ -1,4 +1,4 @@
-/*package util;
+package util;
 
 import java.util.ArrayList;
 
@@ -32,4 +32,4 @@ public class Info extends HBox{
 		menu_items.remove(text);
 		getChildren().remove(text);
 	}
-}*/
+}
