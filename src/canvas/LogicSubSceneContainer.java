@@ -308,7 +308,6 @@ public class LogicSubSceneContainer extends SubScene {
 						}
 					}
 				}catch(NullPointerException e) {
-					e.printStackTrace();
 				}
 			}
 		};

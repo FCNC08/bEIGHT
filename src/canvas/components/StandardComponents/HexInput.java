@@ -50,7 +50,7 @@ public class HexInput extends FunctionalCanvasComponent{
 	protected int current_number = 0;
 	public HexInput(int width, int height, String size) throws IllegalArgumentException {
 		super(width, height, 0, 4, size);
-		
+		changeInput.setVisible(false);
 		paintImage();
 		image_view.addEventFilter(MouseEvent.MOUSE_CLICKED, click_handler);
 		
