@@ -6,14 +6,22 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import canvas.LogicSubSceneContainer;
 import education.EducationSubSceneContainer;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -23,14 +31,17 @@ import util.IllegalInputOutputException;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -216,7 +227,7 @@ public class Main extends Application {
 			@Override
 			public void handle(MouseEvent me) {
 				if(Scenes[2]==null) {
-					addEducationArea();
+					addEducationAreaSetup();
 				}
 				changeScene(2);
 			}
@@ -443,6 +454,56 @@ public class Main extends Application {
 
 	}
 	
+	private File getEducationDir() {
+	    return new File("education/");
+	}
+
+	private File getEducationSettingsFile() {
+	    return new File(getEducationDir(), "settings.json");
+	}
+	
+	/** Create education dir + minimal settings.json if not present. */
+	private void ensureEducationSetup(String username) throws IOException {
+	    File eduDir = getEducationDir();
+	    if (!eduDir.exists()) {
+	        eduDir.mkdirs();
+	    }
+	    File settings = getEducationSettingsFile();
+	    if (!settings.exists()) {
+	        JSONObject json = new JSONObject();
+	        json.put("username", username == null ? "" : username);
+	        json.put("lections", new JSONArray()); // empty progress
+	        try (FileWriter fw = new FileWriter(settings)) {
+	            fw.write(json.toString(2));
+	        }
+	    }
+	}
+
+	/** Copy selected .lct files into the education dir and return the copies. */
+	private List<File> copyLctFilesIntoEducationDir(List<File> sources) throws IOException {
+	    File eduDir = getEducationDir();
+	    new File(eduDir, "").mkdirs();
+	    for (File f : sources) {
+	        File target = new File(eduDir, f.getName());
+	        Files.copy(f.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+	    }
+	    return List.of(getEducationDir().listFiles((dir, name) -> name.toLowerCase().endsWith(".lct")));
+	}
+
+	/** Load all .lct files in education dir into the container. */
+	private void loadLessonsFromEducationDir(EducationSubSceneContainer subscene) {
+	    File[] lcts = getEducationDir().listFiles((dir, name) -> name.toLowerCase().endsWith(".lct"));
+	    if (lcts != null) {
+	        for (File f : lcts) {
+	            try {
+	                subscene.addLesson(new ZipFile(f));
+	            } catch (Exception e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+	}
+	
 	private void addEducationArea() {
 		// Size of screen
 		Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
@@ -450,7 +511,6 @@ public class Main extends Application {
 		int width = screen.width;
 		int height = screen.height;
 
-		// System.out.println("width: "+width+" height: " +height);
 
 		// Adding MenuBar
 		MenuBar bar = new MenuBar();
@@ -475,10 +535,28 @@ public class Main extends Application {
 		MainScene.widthProperty().bind(vbox.widthProperty());
 		MainScene.setFill(Color.GRAY);
 		EducationSubSceneContainer subscene = new EducationSubSceneContainer(width, height);
-		subscene.addLesson(new ZipFile("testfiles/logikgatter.lct"));
-		subscene.addLesson(new ZipFile("testfiles/2bitadder.lct"));
-		subscene.addLesson(new ZipFile("testfiles/2x2multiplier.lct"));
+		loadLessonsFromEducationDir(subscene);
+		
 		root.getChildren().add(subscene);
+		
+		Menu file = new Menu("file");
+		MenuItem addLection = new MenuItem("Add Lection");
+		addLection.setOnAction(me->{
+            FileChooser fc = new FileChooser();
+            fc.setTitle("Choose .lct lessons");
+            fc.getExtensionFilters().add(new ExtensionFilter("bEIGHT Lessons (*.lct)", "*.lct"));
+            List<File> chosen = fc.showOpenMultipleDialog(new Stage());
+            if (chosen != null) {
+            	try {
+					copyLctFilesIntoEducationDir(chosen);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+            	loadLessonsFromEducationDir(subscene);
+            }
+		});
+		file.getItems().add(addLection);
+		bar.getMenus().add(file);
 		
 		vbox.getChildren().add(MainScene);
 
@@ -495,11 +573,123 @@ public class Main extends Application {
 		// Adding Scene
 		Scenes[2] = scene;
 	}
+	
+	private void addEducationAreaSetup() {
+	    // Size of screen
+	    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+	    int width = screen.width;
+	    int height = screen.height;
+
+	    // Menu bar
+	    MenuBar bar = new MenuBar();
+	    bar.getMenus().add(getThemeChoiceMenu());
+	    VBox vbox = new VBox(bar);
+	    vbox.setMinHeight(height);
+	    vbox.setMinWidth(width);
+
+	    // Return menu
+	    Menu returning = new Menu("Return");
+	    MenuItem returning_item = new MenuItem("Return to Start");
+	    returning_item.setOnAction(me -> { changeScene(0); });
+	    returning.getItems().add(returning_item);
+	    bar.getMenus().add(returning);
+
+	    // SubScene root
+	    Group root = new Group();
+	    SubScene MainScene = new SubScene(root, 1000, 500);
+	    MainScene.heightProperty().bind(vbox.heightProperty());
+	    MainScene.widthProperty().bind(vbox.widthProperty());
+	    MainScene.setFill(Color.GRAY);
+
+	    // Decide: first launch (no settings) -> landing page; else -> education unit
+	    boolean firstLaunch = !getEducationSettingsFile().exists();
+
+	    if (firstLaunch) {
+	        // --- LANDING PAGE ---
+	        VBox landing = new VBox(15);
+	        landing.setAlignment(Pos.TOP_CENTER);
+	        landing.setPadding(new Insets(30));
+
+	        Text title = new Text("Welcome to bEIGHT Education");
+	        title.setFont(new Font(36));
+
+	        HBox nameBox = new HBox(10);
+	        nameBox.setAlignment(Pos.CENTER_LEFT);
+	        Label nameLabel = new Label("Username:");
+	        TextField nameField = new TextField();
+	        nameField.setPromptText("Enter a username");
+	        nameBox.getChildren().addAll(nameLabel, nameField);
+
+	        // Upload initial .lct files
+	        Button uploadBtn = new Button("Upload .lct files…");
+	        Label uploadHint = new Label("You can add more later from the menu.");
+	        uploadHint.setFont(new Font(12));
+	        uploadHint.setTextFill(Color.DARKGRAY);
+
+	        List<File> initialFiles = new ArrayList();
+
+	        uploadBtn.setOnAction(e -> {
+	            FileChooser fc = new FileChooser();
+	            fc.setTitle("Choose .lct lessons");
+	            fc.getExtensionFilters().add(new ExtensionFilter("bEIGHT Lessons (*.lct)", "*.lct"));
+	            List<File> chosen = fc.showOpenMultipleDialog(new Stage());
+	            if (chosen != null) {
+	                initialFiles.addAll(chosen);
+	            }
+	        });
+
+	        Button startBtn = new Button("Create & Start");
+	        startBtn.setOnAction(e -> {
+	            String username = nameField.getText() == null ? "" : nameField.getText().trim();
+	            try {
+	                // create education dir + settings.json
+	                ensureEducationSetup(username);
+
+	                // copy selected lessons (if any)
+	                if (!initialFiles.isEmpty()) {
+	                    copyLctFilesIntoEducationDir(initialFiles);
+	                }
+
+	                // After setup, rebuild this area into the real education UI
+	                root.getChildren().clear();
+
+	               addEducationArea();
+
+	            } catch (IOException ex) {
+	                ex.printStackTrace();
+	            }
+	        });
+
+	        landing.getChildren().addAll(title, nameBox, uploadBtn, uploadHint, startBtn);
+	        root.getChildren().add(landing);
+	        
+	        
+		    vbox.getChildren().add(MainScene);
+		    Scene scene = new Scene(vbox);
+		    scene.getStylesheets().add("education_style.css");
+	
+		    // Runnable to maximize & resize
+		    Runnables[2] = new Runnable() {
+		        public void run() {
+		            MainStage.setMaximized(true);
+		            MainStage.setResizable(true);
+		            System.out.println("Education Setup");
+		        }
+		    };
+		    Scenes[2] = scene;
+	    } else {
+	       addEducationArea();
+	    }
+
+
+	}
+
 
 	// Changing Scene method
 	public void changeScene(int SceneNumber) {
 		// Setting Scene to Stage
 		MainStage.setScene(Scenes[SceneNumber]);
+		System.out.println(Scenes[SceneNumber]);
 
 		// Runs Runnable
 		Runnables[SceneNumber].run();
