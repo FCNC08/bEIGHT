@@ -41,6 +41,8 @@ public class EducationSubScene extends SubScene{
 	
 	protected EducationSubSceneContainer container;
 	
+	protected JSONObject settings;
+	
 	protected StackPane root;
 	protected ArrayList<Region> order;
 	int position = 0;
@@ -48,14 +50,16 @@ public class EducationSubScene extends SubScene{
 	protected StackPane icon = new StackPane();
 	protected Text text;
 	
-	public EducationSubScene(double width, double height, ZipFile questions, EducationSubSceneContainer essc) throws ZipException {
+	public EducationSubScene(double width, double height, ZipFile questions, JSONObject settings, EducationSubSceneContainer essc) throws ZipException {
 		super(new StackPane(), width, height);
 		this.root = (StackPane) getRoot();
 		this.root.getStyleClass().add("education-scene");
 		this.root.setPickOnBounds(true);
 		this.root.setAlignment(Pos.CENTER);
 		this.container = essc;
+		this.settings = settings;
 		
+		//Reading files
 		JSONObject jsonobject = null;
 		try {
 			if(questions.isEncrypted()) {
@@ -74,6 +78,8 @@ public class EducationSubScene extends SubScene{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		//Design and Layout
 		VBox choosing_root = new VBox(20);
 		ScrollPane choosing_area = new ScrollPane(choosing_root);
 		String headline_text = jsonobject.getString("name");
@@ -87,6 +93,8 @@ public class EducationSubScene extends SubScene{
 		difficulty.setX((width-difficulty.getBoundsInParent().getWidth())/2);
 		difficulty.setY(headline.getBoundsInParent().getHeight()*1.2);
 		choosing_root.getChildren().add(difficulty);
+		
+		//Add Contents
 		order = new ArrayList<>();
 		order.add(choosing_area);
 		JSONArray modules = jsonobject.getJSONArray("order");
@@ -132,6 +140,7 @@ public class EducationSubScene extends SubScene{
 			public void handle(MouseEvent event) {
 				setNext();
 				container.gotoStart();
+				//TODO mark lesson as finished
 			}
 		});
 		finish.setX((width-finish.getBoundsInParent().getWidth())/2);
@@ -182,6 +191,9 @@ public class EducationSubScene extends SubScene{
 		text.setFont(new Font(width*0.01));
 		icon.getChildren().addAll(text);
 		icon.getStyleClass().add("education-icon");
+		if(settings.getBoolean("completed")) {
+			icon.getStyleClass().add("completed");
+		}
 	}
 	public void setNext() {
 		System.out.println(position);

@@ -13,6 +13,9 @@
 	-fx-alignment: center;
 	-fx-padding: 40px,2px,40px,2px;
 }
+.completed{
+	-fx-background-color: #90ff90;
+}
 
 /*EducationSubScene */
 .education-scene{

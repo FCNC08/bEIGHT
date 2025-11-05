@@ -14,6 +14,7 @@ import java.util.Random;
 
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import canvas.LogicSubSceneContainer;
@@ -480,26 +481,44 @@ public class Main extends Application {
 	}
 
 	/** Copy selected .lct files into the education dir and return the copies. */
-	private List<File> copyLctFilesIntoEducationDir(List<File> sources) throws IOException {
+	private void copyLctFilesIntoEducationDir(List<File> sources) throws IOException {
 	    File eduDir = getEducationDir();
 	    new File(eduDir, "").mkdirs();
+	    
+	    //get settings
+	    JSONObject settings = new JSONObject(Files.readString(getEducationSettingsFile().toPath()));
+	    JSONArray lections = settings.getJSONArray("lections");
+	    //Copy every file to the 
 	    for (File f : sources) {
 	        File target = new File(eduDir, f.getName());
 	        Files.copy(f.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+	        JSONObject lection = new JSONObject();
+	        lection.put("name", f.getName());
+	        lection.put("completed", false);
+	        lections.put(lection);
 	    }
-	    return List.of(getEducationDir().listFiles((dir, name) -> name.toLowerCase().endsWith(".lct")));
+	    //Rewrite Settings.json
+        try (FileWriter fw = new FileWriter(getEducationSettingsFile())) {
+            fw.write(settings.toString(2));
+        }
+	    
 	}
 
 	/** Load all .lct files in education dir into the container. */
 	private void loadLessonsFromEducationDir(EducationSubSceneContainer subscene) {
-	    File[] lcts = getEducationDir().listFiles((dir, name) -> name.toLowerCase().endsWith(".lct"));
-	    if (lcts != null) {
-	        for (File f : lcts) {
-	            try {
-	                subscene.addLesson(new ZipFile(f));
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
+	    JSONObject settings = null;
+		try {
+			settings = new JSONObject(Files.readString(getEducationSettingsFile().toPath()));
+		} catch (JSONException | IOException e1) {
+			e1.printStackTrace();
+		}
+	    JSONArray lections = settings.getJSONArray("lections");
+	    if (lections != null) {
+	        for (Object l : lections) {
+	        	if(l instanceof JSONObject) {
+	        		JSONObject o = (JSONObject) l;
+	        		subscene.addLesson(new ZipFile(new File(getEducationDir(), o.getString("name"))), o);
+	        	}
 	        }
 	    }
 	}
@@ -538,6 +557,12 @@ public class Main extends Application {
 		loadLessonsFromEducationDir(subscene);
 		
 		root.getChildren().add(subscene);
+		
+		MenuItem returnEducation = new MenuItem("Return to Education-Center");
+		returnEducation.setOnAction(me->{
+			subscene.gotoStart();
+		});
+		returning.getItems().add(returnEducation);
 		
 		Menu file = new Menu("file");
 		MenuItem addLection = new MenuItem("Add Lection");
@@ -654,6 +679,7 @@ public class Main extends Application {
 	                root.getChildren().clear();
 
 	               addEducationArea();
+	               changeScene(2);
 
 	            } catch (IOException ex) {
 	                ex.printStackTrace();
@@ -689,7 +715,6 @@ public class Main extends Application {
 	public void changeScene(int SceneNumber) {
 		// Setting Scene to Stage
 		MainStage.setScene(Scenes[SceneNumber]);
-		System.out.println(Scenes[SceneNumber]);
 
 		// Runs Runnable
 		Runnables[SceneNumber].run();

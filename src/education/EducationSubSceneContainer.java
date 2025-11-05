@@ -2,6 +2,8 @@ package education;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -38,9 +40,9 @@ public class EducationSubSceneContainer extends SubScene{
 		root.getChildren().add(main_scene);
 	}
 	
-	public void addLesson(ZipFile file) {
+	public void addLesson(ZipFile file, JSONObject settings) {
 		try {
-			EducationSubScene scene = new EducationSubScene(width, height, file, this);
+			EducationSubScene scene = new EducationSubScene(width, height, file, settings, this);
 			
 			final int number = sections.size();
 			sections.add(scene);
