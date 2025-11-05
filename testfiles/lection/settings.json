@@ -1,6 +1,8 @@
 {
     "name":"SR-Latch",
     "difficulty":"easy",
+    "unlockEnding": "BEEF42",
+    "surveySuffix": "adder-survey-2025",
     "order":[{
         "type":"lesson",
         "filename":"lesson1.lsn"

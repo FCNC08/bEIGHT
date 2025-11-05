@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,12 @@ public class Main extends Application {
 
 	Stage MainStage;
  
+	public static String education_dir = "education/";
+	public static String education_settings_file = education_dir+"settings.json";
+	
+	EducationSubSceneContainer edu_container = null;
+	List<File> initial_files = null;
+	
 	@Override
 	public void start(@SuppressWarnings("exports") Stage primaryStage) {
 		main = this;
@@ -89,6 +96,10 @@ public class Main extends Application {
 		MainStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent event) {
+				//Save settings.json for education
+				if(edu_container != null) {
+					edu_container.saveSettings();
+				}
 				if(new File("temporary/").exists()) {
 					try {
 						FileUtils.cleanDirectory(new File("temporary/"));
@@ -455,70 +466,19 @@ public class Main extends Application {
 
 	}
 	
-	private File getEducationDir() {
-	    return new File("education/");
-	}
-
-	private File getEducationSettingsFile() {
-	    return new File(getEducationDir(), "settings.json");
-	}
-	
-	/** Create education dir + minimal settings.json if not present. */
+	// Create education dir + minimal settings.json if not present. 
 	private void ensureEducationSetup(String username) throws IOException {
-	    File eduDir = getEducationDir();
+	    File eduDir = new File(education_dir);
 	    if (!eduDir.exists()) {
 	        eduDir.mkdirs();
 	    }
-	    File settings = getEducationSettingsFile();
+	    File settings = new File(education_settings_file);
 	    if (!settings.exists()) {
 	        JSONObject json = new JSONObject();
 	        json.put("username", username == null ? "" : username);
 	        json.put("lections", new JSONArray()); // empty progress
 	        try (FileWriter fw = new FileWriter(settings)) {
 	            fw.write(json.toString(2));
-	        }
-	    }
-	}
-
-	/** Copy selected .lct files into the education dir and return the copies. */
-	private void copyLctFilesIntoEducationDir(List<File> sources) throws IOException {
-	    File eduDir = getEducationDir();
-	    new File(eduDir, "").mkdirs();
-	    
-	    //get settings
-	    JSONObject settings = new JSONObject(Files.readString(getEducationSettingsFile().toPath()));
-	    JSONArray lections = settings.getJSONArray("lections");
-	    //Copy every file to the 
-	    for (File f : sources) {
-	        File target = new File(eduDir, f.getName());
-	        Files.copy(f.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
-	        JSONObject lection = new JSONObject();
-	        lection.put("name", f.getName());
-	        lection.put("completed", false);
-	        lections.put(lection);
-	    }
-	    //Rewrite Settings.json
-        try (FileWriter fw = new FileWriter(getEducationSettingsFile())) {
-            fw.write(settings.toString(2));
-        }
-	    
-	}
-
-	/** Load all .lct files in education dir into the container. */
-	private void loadLessonsFromEducationDir(EducationSubSceneContainer subscene) {
-	    JSONObject settings = null;
-		try {
-			settings = new JSONObject(Files.readString(getEducationSettingsFile().toPath()));
-		} catch (JSONException | IOException e1) {
-			e1.printStackTrace();
-		}
-	    JSONArray lections = settings.getJSONArray("lections");
-	    if (lections != null) {
-	        for (Object l : lections) {
-	        	if(l instanceof JSONObject) {
-	        		JSONObject o = (JSONObject) l;
-	        		subscene.addLesson(new ZipFile(new File(getEducationDir(), o.getString("name"))), o);
-	        	}
 	        }
 	    }
 	}
@@ -553,14 +513,24 @@ public class Main extends Application {
 		MainScene.heightProperty().bind(vbox.heightProperty());
 		MainScene.widthProperty().bind(vbox.widthProperty());
 		MainScene.setFill(Color.GRAY);
-		EducationSubSceneContainer subscene = new EducationSubSceneContainer(width, height);
-		loadLessonsFromEducationDir(subscene);
+		EducationSubSceneContainer subscene = null;
+		try {
+			subscene = new EducationSubSceneContainer(width, height, new JSONObject(Files.readString(Paths.get(education_settings_file))));
+		} catch (JSONException | IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		edu_container = subscene;
+		if(initial_files != null) {
+			subscene.addFiles(initial_files);
+			System.out.println("Added initial_files: "+initial_files);
+		}
 		
 		root.getChildren().add(subscene);
 		
 		MenuItem returnEducation = new MenuItem("Return to Education-Center");
 		returnEducation.setOnAction(me->{
-			subscene.gotoStart();
+			edu_container.gotoStart();
 		});
 		returning.getItems().add(returnEducation);
 		
@@ -572,12 +542,7 @@ public class Main extends Application {
             fc.getExtensionFilters().add(new ExtensionFilter("bEIGHT Lessons (*.lct)", "*.lct"));
             List<File> chosen = fc.showOpenMultipleDialog(new Stage());
             if (chosen != null) {
-            	try {
-					copyLctFilesIntoEducationDir(chosen);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-            	loadLessonsFromEducationDir(subscene);
+            	edu_container.addFiles(chosen);
             }
 		});
 		file.getItems().add(addLection);
@@ -627,7 +592,7 @@ public class Main extends Application {
 	    MainScene.setFill(Color.GRAY);
 
 	    // Decide: first launch (no settings) -> landing page; else -> education unit
-	    boolean firstLaunch = !getEducationSettingsFile().exists();
+	    boolean firstLaunch = !(new File(education_settings_file)).exists();
 
 	    if (firstLaunch) {
 	        // --- LANDING PAGE ---
@@ -651,7 +616,7 @@ public class Main extends Application {
 	        uploadHint.setFont(new Font(12));
 	        uploadHint.setTextFill(Color.DARKGRAY);
 
-	        List<File> initialFiles = new ArrayList();
+	        initial_files = new ArrayList<File>();
 
 	        uploadBtn.setOnAction(e -> {
 	            FileChooser fc = new FileChooser();
@@ -659,7 +624,7 @@ public class Main extends Application {
 	            fc.getExtensionFilters().add(new ExtensionFilter("bEIGHT Lessons (*.lct)", "*.lct"));
 	            List<File> chosen = fc.showOpenMultipleDialog(new Stage());
 	            if (chosen != null) {
-	                initialFiles.addAll(chosen);
+	                initial_files.addAll(chosen);
 	            }
 	        });
 
@@ -669,11 +634,6 @@ public class Main extends Application {
 	            try {
 	                // create education dir + settings.json
 	                ensureEducationSetup(username);
-
-	                // copy selected lessons (if any)
-	                if (!initialFiles.isEmpty()) {
-	                    copyLctFilesIntoEducationDir(initialFiles);
-	                }
 
 	                // After setup, rebuild this area into the real education UI
 	                root.getChildren().clear();
