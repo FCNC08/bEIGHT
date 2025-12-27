@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -33,6 +36,7 @@ public class Question extends ScrollPane{
 	protected BorderPane pane = new BorderPane();
 	
 	protected VBox vbox = new VBox(20);
+	protected VBox box;
 	
 	public Question(double width, double height, ZipFile file, EducationSubScene scene) {
 		super();
@@ -108,18 +112,17 @@ public class Question extends ScrollPane{
 				break;
 			}
 			case('o'):{
-				VBox box = new VBox();
+				box = new VBox();
 				box.setMaxWidth(width);
 				correctanswer = jsonobject.getInt("correctanswer");
 				jumpto = jsonobject.getInt("jumpto");
 				int number = 0;
 				for(Object c : jsonobject.getJSONArray("options")) {
 					if(c instanceof String) {
-						if(number>0) {
-							Rectangle space = new Rectangle(50, 10);
-							space.setFill(Color.TRANSPARENT);
-							box.getChildren().add(space);
-						}
+						Pane pane = new Pane();
+						Rectangle space = new Rectangle(50, 10);
+						space.setFill(Color.TRANSPARENT);
+						box.getChildren().add(space);
 						String option = (String) c;
 						Label text = new Label(option);
 						text.getStyleClass().add("question-option");
@@ -131,9 +134,14 @@ public class Question extends ScrollPane{
 							}
 						});
 						number++;
-						box.getChildren().add(text);
+						pane.getChildren().addAll(space,text);
+						box.getChildren().add(pane);
 					}
 				}
+				var shuffled = new ArrayList<>(box.getChildren());
+				Collections.shuffle(shuffled);
+				box.getChildren().clear();
+				box.getChildren().addAll(shuffled);
 				vbox.getChildren().add(box);
 				break;
 			}
@@ -157,9 +165,17 @@ public class Question extends ScrollPane{
 	public void submitAnswer(int answer) {
 		if(answer == correctanswer) {
 			subscene.setNext();
+			var shuffled = new ArrayList<>(box.getChildren());
+			Collections.shuffle(shuffled);
+			box.getChildren().clear();
+			box.getChildren().addAll(shuffled);
 		}else {
 			subscene.setPane(jumpto-3);
 			System.out.println("Correct");
+			var shuffled = new ArrayList<>(box.getChildren());
+			Collections.shuffle(shuffled);
+			box.getChildren().clear();
+			box.getChildren().addAll(shuffled);
 		}
 	}
 }
