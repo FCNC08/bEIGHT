@@ -21,6 +21,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import net.lingala.zip4j.ZipFile;
 
 public class EducationLesson extends ScrollPane{
@@ -96,6 +97,8 @@ public class EducationLesson extends ScrollPane{
 			}
 			case('t'):{
 				Text text = new Text(jsonobjekt.getString("text"));
+				text.setWrappingWidth(width*0.85);
+				text.setTextAlignment(TextAlignment.CENTER);
 				text.setFont(new Font(25));
 				vbox.getChildren().add(text);
 				break;

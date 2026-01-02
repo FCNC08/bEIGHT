@@ -33,6 +33,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import net.lingala.zip4j.ZipFile;
@@ -45,26 +46,22 @@ public class LogicSubSceneTest extends ScrollPane{
 		setContent(vbox);
 		setPrefHeight(height-75);
 		setPrefWidth(width);
+		setFitToWidth(true);
 		vbox.setAlignment(Pos.CENTER);
 		vbox.setPadding(new Insets(0,0,50,0));
 		
 		JSONObject jsonobject = null;
 		final ComponentGroupings groupings;
 		LogicSubSceneContainer container;
-		try {
-			if(file.isEncrypted()) {
-				throw new IllegalArgumentException();
-			}
-			InputStream inputstream = file.getInputStream(file.getFileHeader("test.json"));
-			ByteArrayOutputStream outputstream = new ByteArrayOutputStream();
+		try (InputStream inputstream = file.getInputStream(file.getFileHeader("test.json"));
+			ByteArrayOutputStream outputstream = new ByteArrayOutputStream()) {
 			
 			byte[] buffer = new byte[4096];
-			@SuppressWarnings("unused")
 			int byteRead;
 			while((byteRead = inputstream.read(buffer))!= -1) {
-				outputstream.write(buffer);
+				outputstream.write(buffer, 0, byteRead);
 			}
-			String jsonString = outputstream.toString(StandardCharsets.UTF_8);
+			String jsonString = new String(outputstream.toByteArray(),StandardCharsets.UTF_8);
 			jsonobject = new JSONObject(jsonString);
 		}catch(IOException e) {
 			e.printStackTrace();
@@ -72,24 +69,22 @@ public class LogicSubSceneTest extends ScrollPane{
 		String headlineString = jsonobject.getString("headline");
 		Label headline = new Label(headlineString);
 		headline.setWrapText(true);
-		headline.setMaxWidth(width-40);
+		headline.setMaxWidth(width*0.85);
 		headline.setFont(new Font(25));
+		
+		double headlineHeight = headline.prefHeight(width * 0.85);
+		
 		file.extractAll(EducationSubScene.tempmod);
 		@SuppressWarnings("resource")
 		ZipFile temporary_file = new ZipFile(EducationSubScene.tempmod+jsonobject.getString("space"));
 		JSONObject space = null;
-		try {
-			if(temporary_file.isEncrypted()) {
-				throw new IllegalArgumentException();
-			}
-			InputStream inputStream = temporary_file.getInputStream(temporary_file.getFileHeader("space.json"));
+		try (InputStream inputStream = temporary_file.getInputStream(temporary_file.getFileHeader("space.json"))){
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			
 			byte[] buffer = new byte[4096];
-			@SuppressWarnings("unused")
 			int byteRead;
 			while((byteRead = inputStream.read(buffer)) !=-1) {
-				outputStream.write(buffer);
+				outputStream.write(buffer, 0, byteRead);
 			}
 			String jsonString = outputStream.toString();
 			space = new JSONObject(jsonString);
@@ -164,7 +159,9 @@ public class LogicSubSceneTest extends ScrollPane{
 		}
 		groupings = grouping;
 		
-		container = new LogicSubSceneContainer((int)width, (int)(height-headline.getBoundsInParent().getHeight()-75), new Group(), grouping, 2);
+		int containerHeight = (int) Math.max(150, (height - 75 - headlineHeight)*0.71); // clamp to a sane min height
+		container = new LogicSubSceneContainer((int) width, containerHeight, new Group(), grouping, 2);
+		
 		File tempfile = new File(EducationSubScene.tempmod);
 		if(tempfile.isDirectory()&&tempfile.exists()) {
 			File[] files = tempfile.listFiles();
@@ -179,30 +176,37 @@ public class LogicSubSceneTest extends ScrollPane{
 		Button button_back = new Button("Back");
 		button_back.setFont(new Font(25));
 		button_back.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				vbox.getChildren().clear();
-				LogicSubSceneContainer container = new LogicSubSceneContainer((int)width, (int)(height-headline.getBoundsInParent().getHeight()-75), new Group(), groupings, 2);
-				vbox.getChildren().addAll(container, headline, button_box);
-				scene.setPrev();
-			}
+		    @Override
+		    public void handle(MouseEvent event) {
+		        vbox.getChildren().clear();
+		        // Recreate container with the same sizing logic
+		        int containerHeight = (int) Math.max(150, (height - 75 - headline.prefHeight(width * 0.85)));
+		        LogicSubSceneContainer container =
+		            new LogicSubSceneContainer((int) width, containerHeight, new Group(), groupings, 2);
+		        vbox.getChildren().addAll(headline, container, button_box);
+		        scene.setPrev();
+		    }
 		});
-		button_back.setLayoutX(width*0.1);
 		
 		Button button_next = new Button("Next");
 		button_next.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				vbox.getChildren().clear();
-				LogicSubSceneContainer container = new LogicSubSceneContainer((int)width, (int)(height-headline.getBoundsInParent().getHeight()-75), new Group(), groupings, 2);
-				vbox.getChildren().addAll(container, headline, button_box);
-				scene.setNext();
-			}
+		    @Override
+		    public void handle(MouseEvent event) {
+		        vbox.getChildren().clear();
+		        int containerHeight = (int) Math.max(150, (height - 75 - headline.prefHeight(width * 0.85)));
+		        LogicSubSceneContainer container =
+		            new LogicSubSceneContainer((int) width, containerHeight, new Group(), groupings, 2);
+		        vbox.getChildren().addAll(headline, container, button_box);
+		        scene.setNext();
+		    }
 		});
-		button_next.setLayoutX(width*0.9);
 		button_next.setFont(new Font(25));
 		button_box.getChildren().addAll(button_back, button_next);
-		vbox.getChildren().addAll(container, headline, button_box);
+		
+		button_box.setPadding(Insets.EMPTY);
+		vbox.getChildren().addAll(headline, container, button_box);
+		vbox.setAlignment(Pos.TOP_CENTER);
+		vbox.setPadding(new Insets(20, 0, 50, 0));
 		requestLayout();
 	}
 }
