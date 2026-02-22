@@ -11,12 +11,15 @@ import org.json.JSONObject;
 
 import canvas.ComponentGroup;
 import canvas.ComponentGroupings;
+import canvas.LogicSubScene;
 import canvas.LogicSubSceneContainer;
 import canvas.components.FunctionalCanvasComponent;
 import canvas.components.LogicComponent;
 import canvas.components.ExternalComponents.ExternalComponent;
+import canvas.components.StandardComponents.HexInput;
 import canvas.components.StandardComponents.Input;
 import canvas.components.StandardComponents.Output;
+import canvas.components.StandardComponents.SevenSegmentDisplay;
 import canvas.components.StandardComponents.LogicComponents.ANDGate;
 import canvas.components.StandardComponents.LogicComponents.NANDGate;
 import canvas.components.StandardComponents.LogicComponents.NORGate;
@@ -127,6 +130,14 @@ public class LogicSubSceneTest extends ScrollPane{
 						defaults.add(XORGate.getSolidXORGATE(LogicComponent.SIZE_MIDDLE, 2));
 						break;
 					}
+					case("Hex"):{
+						defaults.add(new HexInput((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5)));
+						break;
+					}
+					case("SSD"):{
+						defaults.add(new SevenSegmentDisplay((int)(LogicSubScene.cross_distance*2.5),(int) (LogicSubScene.cross_distance*4.5)));
+						break;
+					}
 					case("NONE"):{
 						break;
 					}
@@ -147,9 +158,12 @@ public class LogicSubSceneTest extends ScrollPane{
 			temporary_file.extractAll(EducationSubScene.tempext);
 			for(Object externalcomponent : externalcomponents) {
 				if(externalcomponent instanceof String) {
-					ZipFile external_file = new ZipFile(EducationSubScene.tempext+(String)externalcomponent);
-					ExternalComponent comp = ExternalComponent.init(ExternalComponent.SIZE_MIDDLE, external_file);
-					external.add(comp);
+					if(!((String)externalcomponent).equals("NONE")) {
+						ZipFile external_file = new ZipFile(EducationSubScene.tempext+(String)externalcomponent);
+						ExternalComponent comp = ExternalComponent.init(ExternalComponent.SIZE_MIDDLE, external_file);
+						external.add(comp);
+						
+					}
 				}
 			}
 			//new File(EducationSubScene.tempext).delete();

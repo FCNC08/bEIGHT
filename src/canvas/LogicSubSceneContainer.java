@@ -605,7 +605,7 @@ public class LogicSubSceneContainer extends SubScene {
 	    // keep reference for future save()
 	    this.file = new ZipFile(beightFile);
 
-	    // 1) Extract safely to a unique temp dir
+	    //  Extract safely to a unique temp dir
 	    Path tempDir;
 	    try {
 	        tempDir = createOpenTempDir();
@@ -648,12 +648,12 @@ public class LogicSubSceneContainer extends SubScene {
 	        return;
 	    }
 
-	    // 2) Resolve extracted layout
+	    //  Resolve extracted layout
 	    Path settingsPath = tempDir.resolve("settings.json");
 	    Path logicsDir    = tempDir.resolve("logics");
 	    Path externalsDir = tempDir.resolve("externals");
 
-	    // 3) If settings.json missing, fall back to legacy open (single file format)
+	    //  If settings.json missing, fall back to legacy open (single file format)
 	    if (!Files.exists(settingsPath)) {
 	        try {
 	            // clear current UI
@@ -686,7 +686,7 @@ public class LogicSubSceneContainer extends SubScene {
 	        return;
 	    }
 
-	    // 4) Parse settings.json
+	    //  Parse settings.json
 	    JSONObject settings;
 	    try {
 	        String jsonText = Files.readString(settingsPath, StandardCharsets.UTF_8);
@@ -696,7 +696,7 @@ public class LogicSubSceneContainer extends SubScene {
 	        return;
 	    }
 
-	    // 5) Clear current scenes & labels
+	    //  Clear current scenes & labels
 	    if (logic_subscene != null) {
 	        root.getChildren().remove(logic_subscene);
 	    }
@@ -705,8 +705,41 @@ public class LogicSubSceneContainer extends SubScene {
 	    }
 	    
 	    addBeightChooser();
+	    
+	    // Load external components from /externals
+	    try {
+	        external_files.clear();
+	        if (Files.exists(externalsDir)) {
+	            JSONArray exts = settings.optJSONArray("external_components");
+	            if (exts != null) {
+	                for (int i = 0; i < exts.length(); i++) {
+	                    String name = exts.getString(i);
+	                    System.out.println(name);
+	                    Path cmpPath = externalsDir.resolve(name);
+	                    if (!Files.exists(cmpPath)) continue;
 
-	    // 6) Load subscenes from /logics
+	                    try {
+	                        File ext_file = new File("temporary/scene/externals/"+cmpPath.getFileName());
+
+	                        Path extDir = Paths.get("temporary", "scene", "externals");
+	                        Files.createDirectories(extDir);
+
+	                        ext_file.createNewFile();
+	                        Files.copy(cmpPath, ext_file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+	                        ExternalComponent component = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE,new ZipFile(ext_file));
+	                        external_group.add(component);
+	                        external_files.add(ext_file);
+	                    } catch (Exception compEx) {
+	                        compEx.printStackTrace(); // continue loading others
+	                    }
+	                }
+	            }
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    //  Load subscenes from /logics
 	    try {
 	        JSONArray areas = settings.optJSONArray("logic_areas");
 
@@ -758,6 +791,8 @@ public class LogicSubSceneContainer extends SubScene {
 	                        LogicSubScene.getNearesDot((int) (height * 0.9))
 	                );
 	                scene.setFill(color == WHITE ? LogicSubScene.white_grey : LogicSubScene.black_grey);
+	                scene.addX((int) (width * 0.1));
+	                scene.addY((int) (height * 0.01));
 	                scene.setName("bEIGHT " + i);
 	                addLogicSubScene(scene, false);
 	            }
@@ -771,39 +806,6 @@ public class LogicSubSceneContainer extends SubScene {
 	        e.printStackTrace();
 	        return;
 	    }
-
-	    // 7) Load external components from /externals
-	    try {
-	        external_files.clear();
-	        if (Files.exists(externalsDir)) {
-	            JSONArray exts = settings.optJSONArray("external_components");
-	            if (exts != null) {
-	                for (int i = 0; i < exts.length(); i++) {
-	                    String name = exts.getString(i);
-	                    System.out.println(name);
-	                    Path cmpPath = externalsDir.resolve(name);
-	                    if (!Files.exists(cmpPath)) continue;
-
-	                    try {
-	                        File ext_file = new File("temporary/scene/externals/"+cmpPath.getFileName());
-
-	                        Path extDir = Paths.get("temporary", "scene", "externals");
-	                        Files.createDirectories(extDir);
-
-	                        ext_file.createNewFile();
-	                        Files.copy(cmpPath, ext_file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-	                        ExternalComponent component = ExternalComponent.init(FunctionalCanvasComponent.SIZE_MIDDLE,new ZipFile(ext_file));
-	                        external_group.add(component);
-	                        external_files.add(ext_file);
-	                    } catch (Exception compEx) {
-	                        compEx.printStackTrace(); // continue loading others
-	                    }
-	                }
-	            }
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
 	    
 	    try {
 			FileUtils.cleanDirectory(tempDir.getParent().toFile());
@@ -811,11 +813,10 @@ public class LogicSubSceneContainer extends SubScene {
 			e.printStackTrace();
 		}
 
-	    // 8) Refresh chooser & mouse listeners
+	    //  Refresh chooser & mouse listeners
 	    addChooserMaster();   // or addChooserMaster() if you want master palette after open
 	    addListener();
 
-	    // (optional) System.gc();  // only if you found it necessary elsewhere
 	}
 
 	

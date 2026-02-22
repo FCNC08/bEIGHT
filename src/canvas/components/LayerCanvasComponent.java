@@ -48,8 +48,8 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 		System.out.println(connections.length);
 		Connection[] new_inputs = new Connection[input_count];
 		Output[] new_outputs = new Output[output_count];
-		for(int i = 0; i<jo.getJSONArray("inputs").length(); i++) {
-			connections[i] = new_inputs[i]= new Connection();
+		for(int i = 1; i<=jo.getJSONArray("inputs").length(); i++) {
+			connections[i] = new_inputs[i-1]= new Connection();
 		}
 		JSONArray ja = jo.getJSONArray("outputs");
 		for(int i = 0; i<ja.length(); i++) {
@@ -68,31 +68,31 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 				case("AND"):{
 					JSONArray finputs = fjo.getJSONArray("inputs");
 					AND comp = new AND(finputs.length());
-					for(int i = 0; i<fjo.length(); i++) {
+					for(int i = 0; i<finputs.length(); i++) {
 						comp.inputs[i] = connections[finputs.getInt(i)];
 						comp.inputs[i].addComponent(comp);
 					}
-					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					comp.outputs[0] = connections[fjo.getJSONArray("outputs").getInt(0)];
 					break;
 				}
 				case("NAND"):{
 					JSONArray finputs = fjo.getJSONArray("inputs");
 					NAND comp = new NAND(finputs.length());
-					for(int i = 0; i<fjo.length(); i++) {
+					for(int i = 0; i<finputs.length(); i++) {
 						comp.inputs[i] = connections[finputs.getInt(i)];
 						comp.inputs[i].addComponent(comp);
 					}
-					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					comp.outputs[0] = connections[fjo.getJSONArray("outputs").getInt(0)];
 					break;
 				}
 				case("NOR"):{
 					JSONArray finputs = fjo.getJSONArray("inputs");
 					NOR comp = new NOR(finputs.length());
-					for(int i = 0; i<fjo.length(); i++) {
+					for(int i = 0; i<finputs.length(); i++) {
 						comp.inputs[i] = connections[finputs.getInt(i)];
 						comp.inputs[i].addComponent(comp);
 					}
-					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					comp.outputs[0] = connections[fjo.getJSONArray("outputs").getInt(0)];
 					break;
 				}
 				case("NOT"):{
@@ -100,37 +100,37 @@ public class LayerCanvasComponent extends FunctionalCanvasComponent{
 					NOT comp = new NOT();
 					comp.inputs[0] = connections[finputs.getInt(0)];
 					comp.inputs[0].addComponent(comp);
-					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					comp.outputs[0] = connections[fjo.getJSONArray("outputs").getInt(0)];
 					break;
 				}
 				case("OR"):{
 					JSONArray finputs = fjo.getJSONArray("inputs");
 					OR comp = new OR(finputs.length());
-					for(int i = 0; i<fjo.length(); i++) {
+					for(int i = 0; i<finputs.length(); i++) {
 						comp.inputs[i] = connections[finputs.getInt(i)];
 						comp.inputs[i].addComponent(comp);
 					}
-					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					comp.outputs[0] = connections[fjo.getJSONArray("outputs").getInt(0)];
 					break;
 				}
 				case("XNOR"):{
 					JSONArray finputs = fjo.getJSONArray("inputs");
 					XNOR comp = new XNOR(finputs.length());
-					for(int i = 0; i<fjo.length(); i++) {
+					for(int i = 0; i<finputs.length(); i++) {
 						comp.inputs[i] = connections[finputs.getInt(i)];
 						comp.inputs[i].addComponent(comp);
 					}
-					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					comp.outputs[0] = connections[fjo.getJSONArray("outputs").getInt(0)];
 					break;
 				}
 				case("XOR"):{
 					JSONArray finputs = fjo.getJSONArray("inputs");
 					XOR comp = new XOR(finputs.length());
-					for(int i = 0; i<fjo.length(); i++) {
+					for(int i = 0; i<finputs.length(); i++) {
 						comp.inputs[i] = connections[finputs.getInt(i)];
 						comp.inputs[i].addComponent(comp);
 					}
-					comp.outputs[0] = connections[fjo.getJSONArray("inputs").getInt(0)];
+					comp.outputs[0] = connections[fjo.getJSONArray("outputs").getInt(0)];
 					break;
 				}
 				

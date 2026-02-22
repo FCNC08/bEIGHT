@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /*import org.apache.pdfbox.pdmodel.PDDocument;
@@ -1559,7 +1560,7 @@ public class LogicSubScene extends SubScene {
 				case("External"):{
 					try {
 						//System.out.println(new File("temporary/externals/")+jsoncomponent.getString("name")+".cmp"+);
-						component = ExternalComponent.init(jsoncomponent.getString("size"), new ZipFile(new File("temporary/externals/"+jsoncomponent.getString("name")+".cmp")));
+						component = ExternalComponent.init(jsoncomponent.getString("size"), new ZipFile(new File("temporary/scene/externals/"+jsoncomponent.getString("name")+".cmp")));
 					}catch (Exception e) {
 						e.printStackTrace();
 					}
